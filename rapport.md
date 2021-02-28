@@ -1,3 +1,41 @@
+### Ports
+
+#### Introduction
+Il y a un certain nombre de ports à ouvrir pour que le cluster fonctionne.
+#### Le ports à ouvrir
+Voici les ports à ouvrir. Certaines doivent être accessibles par les noeuds et d'autres par les client externes. Ce tableau est extrait de la documentation officielle d'OKD et a été complétéepour notre cas d'usage.
+
+#### 1/ Machine à machine
+
+| Port/Potocol        	| Description                                                                                                          	|
+|---------------------	|----------------------------------------------------------------------------------------------------------------------	|
+| ICMP                	| Network reachability tests                                                                                           	|
+| 9000-9999/TCP       	| Host level services, including the node exporter on ports 9100-9101 and the Cluster Version Operator on port  9099.  	|
+| 10250-10259/TCP     	| The default ports that Kubernetes reserves.                                                                          	|
+| 4789/UDP            	| VXLAN and Geneve                                                                                                     	|
+| 6081/UDP            	| VXLAN and Geneve                                                                                                     	|
+| 9000-9999/UDP       	| Host level services, including the node exporter on ports 9100-9101.                                                 	|
+| 30000-32767/TCP-UDP 	| Kubernetes node port                                                                                                 	|
+
+#### 2/ Machines aux machines de contrôle
+| Port/Potocol  	| Description                          	|
+|---------------	|--------------------------------------	|
+| 2379-2380/TCP 	| etcd server, peer, and metrics ports 	|
+| 6443/TCP      	| Kubernetes API                       	|
+
+####  3/ Vers la machines Services
+| Port/Potocol 	| Back-end machines (pool members) for load balancer                                                                                                                                                                                     	| Internal 	| External 	| Description                          	|
+|--------------	|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------	|----------	|----------	|--------------------------------------	|
+| 6443/TCP     	| Bootstrap and control plane. You remove the bootstrap machine from the load balancer after the bootstrap machine initializes the cluster control plane. You must configure the /readyz endpoint for the API server health check probe. 	| X        	| X        	| Load Balancer: Kubernetes API server 	|
+| 22623/TCP    	| Bootstrap and control plane. You remove the bootstrap machine from the load balancer after the bootstrap machine initializes the cluster control plane.                                                                                	| X        	|          	| Load Balancer: Machine config server 	|
+| 443/TCP      	| The machines that run the Ingress router pods, compute, or worker, by default.                                                                                                                                                         	| X        	| X        	| Load Balancer: HTTPS                 	|
+| 80/TCP       	| The machines that run the Ingress router pods, compute, or worker, by default.                                                                                                                                                         	| X        	| X        	| Load Balancer: HTTP                  	|
+| 4789/UDP     	| /                                                                                                                                                                                                                                      	| X        	| X        	| VXLAN inter-site                     	|
+| 67-68/UDP    	| /                                                                                                                                                                                                                                      	| X        	|          	| DHCP                                 	|
+| 8080/TCP     	| /                                                                                                                                                                                                                                      	| X        	|          	| Web server to get ignition files     	|
+| 53/UDP       	| /                                                                                                                                                                                                                                      	| X        	| X        	| DNS (see DNS part)                   	|
+
+
 ### DNS
 
 #### Introduction
