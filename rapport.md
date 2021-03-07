@@ -5,7 +5,7 @@ Cette documentation est basée sur un guide<sup>(1)</sup> présent sur itnext.io
 ### Architecture
 Dans un premier temps, pour déployer le cluster il faut décider d'une [architecture](https://docs.okd.io/latest/architecture/architecture.html) pour ce dernier.
 Pour ce cluster nous utiliserons l'architecture suivante :
-![Architecture du cluster](https://github.com/DzeCin/Cassiopee2021/blob/master/architecture_cassiop.jpg?raw=true)
+![Architecture du cluster](https://raw.githubusercontent.com/DzeCin/Cassiopee2021/master/source_files/architecture_cassiop.jpg)
 Quant aux VM voici leur description :
 |Machine| OS | vCPU | RAM (Go) | Stockage (Go) | Addresse IP
 |--|--|--|--|--|--|
@@ -22,7 +22,7 @@ Dans cette architecutre nous avons décidé de regrouper au sein de la VM `servi
 
 ### Création du pont au sein de proxmox
 Pour que les VMs master 1 à bootstrap puissent communiquer entre elles ils faut les inscrire dans un sous-réseau, ainsi il faut créer un pont dans proxmox comme suit :
-![Création du bridge](insérer lien ici après t'as capté)
+![Création du bridge](https://raw.githubusercontent.com/DzeCin/Cassiopee2021/master/source_files/proxmox_vmbr.png)
 Une fois ceci fait nous pouvons passer à la création des VM.
 
 ### Création et configuration des VM
