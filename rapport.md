@@ -16,13 +16,16 @@ Quant aux VM voici leur description :
 |worker 1|Fedora CoreOS 8|4|16|120|10.0.0.5|
 |worker 2|Fedora CoreOS 8 |4|16|120|10.0.0.6|
 |bootstrap|Fedora CoreOS 8|4|16|120|10.0.0.7|
+<!--end of table-->
 Dans cette architecutre nous avons décidé de regrouper au sein de la VM `services` le DNS, Load Balances, Serveur Web, Routeur, DHCP et le pare-feu. Une variante<sup>(1)</sup> de cette architecture pourrait être d'isoler le pare-feu, routeur et DHCP sous une VM FreeBSD.
 | NOTE: Pour ce déploiement, nous omettrons pour l'instant l'utilisation d'un pare-feu. |
 | --- |
 
 ### Création du pont au sein de proxmox
 Pour que les VMs master 1 à bootstrap puissent communiquer entre elles ils faut les inscrire dans un sous-réseau, ainsi il faut créer un pont dans proxmox comme suit :
+
 ![Création du bridge](https://raw.githubusercontent.com/DzeCin/Cassiopee2021/master/source_files/proxmox_vmbr.png)
+
 Une fois ceci fait nous pouvons passer à la création des VM.
 
 ### Création et configuration des VM
