@@ -224,6 +224,11 @@ Poursuivez ensuite en remplançant par les liens trouvés au préalable :
 >```
 >Generate the Kubernetes manifests for the cluster, ignore the warning:
 >```
+Dans notre cas nous avons aussi modifié légèrement le fichier install-config.yaml pour modifier les adresses IP données aux différents nœuds. En se référant à la [documentation officielle](https://docs.okd.io/latest/installing/installing_platform_agnostic/installing-platform-agnostic.html#installation-bare-metal-config-yaml_installing-platform-agnostic) on doit donc modifier le point (9) pour y mettre
+```
+serviceNetwork:  
+-  10.0.0.0/16
+```
 >openshift-install create manifests --dir=install_dir/
 >```
 >Modify the cluster-scheduler-02-config.yaml manifest file to prevent Pods from being scheduled on the control plane machines:
@@ -390,6 +395,28 @@ I --> J[VethB]
 De ce fait, on définit un MTU de 1400 octets pour les communications dans le cluster ( ....) et 1450 octets sur les interfaces des noeuds. De ce fait, lorsque le paquet sort du 2ème VTEP, le MTU de base de 1500 octets n'est pas dépassé.
 La communication peut donc se faire sans problème de fragmentation de paquet et sans avoir à faire intervenir le WAN pour une augmentation du MTU.
 
+## Troubleshooting (Eclipse CHE)
+### Où regarder ?
+#### 1) Pour chaque workspace
+Pour les informations relatives à chacun des workspace, les informations se trouvent dans `View > Output`.
+#### 2) Pour eclipe che en général
+Concernant chaque operateur, pour trouver leurs logs il faut naviguer à travers les pods dans `Workloads > Pods`. On y trouve alors plusieurs pods pour différentes tâches de chaque opérateur, en cliquant sur l'un d'entre eux et en se rendant dans l'onglet `Logs` on obtient alors les logs du pod concerné.
+
+### Quels sont les problèmes recontrés ?
+##### Terminal qui ne s'affiche pas sous Firefox
+<ins>Bug</ins> : Il arrive que le terminal d'un workspace ne s'affiche pas sous firefox.
+<ins>Commentaire</ins> : Le bug a été reconnu en tant qu'issue sur le github officiel du projet eclipse che [#13736](https://github.com/eclipse/che/issues/13736).
+<ins>Correctif</ins> : Le problème viendrait d'une ancienne version de Firefox, une mise à jour est donc nécessaire. Autrement, désactiver "csp" semble aussi régler le problème.
+
+##### Problème d'autorisation d'accès aux informations du pod
+<ins>Bug</ins> : Lors de l'exécution de certaines tâches, le workspace tente d'accèder aux informations du pod et n'y parvient pas
+<ins>Commentaire</ins> : Le bug a été reconnu en tant qu'issue sur le github officiel du projet eclipse che [#18812](https://github.com/eclipse/che/issues/18812).
+<ins>Correctif</ins> : Les permissions sont bien établies (accessibles depuis [ce lien](https://che-eclipse-che.apps.paasdf.157.159.110.248.nip.io/swagger/#!/permissions)). Le problème n'a pas de correctif pour le moment, mais devrait être corrigé pour la prochaine mise à jour d'eclipse che [#19331](https://github.com/eclipse/che/issues/19331).
+
+##### Dashboard vide
+<ins>Bug</ins> : Après une manipulation (à déterminer) le dashboard n'affiche plus rien excépté `ChunkLoadError: Loading chunk 0 failed`.
+<ins>Commentaire</ins> : Aucun commentaire sur le bug pour le moment.
+<ins>Correctif</ins> : Rafraîchir la page semble résoudre le problème.
 
 ### Sources
 (1) - [Guide: Installing an OKD 4.5 Cluster](https://itnext.io/guide-installing-an-okd-4-5-cluster-508a2631cbee)
