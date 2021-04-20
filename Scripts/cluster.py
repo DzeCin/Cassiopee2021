@@ -105,4 +105,3 @@ class Cluster:
             # ,string=http://10.0.0.1:8080/ignition/worker.ign '
             #     '-fw_cfg name=opt/coreos.inst.install_dev,string=sda',
         )
-

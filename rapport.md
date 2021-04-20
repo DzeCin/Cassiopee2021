@@ -1,3 +1,4 @@
+
 ﻿
 ## Déploiement d'un cluster OKD sur proxmox
 #### Mention spéciale
@@ -235,6 +236,19 @@ serviceNetwork:
 >```
 >sed -i 's/mastersSchedulable: true/mastersSchedulable: False/' install_dir/manifests/cluster-scheduler-02-config.yml
 >```
+>Create manifests/cluster-network-03-config.yml and modify it to fit out network configuration:
+>```
+```yaml
+apiVersion: operator.openshift.io/v1
+kind: Network
+metadata:
+  name: cluster
+spec:
+  defaultNetwork:
+    openshiftSDNConfig:
+      mtu: 1400
+   ```
+>```
 >Now you can create the ignition-configs:
 >```
 >openshift-install create ignition-configs --dir=install_dir/
@@ -265,6 +279,10 @@ serviceNetwork:
 >sudo chown -R apache: /var/www/html/  
 >sudo chmod -R 755 /var/www/html/
 >```
+
+
+> :warning: **Sur toutes les vms**: taper nmtui puis configurer le MTU à 1450 (cf la partie sur le MTU)
+
 #### Démarrage de la VM bootstrap:
 
 >Power on the odk4-bootstrap VM. Press the TAB key to edit the kernel boot options and add the following:
@@ -303,6 +321,12 @@ serviceNetwork:
 >It is usual for the worker nodes to display the following until the bootstrap process complete:
 >
 >![Image for post](https://miro.medium.com/max/724/1*lQnBIHp7lsjjwV49FzgS5Q.png)
+
+#### Installation d'Eclipse Che
+
+Rendez-vous dans OperatorHub puis installez l'opérateur Eclipse Che. Cliquez ensuite sur celui-ci puis sur "Create CheCluster". Définissez les paramètres comme souhaités. N'oubliez pas de désactiver l'authentification OpenShift dans l'onglet Auth.
+
+Attendez que les différents composants d'Eclipse Che se déploient. Puis visitez l'url donnée pour accéder au dashboard EclipseChe.
 
 ### Ports
 
