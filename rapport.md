@@ -1,6 +1,4 @@
-
-﻿
-## Déploiement d'un cluster OKD sur proxmox
+## Déploiement d'un cluster OKD sur proxmox (Pratique)
 #### Mention spéciale
 Cette documentation est basée sur un guide<sup>(1)</sup> présent sur itnext.io écrit par Craig Robinson. Notre objectif est d'adapter cette documentation sur un environnement proxmox pour en faciliter le déploiement.
 ### Architecture
@@ -26,12 +24,13 @@ Dans cette architecutre nous avons décidé de regrouper au sein de la VM `servi
 Pour que les VMs master 1 à bootstrap puissent communiquer entre elles ils faut les inscrire dans un sous-réseau, ainsi il faut créer un pont dans proxmox comme suit :
 
 ![Création du bridge](https://raw.githubusercontent.com/DzeCin/Cassiopee2021/master/source_files/proxmox_vmbr.png)
+Note: Vous pouvez aussi utiliser le script 'vmbr.py' qui créera un pont automatiquement.
 
 Une fois ceci fait nous pouvons passer à la création des VM.
 
 ### Création et configuration des VM
 Avant de créer les VM il faut fournir à proxmox les OS nécessaires à la création de ces dernières. Pour ce faire rendez-vous dans votre stockage et dans l'onglet "ISO Images" ajoutez les images de [CentOS](https://www.centos.org/download/) et de [Fedora CoreOS](https://getfedora.org/coreos/download?tab=cloud_launchable&stream=stable).
-#### VM : services
+#### VM : Services
 ##### Création et configuration de la VM
 Nous allons débuter le déploiement par la création de la machine virtuelle "services". Depuis votre nœud créez une VM en remplissant les informations suivantes :
  * OS : CentOS-8...
@@ -85,6 +84,8 @@ Les VM restantes peuvent maintenant être créées, toutes les installations son
  * Memory : 16384
  * Network : Ici choisissez le pont créé plus tôt pour la communication interne des VM
 <!--end of list-->
+
+Ces VMs peuvent être déployés plus rapidement à l'aide du script "Cluster.py" présent dans le dépôt git. Il vous suffit d'avoir une clé API sur Proxmox.
 
 #### VM : Services
 ##### Configuration du DHCP
@@ -322,11 +323,30 @@ spec:
 >
 >![Image for post](https://miro.medium.com/max/724/1*lQnBIHp7lsjjwV49FzgS5Q.png)
 
-#### Installation d'Eclipse Che
+## Installation d'Eclipse Che
 
 Rendez-vous dans OperatorHub puis installez l'opérateur Eclipse Che. Cliquez ensuite sur celui-ci puis sur "Create CheCluster". Définissez les paramètres comme souhaités. N'oubliez pas de désactiver l'authentification OpenShift dans l'onglet Auth.
 
 Attendez que les différents composants d'Eclipse Che se déploient. Puis visitez l'url donnée pour accéder au dashboard EclipseChe.
+
+### Ajout d'une méthode d'authentification
+Ici, nous allons utiliser un LDAP comme méthode d'authentification. Nous supposons qu'un serveur LDAP a déjà été déployé et est accessible par les machines du cluster OKD.
+#### 1/ Identifiants admin de keycloack
+Premièrement, il faut récupérer les identifiants administrateurs de Keycloak. 
+- Sur le dashboard OKD, allez dans "Operators ⇒ Installed Operators ⇒ Eclipse Che ⇒ Eclipse Che Cluster" sélectionnez le cluster Che que vous venez de déployer puis cliquez sur "Resourcers".
+- Sélectionnez le "che-identity-secret" puis scrollez en bas. Vous pourrez alors récupérer les identifiants pour Keycloak.
+#### 2/ Utiliser le LDAP comme méthode d'authentification
+Rendez vous sur le lien Keycloak et connectez vous avec les identifiants précédemment récupérés.
+
+Vous pouvez alors aller dans "User Federation" ⇒ "Add provider" et sélectionnez LDAP. Remplissez les informations de votre serveur LDAP. Vous pourrez alors utiliser le LDAP comme méthode d'authentification pour Eclipse Che.
+
+### Ajouter des utlisiateurs sur le LDAP
+> :warning: **Cette partie ne s'applique qu'au LDAP de notre projet**
+
+Nous utilisons Ldap Manager pour avoir une interface graphique.
+Rendez vous sur :  http://157.159.110.248:8081/lam puis connectez vous avec les identifiants admin du LDAP. Vous pourrez alors gérer le LDAP dans son intégralité et importer des utilisateurs au format CSV.
+
+## Déploiement d'un cluster OKD sur proxmox (Eléments théoriques) 
 
 ### Ports
 
@@ -444,5 +464,4 @@ Concernant chaque operateur, pour trouver leurs logs il faut naviguer à travers
 
 ### Sources
 (1) - [Guide: Installing an OKD 4.5 Cluster](https://itnext.io/guide-installing-an-okd-4-5-cluster-508a2631cbee)
-
 
