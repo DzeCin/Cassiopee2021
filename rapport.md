@@ -1,6 +1,33 @@
+# Projet Cassiopée 
+## Synthèse
+
+Le projet est le suivant : Il est possible de remarquer un début d'obsolescence en ce qui concerne les plateformes de Travaux Pratiques "virtuels", encore plus aujourd'hui avec le contexte sanitaire. 
+
+L'idée est alors de mettre en place une plateforme de la sorte qui va s'exécuter sur un Cloud Privé, donnant alors accès aux étudiants à des plateformes de développement à partir d'un simple navigateur web. 
+
+Ainsi, le projet est le déploiement d'une plateforme Eclipse Che s'exécutant sur un cloud SaaS openshift, permettant alors aux étudiants et aux professeurs d'avoir accès à des environnements de développement, tout en s'inscrivant dans la charte des services déployés par l'école (Authentification Shibboleh, etc...).
+ 
+Le projet s'inscrit alors dans le cadre de l'amélioration des plateformes de TP virtuels pour les différentes écoles du groupe IMT.
+
+Dans ce document, nous décrivons la mise en place des différents outils nécessaires et donnons des éléments théoriques de base pour comprendre le fonctionnement.
+
+L'environnement est le suivant :
+
+Nous avons 1 serveur dont les caractéristiques sont :
+
+- Processeur: 96 x AMD EPYC 7352 24-Core Processor (2 Sockets)
+- RAM: 377,44 GB
+
+L'intégration sera faite dans un réseau déjà existant (celui de la DISI).
+
+## Table des matières
+
 ## Déploiement d'un cluster OKD sur proxmox (Pratique)
+
+Dans un premier temps, il est nécessaire de déployer un cluster OKD qui nous servira de support pour déployer Eclipse Che.
+
 #### Mention spéciale
-Cette documentation est basée sur un guide<sup>(1)</sup> présent sur itnext.io écrit par Craig Robinson. Notre objectif est d'adapter cette documentation sur un environnement proxmox pour en faciliter le déploiement.
+Cette documentation est basée sur un guide<sup>(1)</sup> présent sur itnext.io écrit par Craig Robinson. Notre objectif est d'adapter cette documentation sur un environnement Proxmox pour en faciliter le déploiement.
 ### Architecture
 Dans un premier temps, pour déployer le cluster il faut décider d'une [architecture](https://docs.okd.io/latest/architecture/architecture.html) pour ce dernier.
 Pour ce cluster nous utiliserons l'architecture suivante :
@@ -20,16 +47,16 @@ Dans cette architecutre nous avons décidé de regrouper au sein de la VM `servi
 | NOTE: Pour ce déploiement, nous omettrons pour l'instant l'utilisation d'un pare-feu. |
 | --- |
 
-### Création du pont au sein de proxmox
-Pour que les VMs master 1 à bootstrap puissent communiquer entre elles ils faut les inscrire dans un sous-réseau, ainsi il faut créer un pont dans proxmox comme suit :
+### Création du pont au sein de Proxmox
+Pour que les VMs master 1 à bootstrap puissent communiquer entre elles ils faut les inscrire dans un sous-réseau, ainsi il faut créer un pont dans Proxmox comme suit :
 
 ![Création du bridge](https://raw.githubusercontent.com/DzeCin/Cassiopee2021/master/source_files/proxmox_vmbr.png)
 Note: Vous pouvez aussi utiliser le script 'vmbr.py' qui créera un pont automatiquement.
 
-Une fois ceci fait nous pouvons passer à la création des VM.
+Une fois ceci fait nous pouvons passer à la création des VMs.
 
-### Création et configuration des VM
-Avant de créer les VM il faut fournir à proxmox les OS nécessaires à la création de ces dernières. Pour ce faire rendez-vous dans votre stockage et dans l'onglet "ISO Images" ajoutez les images de [CentOS](https://www.centos.org/download/) et de [Fedora CoreOS](https://getfedora.org/coreos/download?tab=cloud_launchable&stream=stable).
+### Création et configuration des VMs
+Avant de créer les VMs il faut fournir à Proxmox les OS nécessaires à la création de ces dernières. Pour ce faire rendez-vous dans votre stockage et dans l'onglet "ISO Images" ajoutez les images de [CentOS](https://www.centos.org/download/) et de [Fedora CoreOS](https://getfedora.org/coreos/download?tab=cloud_launchable&stream=stable).
 #### VM : Services
 ##### Création et configuration de la VM
 Nous allons débuter le déploiement par la création de la machine virtuelle "services". Depuis votre nœud créez une VM en remplissant les informations suivantes :
@@ -79,9 +106,9 @@ Pour cette étape, veillez à ce que votre interface réseau ayant accès à int
 #### VM : bootstrap, masters et workers
 Les VM restantes peuvent maintenant être créées, toutes les installations sont similaires on décrira ainsi une unique installation ici, celle de master1 :
  * OS : fedora-coreos...
- * Hard Disk : Disk Size : 120
+ * Hard Disk : Disk Size : 120 GiB
  * CPU : Cores : 4
- * Memory : 16384
+ * Memory : 16384 MiB
  * Network : Ici choisissez le pont créé plus tôt pour la communication interne des VM
 <!--end of list-->
 
@@ -330,7 +357,7 @@ Rendez-vous dans OperatorHub puis installez l'opérateur Eclipse Che. Cliquez en
 Attendez que les différents composants d'Eclipse Che se déploient. Puis visitez l'url donnée pour accéder au dashboard EclipseChe.
 
 ### Ajout d'une méthode d'authentification
-Ici, nous allons utiliser un LDAP comme méthode d'authentification. Nous supposons qu'un serveur LDAP a déjà été déployé et est accessible par les machines du cluster OKD.
+Ici, nous allons utiliser un LDAP comme méthode d'authentification. Nous avons déployé celui-ci grâce à OpenLdap et nous ne décrirons pas le processus de déploiement ici.
 #### 1/ Identifiants admin de keycloack
 Premièrement, il faut récupérer les identifiants administrateurs de Keycloak. 
 - Sur le dashboard OKD, allez dans "Operators ⇒ Installed Operators ⇒ Eclipse Che ⇒ Eclipse Che Cluster" sélectionnez le cluster Che que vous venez de déployer puis cliquez sur "Resourcers".
@@ -410,10 +437,9 @@ Nous avons décidé d'utiliser VxLAN pour interconnecter les différents sites. 
 
 VXLAN (Virtual Extensible LAN)  est un protocole permettant une communication de couche 2 via une liaison de niveau 4 grâce à une encapsulation. Les interfaces s'occupant d'encapsuler et décapsuler s'appellent les VTEPs (VXLAN tunnel endpoint). **Ce protocole n'offre pas de moyen de chiffrer les échanges**. Ce protocole nous permet de faire communiquer les nœuds du cluster via IP locale.
 
+L'encapsulation VXLAN ajoutant 16 octets d'en tête dans le paquet IP, il faut prendre cela en compte lors de la configuration des interfaces réseaux. Voici un flux typique de "routage" de paquet entre 2 conteneurs d'OKD sur 2 sites différents pour le SDN OpenShift CNI:
 
-L'encapsulation VXLAN ajoutant 16 octets d'en tête dans le paquet IP, il faut prendre cela en compte lors de la configuration des interfaces réseaux. Voici un flux typique de "routage" de paquet entre 2 conteneurs d'OKD sur 2 sites différents pour le Network Provider choisi OpenShift SDN CNI:
-
-On considère A et B 2 conteneurs OKD sur des sites distincts. Un flux de paquet typique entre A et B est:
+On considère A et B 2 conteneurs OKD sur des sites distincts. Un flux de paquets typique entre A et B est:
 ```mermaid
 graph LR
 B[VethA] --> C[br0]
@@ -436,8 +462,8 @@ I --> J[VethB]
    the larger frame size due to the encapsulation.
    ```
 
-De ce fait, on définit un MTU de 1400 octets pour les communications dans le cluster ( ....) et 1450 octets sur les interfaces des noeuds. De ce fait, lorsque le paquet sort du 2ème VTEP, le MTU de base de 1500 octets n'est pas dépassé.
-La communication peut donc se faire sans problème de fragmentation de paquet et sans avoir à faire intervenir le WAN pour une augmentation du MTU.
+De ce fait, on définit un MTU de 1400 octets pour les communications dans le cluster et 1450 octets sur les interfaces des noeuds. De ce fait, lorsque le paquet sort du 2ème VTEP, le MTU de base de 1500 octets n'est pas dépassé.
+La communication peut donc se faire sans problème de fragmentation de paquet et sans avoir à faire des modifications sur le WAN pour une augmentation du MTU.
 
 ## Troubleshooting (Eclipse CHE)
 ### Où regarder ?
@@ -464,4 +490,3 @@ Concernant chaque operateur, pour trouver leurs logs il faut naviguer à travers
 
 ### Sources
 (1) - [Guide: Installing an OKD 4.5 Cluster](https://itnext.io/guide-installing-an-okd-4-5-cluster-508a2631cbee)
-
