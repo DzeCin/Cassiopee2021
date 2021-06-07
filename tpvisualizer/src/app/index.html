@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./bootstrap.min.css" type="text/css" />
+  <title>Visualiseur de TP PHP</title>
+</head>
+
+<body>
+  <div id="container" class="container-fluid"></div>
+  <nav class="navbar fixed-bottom">
+    <div class="container-fluid">
+      <button id="previous">Précédent</button>
+      <button id="next">Suivant</button>
+    </div>
+  </nav>
+  <script src="./bootstrap.min.js"></script>
+  <script>
+    var tpSteps = [];
+    var currentIndex = 0;
+    var isTpLoaded = false;
+
+    function setContainerContent(html) {
+      document.getElementById("container").innerHTML = html;
+      document.getElementById("previous").disabled = currentIndex == 0;
+      document.getElementById("next").disabled = currentIndex == tpSteps.length - 1;
+    }
+
+    function navigateTp(next) {
+      if (next && currentIndex < tpSteps.length - 1) {
+        currentIndex++;
+      }
+      if (!next && currentIndex > 0) {
+        currentIndex--;
+      }
+      setContainerContent(tpSteps[currentIndex]);
+    }
+
+    (function() {
+      const vscode = acquireVsCodeApi();
+      document.getElementById("previous").onclick = function() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        navigateTp(false);
+      };
+      document.getElementById("next").onclick = function() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        navigateTp(true);
+      };
+      window.addEventListener('message', event => {
+        const message = event.data;
+        switch (message.command) {
+          case "tpSteps":
+            tpSteps = message.data;
+            setContainerContent(tpSteps[0]);
+            isTpLoaded = true;
+            break;
+
+          case "css":
+            console.log(message.data);
+            document.getElementsByTagName("head")[0].insertAdjacentHTML(
+              "beforeend",
+              `<link rel="stylesheet" type="text/css" href="${message.data.path}">`);
+            break;
+
+          default:
+            break;
+        }
+      })
+    }())
+  </script>
+</body>
+
+</html>
