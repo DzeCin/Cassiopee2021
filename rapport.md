@@ -488,5 +488,64 @@ Concernant chaque operateur, pour trouver leurs logs il faut naviguer à travers
 <ins>Commentaire</ins> : Aucun commentaire sur le bug pour le moment.
 <ins>Correctif</ins> : Rafraîchir la page semble résoudre le problème.
 
+ ## Authentification et utilisation de Keycloak / Shibboleth :
+ 
+ ### Mise en place de Shibboleth :
+ En utilisant l'authentification fédérée de Shibboleth permet d'ouvir la connexion à une instance Pod à toute personne possédant un compte dans une fédération Shibboleth, justement ce qui nous intéresse ici pour l'authentificatin grâce à la Fédération Education - Recherche Renater.
+ Ainsi, il faut d'abord commencer par l'installation d'un Service Provider Shibboleth, puisque chaque application doit posséder son propre Service Provider.
+ 
+ #### Mise en place du Service Provider (SP) : 
+ On utilisera ici le LDAP définit plus tôt : rendez-vous sur : http://157.159.110.248:8081/lam pour l'interface graphique de Ldap Manager)
+ ### Installation de Shibboleth : 
+ Shibboleth IdP est un servlet JAVA qui va utiliser n'importe quel Java ervlet 2.4 Container (On va utiliser Apache-Tomcat ici).
+ Commençons par l'installation de Java : 
+ ```
+ apt install java-1.8.0-openjdk
+ apt install java-1.8.0
+ ```
+ Par la suite, installons les paquets nécessaires au serveur tomcat et donnons les accès à un nouvel utilisateur tomcat pour qu'il puisse toucher à tous les dossiers nécessaires :
+  ```
+ apt install tomcat9
+ /usr/sbin/useradd tomcat
+ chown tomcat /etc/init.d/tomcat9
+ chmod 755 /etc/init.d/tomcat9
+ chmod +x tomcat/bin/*.sh
+ chown -R tomcat /etc/tomcat9
+ ```
+ 
+ Par la suite, il va falloir configurer un fichier XML qui va permettre de déployer une brique Shibboleth IdP sans avoir à faire un lien symbolique ou un appel continu. Ainsi, nous allons créer un nouveau dossier et un nouveau fichier :
+ ```
+ mkdir -p /etc/tomcat9/Catalina/localhost/
+ nano /etc/tomcat9/Catalina/localhost/idp.xml
+ ```
+ ``` 
+             /etc/tomcat9/Catalina/localhost/idp.xml            
+ <Context docBase="/opt/shibboleth-idp/war/idp.war" privileged="true" antiResourceLocking="false"                               antiJARLocking="false"                                                                                                  unpackWAR="false" />                                                                                     
+ ```
+ 
+ Installons maintenant Shibboleth et donnons le droit à tomcat d'accéder à ces fichiers-ci :
+ 
+ ``` 
+ mkdir /opt/src
+ cd /opt/src/
+ wget https://shibboleth.net/downloads/identity-provider/latest4/shibboleth-identity-provider-4.1.2.zip
+ wget https://shibboleth.net/downloads/identity-provider/latest4/shibboleth-identity-provider-4.1.2.zip.asc
+ unzip shibboleth-identity-provider-4.1.2.zip
+ cd shibboleth-identity-provider-4.1.2 
+ ./install.sh
+ chown -R tomcat /opt/shibboleth-idp/
+ ```
+ Grâce au lien fait avec idp.xml, normalement, si le serveur tomcat est restart, nous pourrons voir que l'idp est bien inclus dans les applications. Pour ceci, nous allons simplement installer le paquet de gestion de tomcat, pour pouvoir avoir accès à l'interface manager de tomcat.
+ ```
+ apt install tomcat9-admin
+ ```
+ On peut alors y accéder, mais nous préférons garder cette plateforme manager accessible uniquement au "manager", c'est à dire en local à partir de la machine. Ainsi, pour y avoir accès, nous allons changer notre commande de ssh pour "ramener" le localhost sur notre machine.
+ ```
+ ssh -L 8080:localhost:8080 157.159.110.39
+```
+ On peut maintenant avoir accès à la page manager de tomcat et on voit bien la présence de idp dans l'application list : http://localhost:8080/manager/html (Les identifiants sont trouvables au niveau de /etc/tomcat9/tomcat-users.xml)
+ 
+ 
 ### Sources
+ 
 (1) - [Guide: Installing an OKD 4.5 Cluster](https://itnext.io/guide-installing-an-okd-4-5-cluster-508a2631cbee)
