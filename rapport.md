@@ -559,17 +559,107 @@ Concernant chaque operateur, pour trouver leurs logs il faut naviguer à travers
  Pour cette partie, j'utiliserai ce projet : https://github.com/mesosphere-backup/docker-containers/tree/master/shibboleth-idp .
  En effet, pour pouvoir bien comprendre la configuration de Shibboleth (Qui, il faut l'avouer, est plutôt hasardeuse, avec peu de documentation précise ou à jour sur internet).
  Ainsi, certains changements doivent être faits au niveau des deux fichiers :
-   * `shibboleth-idp/conf/ldap.properties`
-  * `shibboleth-idp/conf/attribute-resolver.xml`
+    * `shibboleth-idp/conf/ldap.properties`
+    * `shibboleth-idp/conf/attribute-resolver.xml`
  
  - ldap.properties :
  Voici les changements faits : (Commentés pour essayer de comprendre le fonctionnement de ce fichier de configuration).
  ![image](https://user-images.githubusercontent.com/77978692/121250211-bfebe900-c8a5-11eb-9a60-94b9f680c6c9.png)
-![image](https://user-images.githubusercontent.com/77978692/121250278-d5f9a980-c8a5-11eb-8d14-1be87d6967d4.png)
+ ![image](https://user-images.githubusercontent.com/77978692/121250278-d5f9a980-c8a5-11eb-8d14-1be87d6967d4.png)
+ 
+  
+ - attribute-resolver :
+ ![image](https://user-images.githubusercontent.com/77978692/121250918-91bad900-c8a6-11eb-8fe2-4901ee35a190.png)
 
+ #### Utilisation d'OIDC :
  
+ Pour notre plus grand bonheur, un plugin OIDC OP est déjà disponible au téléchargement libre.
+ Commençons ainsi par télécharger OIDCCommon : https://wiki.shibboleth.net/confluence/display/IDPPLUGINS/OIDCCommon
+ Téléchargeons alors nos deux plugins
+```
+ wget https://shibboleth.net/downloads/identity-provider/plugins/oidc-common/1.1.0/oidc-common-dist-1.1.0.tar.gz
+ wget https://shibboleth.net/downloads/identity-provider/plugins/oidc-common/1.1.0/oidc-common-dist-1.1.0.tar.gz.sha256
+ wget https://shibboleth.net/downloads/identity-provider/plugins/oidc-op/3.0.1/idp-plugin-oidc-op-distribution-3.0.1.tar.gz.sha256
+ wget https://shibboleth.net/downloads/identity-provider/plugins/oidc-op/3.0.1/idp-plugin-oidc-op-distribution-3.0.1.tar.gz 
+ /opt/shibboleth-idp/bin/plugin.sh -i oidc-common-dist-1.1.0.tar.gz
+ /opt/shibboleth-idp/bin/plugin.sh -i idp-plugin-oidc-op-distribution-3.0.1.tar.gz 
+ ```
+ Normalement, le module est déjà activé, mais il est possible de s'en assurer grace à la commande suivante (Et de l'enable après).
+ ``` 
+ /opt/shibboleth-idp/bin/module.sh -l
+ /opt/shibboleth-idp/bin/module.sh -e idp.oidc.OP
+ ```
+ Place maintenant à la configuration : 
+ Commençons maintenant par importer la chose au niveau des credentials :
+ ```
+               conf/credentials.xml
+<!-- OIDC extension default credential definitions -->
+<import resource="oidc-credentials.xml" />
+```
+ Ce plugin utilise des clés au format JWK. Bien heureusement, il existe des scripts déjà tout faits pour la génération de ces dernières.
+ ```
+ cd /opt/shibboleth-idp
+ bin/jwtgen.sh -t RSA -s 2048 -u sig -i defaultRSASign | tail -n +2 > credentials/idp-signing-rs.jwk
+ bin/jwtgen.sh -t EC -c P-256 -u sig -i defaultECSign | tail -n +2 > credentials/idp-signing-es.jwk
+ bin/jwtgen.sh -t RSA -s 2048 -u enc -i defaultRSAEnc | tail -n +2 > credentials/idp-encryption-rsa.jwk
+```
+ Place maintenant à l'issuer, ce qui va nous permettre d'associer dynamiquement un FI à l'utilisateur.
+ ```
+              conf/oidc.properties
+ idp.oidc.issuer = http://localhost:8080/idp/profile/oidc/discovery 
+ ```
+ Maintenant, passons à la configuration du Relying Party :
+ Dans un premier temps, faisons en sorte qu'un des profils soit accessible.
+ ```
+              conf/relying-party.xml
+ <bean id="shibboleth.UnverifiedRelyingParty" parent="RelyingParty">
+    <property name="profileConfigurations">
+        <list>
+            <ref bean="OIDC.Keyset" />
+        </list>
+    </property>
+</bean>
+ ```
+ Au niveau des RP, pour les tests, il est possible d'utiliser du JSON pour définir le test.
+ Et ça, ça se fait au niveau de conf/oidc-clientinfo-resolvers.xml
+ ```
+ <util:list id="shibboleth.oidc.ClientInformationResolvers">
+    <ref bean="ExampleFileResolver" />
+    <ref bean="ExampleStorageClientInformationResolver" />
+</util:list>
  
+<bean id="ExampleFileResolver" parent="shibboleth.oidc.FilesystemClientInformationResolver"
+    c:metadata="%{idp.home}/metadata/oidc-client.json" />
+```
+ Et maintenant, il est possible d'utiliser https://openidconnect.net/ pour faire des tests !
  
+ #### Et maintenant ? 
+ 
+ Il est possible, depuis peu, d'utiliser de nouvelles méthodes d'authentification à part KeyCloak au niveau d'Eclipse Che : https://www.eclipse.org/che/docs/che-7/administration-guide/authenticating-users/
+ 
+ #### Problèmes et bugs :
+ 
+ De nombreux problèmes ont pu être trouvés, tout d'abord avec le format XML qui peut être capricieux à certaines occasions.
+ L'un des plus gros problèmes se trouve au niveau des logs : Pendant un long moment, et sans le comprendre, nous n'avions pas de logs au niveau de Shibboleth.
+ Pour résoudre ce problème il a fallu remonter à l'utilisation de systemd et de Debian : En effet, ce dernier n'a aucune raison de connaître initialement le path de Shibboleth, il va alors falloir l'ajouter.
+ ```
+ systemctl edit tomcat9
+ ```
+ ```
+ [Service]
+ ReadWritePaths=/opt/shibboleth-idp/logs/
+ ReadWritePaths=/opt/shibboleth-idp/metadata/
+ ```
+ ```
+ systemctl daemon-reload
+ systemctl restart tomcat9
+ ```
+ Maintenant, Tomcat est autorisé à accéder aux logs et aux metadata.
+ 
+ Un autre problème a été le fait qu'il existe un dossier qui va overwrite complétement notre configuration du ldap.properties :
+     * `shibboleth-idp/credentials/secrets.properties`
+Il faut alors bien penser à commenter les lignes au niveau du ldap.bindDNCredential.
+
 ### Sources
  
 (1) - [Guide: Installing an OKD 4.5 Cluster](https://itnext.io/guide-installing-an-okd-4-5-cluster-508a2631cbee)
