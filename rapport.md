@@ -662,6 +662,255 @@ Concernant chaque operateur, pour trouver leurs logs il faut naviguer à travers
  
 Il faut alors bien penser à commenter les lignes au niveau du ldap.bindDNCredential.
 
+# Intégration Eclipse CHE à Moodle via LTI
+
+## Introduction
+
+LTI est un standard établit par l'IMS pour standardiser les communications entre plusieurs plateformes d'éducations (pour en citer certaines Moodle, edX, Canva...). Dans son utilisation la plus simple, LTI est un ensemble d'attributs HTML sécurisé par le protocole Oauth2 (dans la version LTI1.3) ce qui permet déjà d'envoyer des informations de manière sécurisée et fiable mais ce standard est capable de bien plus comme on pourra le voir plus tard.
+
+## Choix de l'application hôte LTI (tool)
+
+### Un mot sur les plugins eclipse che
+
+A la date d'écriture de ce rapport, nous avons rencontré un problème [(#19335)](https://github.com/eclipse/che/issues/19335) nous empêchant de nous pencher sur le développement d'un plugin pour eclipse pour intégrer les fonctionnalités dont nous parlerons par la suite directement au sein d'eclipse che. En revanche, cela est tout à fait possible bien que certains obstacles doivent être surmontés pour y arriver dont notamment :
+
+- Établir le lien entre moodle et le plugin LTI d'eclipse che sachant que le workspace de l'étudiant/utilisateur ne se lance qu'au moment où il le demande (on pourrait imaginer lancer uniquement le workspace et pré-charger le plugin dans la configuration .yaml ce qui est faisable)
+- Unicité (ou non) du plugin : étant donné que (comme on le verra plus tard) moodle a besoin d'une URL pour l'hôte de l'application LTI, cette URL est unique et une solution doit donc être trouvée pour rediriger l'URL de moodle sur la bonne URL du plugin à l'intérieur du workspace de l'étudiant
+
+En attendant la résolution des problèmes relatifs aux autorisations utilisateurs au sein d'eclipse CHE (voir [#19335](https://github.com/eclipse/che/issues/19335)), nous avons décidé d'utiliser une API externe qui jouera le rôle de medium entre Moodle et eclipse CHE
+
+### Embarras du choix
+
+En se baladant dans la [documentation officielle de LTI](http://www.imsglobal.org/spec/lti/v1p3/) on se rends vite de compte de la complexité du modèle. D'autant plus que LTI possède énormément de fonctionnalité qui ralentissent les premiers pas dans le standard.
+
+En revanche, et bien heureusement, il existe de nombreuses bibliothèque open-source dans différents langages pour adapter plus facilement ce standard dans notre application hôte (que l'on appellera 'tool' par la suite). Pour ce qui est des langages on retrouve notamment javascript, python, java ou encore php. Et quant aux framework de nombreux exemples disponibles sur github et autres couvrent largement les frameworks les plus populaires dont Flask, Django, Node.js etc...
+
+Pour ce projet nous nous baserons sur Flask, plus précisément sur une version modifiée de [ce repo](https://github.com/ucfopen/lti-template-flask) avec donc la librairie [PyLTI](https://pypi.org/project/PyLTI/).
+
+## Intégration à Moodle
+
+> NB : Une version de moodle est disponible sur docker, ce qui rends le déploiement très facile et suffit parfaitement pour des premiers tests.
+
+### External tool
+
+La première étape pour ajouter notre application à moodle est de construire un cours de test, une fois cela fait on souhaite ajouter une ressource, dans la liste proposée on sélectionne "External tool".
+
+Ce qui nous amène sur la fenêtre de configuration de la ressource qui contient trois éléments essentiels à l'association du tool :
+
+- l'URL
+- La "consumer key"
+- Le "shared secret"
+
+L'URL, souvent en "/launch" permet d'établir le lien entre moodle et le tool en y communiquant notamment les deux autres éléments (key, secret) qui sont partagés par l'application et moodle. 
+
+> :warning: Les navigateurs récents n'aiment pas mélanger les protocoles http/https. Donc si votre instance de moodle est en https assurez vous d'au moins avoir un certificat auto-signé pour votre tool.
+>
+> :warning: Dans le cas particulier de flask (et plus généralement du module ssl), il n'aime pas du tout les certificats auto-signés. Donc pour les tests évitez complètement le https et faites tout tourner en http.
+
+Une fois que vous avez choisis votre clé et secret entrez les dans le fichier `setting.py` :
+
+```python
+PYLTI_CONFIG = {
+    'consumers': {
+        CONSUMER_KEY: {
+            "secret": SHARED_SECRET
+        }
+```
+
+Une fois la configuration faite, installez les librairies nécessaire avec `pip install -r requirements.txt` ( ce n'est pas obligatoire mais il est préférable de faire ça dans un environnement virtuel ). Exportez ensuite `FLASK_APP=views.py` et `FLASK_ENV=development`. Puis lancez le serveur avec la commande `flask run -h ip.publique.du.serveur -p 3000` (on utilise ici l'ip publique pour éviter les problèmes d'accès avec moodle si moodle et l'API ne sont pas lancés sur la même machine).
+
+Et puis voilà ! C'est tout ce dont nous avons besoin pour avoir une application de base fonctionnelle !
+Quand on tente de se rendre sur l'activité qu'on a créé auparavant on devrait être accueilli par la page suivante :
+
+![screen_lti_launch](https://raw.githubusercontent.com/DzeCin/Cassiopee2021/master/source_files/screen_lti_launch.png)
+
+Lors du lancement de la page on remarque aussi tous les attributs LTI avec lesquels on peut jouer pour notre (futur) plug-in :
+
+```json
+INFO in views: {
+  "oauth_version": "1.0",
+  "oauth_nonce": "f52c49f36f4460ea114a65ad3addd410",
+  "oauth_timestamp": "1623182761",
+  "oauth_consumer_key": "top",
+  "user_id": "2",
+  "lis_person_sourcedid": "",
+  "roles": "Instructor,urn:lti:sysrole:ims/lis/Administrator,urn:lti:instrole:ims/lis/Administrator",
+  "context_id": "2",
+  "context_label": "CSCTEST",
+  "context_title": "Test de cours moodle",
+  "resource_link_title": "eclipse che",
+  "resource_link_description": "Blue Coral Guide to Magellan's Voyage is an interactive 3D model of his route around the Earth. Freely browse by selecting, dragging, and zooming or step through the grand tour. Each stop along the way contains an optional profile for more detail.",
+  "resource_link_id": "1",
+  "context_type": "CourseSection",
+  "lis_course_section_sourcedid": "",
+  "lis_result_sourcedid": "{\"data\":{\"instanceid\":\"1\",\"userid\":\"2\",\"typeid\":null,\"launchid\":1858082915},\"hash\":\"b51fd03d70466b6d0ec3d432c17a69a734bdc6acd683bd741d53d09a218ad589\"}",               
+  "lis_outcome_service_url": "http://157.159.110.226/mod/lti/service.php",
+  "lis_person_name_given": "Admin",
+  "lis_person_name_family": "User",
+  "lis_person_name_full": "Admin User",
+  "ext_user_username": "user",
+  "lis_person_contact_email_primary": "user@example.com",
+  "launch_presentation_locale": "en",
+  "ext_lms": "moodle-2",
+  "tool_consumer_info_product_family_code": "moodle",
+  "tool_consumer_info_version": "2020110902",
+  "oauth_callback": "about:blank",
+  "lti_version": "LTI-1p0",
+  "lti_message_type": "basic-lti-launch-request",
+  "tool_consumer_instance_guid": "157.159.110.226",
+  "tool_consumer_instance_name": "New Site",
+  "tool_consumer_instance_description": "New Site",
+  "launch_presentation_document_target": "window",
+  "launch_presentation_return_url": "http://157.159.110.226/mod/lti/return.php?course=2&launch_container=4&instanceid=1&sesskey=DG6DNkALnl",                                                                
+  "oauth_signature_method": "HMAC-SHA1",
+  "oauth_signature": "QilU0if5TEJIj8ztXx2DTChxDNA="
+}
+```
+
+On remarquera notamment la présence du champ "role" qui permettra d'assigner un environnement en fonction du rôle de l'utilisateur (élève ou professeur).
+
+La fonction chargée de vérifier l'intégrité de l'échange LTI commence son chemin dans la route "launch" :
+
+```python
+@app.route('/launch', methods=['POST', 'GET'])
+@lti(error=error, request='initial', role='any', app=app)
+def launch(lti=lti):
+    session['lis_person_name_full'] = request.form.get('lis_person_name_full')
+    role = request.form.get('roles')
+    app.logger.info(json.dumps(request.form, indent=2))
+    return render_template('launch.html', lis_person_name_full=session['lis_person_name_full'], role=role)
+```
+
+Rien de bien fou en termes de lti, tout se passe dans le décorateur `@lti` qui nous renvoi dans la bibliothèque PyLTI et le module flask dont voici une portion :
+
+```python
+def wrapper(*args, **kwargs):
+            """
+            Pass LTI reference to function or return error.
+            """
+            try:
+                the_lti = LTI(lti_args, lti_kwargs)
+                the_lti.verify()
+                the_lti._check_role()
+                kwargs['lti'] = the_lti
+                return function(*args, **kwargs)
+            except LTIException as lti_exception:
+                error = lti_kwargs.get('error')
+                exception = dict()
+                exception['exception'] = lti_exception
+                exception['kwargs'] = kwargs
+                exception['args'] = args
+                return error(exception=exception)
+
+        return wrapper
+```
+
+> NB : La forme de la classe est similaire à celle que l'on peut retrouver dans d'autres langages, donc si python pour du web n'est pas votre tasse de thé pas d'inquiétude cette doc devrait quand même vous aider !
+
+On voit qu'un objet `LTI` est créé, c'est le cœur de notre échange. Une fois qu'il a été créé, on vérifie son intégrité avec la méthode `.verify()` et la validité du rôle via `._check_role()` si tout est bon on décore la fonction (launch() dans notre cas).
+
+Il existe de nombreuses méthode pour faciliter les échanges, un autre exemple :
+
+```python
+def post_grade(self, grade):
+        """
+        Post grade to LTI consumer using XML
+
+        :param: grade: 0 <= grade <= 1
+        :return: True if post successful and grade valid
+        :exception: LTIPostMessageException if call failed
+        """
+        message_identifier_id = self.message_identifier_id()
+        operation = 'replaceResult'
+        lis_result_sourcedid = self.lis_result_sourcedid
+        score = float(grade)
+        if 0 <= score <= 1.0:
+            xml = generate_request_xml(
+                message_identifier_id, operation, lis_result_sourcedid,
+                score)
+            ret = post_message(self._consumers(), self.key,
+                               self.response_url, xml)
+            if not ret:
+                raise LTIPostMessageException("Post Message Failed")
+            return True
+
+        return False
+```
+
+Cette méthode permet de renvoyer une note au "LTI Consumer", moodle dans notre cas. Il existe plusieurs moyen de l'intégrer, un moyen qui permet de profiter des vérifications précédentes est le suivant :
+
+```python
+@app.route('/grade', methods=['POST'])
+@lti(request='session', error=error, app=app)
+def grade(lti=lti):
+    """ post grade
+
+    :param lti: the `lti` object from `pylti`
+    :return: grade rendered by grade.html template
+    """
+    lti.post_grade(1)
+    return render_template('grade.html')
+```
+
+De cette manière on peut mettre à jour la note selon une information qui nous serait renvoyée par eclipse che.
+Un exemple d'intégration de cette méthode serait le suivant :
+
+```python
+import requests
+...
+@app.route('/grade', methods=['POST'])
+@lti(request='session', error=error, app=app)
+def grade(lti=lti):
+    headers = {'PRIVATE-TOKEN': '<token>'}
+    r = requests.get("https://gitlabens.imtbs-tsp.eu/nom.prenom/projet/-/pipelines/xxx", headers=headers)
+    if (r["status"] == "succes") :
+        grade = 1
+    else :
+        grade = 0
+    lti.post_grade(grade)
+    return render_template('grade.html')
+```
+
+Avec eclipse che lié à gitlabens on peut récupérer le résultat d'une pipeline et y accorder une note en fonction du résultat (on peut bien évidemment élaborer, cette solution étant assez radicale).
+
+## Authentification
+
+### SSO
+
+La manière actuelle de se connecter à son espace Eclipse CHE est le SSO proposé par shibboleth. En se connectant à notre espace (via le CAS de Télécom Sudparis par exemple) on a accès à Moodle et par la même occasion on aurait accès à notre espace personnel eclipse che. Et ce soit en s'y rendant directement, soit via moodle qui ajoute un contexte.
+
+Cette solution permet une sécurité optimale étant donné qu'elle repose uniquement sur shibboleth et permet quand même l'intégration LTI, toutefois limité. On peut par exemple faire la chose suivante :
+
+```html
+{% if role == 'Learner' %}
+    <iframe width="100%" height="600px" src="https://che-eclipse-che.apps.paasdf.157.159.110.248.nip.io/dashboard/#/create-workspace?tab=quick-add">
+    {% else %}
+    <iframe width="100%" height="600px" src="https://che-eclipse-che.apps.paasdf.157.159.110.248.nip.io/dashboard/#/create-workspace?tab=custom-workspace">
+    {% endif %}
+```
+
+Ce qui permet de renvoyer l'utilisateur vers un workspace (ici uniquement une page du workspace) différent selon le role que possède l'utilisateur.
+
+### Authentification via LTI
+
+Un autre moyen d'identifier un utilisateur, qui pourrait permettre une meilleur intégration pour le reste du réseau de l'IMT serait l'authentification via LTI.
+Une des capacités de LTI est d'agir comme une source d'identification de l'utilisateur auprès de l'application cible (tool). Ceci se repose sur une relation de confiance entre le tool (eclipse che) et le consumer (moodle) via l'échange de la clé et du secret.
+
+Cette option n'a pas été creusée pour ce projet mais est intégrable (pourvu que les plugins eclipse che le permettent), la documentation pour réaliser ceci est la suivante : [LTI as a SSO Mechanism](https://www.imsglobal.org/learning-tools-interoperability-sso-mechanism).
+
+------
+
+
+
+### Aide pour tester moodle
+
+#### Ajouter un utilisateur à un cours
+
+Site administration > Courses > Manage course and category management
+Ensuite sélectionner le cours puis cliquer sur "Enrolled Users" et ajouter des étudiants via le bouton en haut/bas à droite.
+
+
+ 
 ### Sources
  
 (1) - [Guide: Installing an OKD 4.5 Cluster](https://itnext.io/guide-installing-an-okd-4-5-cluster-508a2631cbee)
