@@ -545,6 +545,30 @@ Concernant chaque operateur, pour trouver leurs logs il faut naviguer à travers
 ```
  On peut maintenant avoir accès à la page manager de tomcat et on voit bien la présence de idp dans l'application list : http://localhost:8080/manager/html (Les identifiants sont trouvables au niveau de /etc/tomcat9/tomcat-users.xml)
  
+ ### Configuration de la brique Shibboleth-idp :
+ 
+ #### Activation du LDAP :
+ 
+ Commençons d'abord par activer l'authentification par utilisation du LDAP : LDAPCredentialValidator. On va alors commencer par activer le bean au niveau du /opt/shibboleth-idp/conf/authn/password-authn-config.xml
+ ```
+                      /opt/shibboleth-idp/conf/authn/password-authn-config.xml 
+    <util:list id="shibboleth.authn.Password.Validators">                                                                       <ref bean="shibboleth.LDAPValidator" />                                                                                 <!-- <ref bean="shibboleth.KerberosValidator" /> -->                                                                    <!-- <ref bean="shibboleth.JAASValidator" /> -->                                                                        <!-- <bean parent="shibboleth.HTPasswdValidator" p:resource="%{idp.home}/credentials/demo.htpasswd" /> -->          </util:list>                                                                                                                                                                                                                                    <!-- Apply any regular expression replacement pairs to username before validation. -->                                  <util:list id="shibboleth.authn.Password.Transforms">                                                                       <!--                                                                                                                    <bean parent="shibboleth.Pair" p:first="^(.+)@example\.org$" p:second="$1" />                                           -->                                                                                                                 </util:list>                                                   
+ ```
+ #### Configuration de Shibboleth pour le LDAP :
+ 
+ Pour cette partie, j'utiliserai ce projet : https://github.com/mesosphere-backup/docker-containers/tree/master/shibboleth-idp .
+ En effet, pour pouvoir bien comprendre la configuration de Shibboleth (Qui, il faut l'avouer, est plutôt hasardeuse, avec peu de documentation précise ou à jour sur internet).
+ Ainsi, certains changements doivent être faits au niveau des deux fichiers :
+   * `shibboleth-idp/conf/ldap.properties`
+  * `shibboleth-idp/conf/attribute-resolver.xml`
+ 
+ - ldap.properties :
+ Voici les changements faits : (Commentés pour essayer de comprendre le fonctionnement de ce fichier de configuration).
+ ![image](https://user-images.githubusercontent.com/77978692/121250211-bfebe900-c8a5-11eb-9a60-94b9f680c6c9.png)
+![image](https://user-images.githubusercontent.com/77978692/121250278-d5f9a980-c8a5-11eb-8d14-1be87d6967d4.png)
+
+ 
+ 
  
 ### Sources
  
