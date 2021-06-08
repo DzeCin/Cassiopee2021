@@ -657,7 +657,9 @@ Concernant chaque operateur, pour trouver leurs logs il faut naviguer à travers
  Maintenant, Tomcat est autorisé à accéder aux logs et aux metadata.
  
  Un autre problème a été le fait qu'il existe un dossier qui va overwrite complétement notre configuration du ldap.properties :
+ 
      * `shibboleth-idp/credentials/secrets.properties`
+ 
 Il faut alors bien penser à commenter les lignes au niveau du ldap.bindDNCredential.
 
 ### Sources
