@@ -13,7 +13,7 @@ function initializeWebviewPanel(context: vscode.ExtensionContext) {
     "tpVisualizer",
     "TP de PHP (CSC4101)",
     vscode.ViewColumn.Beside,
-    { enableScripts: true }
+    { enableScripts: true, retainContextWhenHidden: true }
   );
 
   // Get the webview HTML and set it
@@ -55,16 +55,12 @@ function passTpToWebview(webview: vscode.Webview, tp: HTMLElement) {
     parsedTp.steps.push(step);
   });
 
-  console.log(parsedTp);
-
   webview.postMessage({
     command: "tp",
     data: parsedTp,
   });
 }
 
-// this method is called when your extension is activated
-// your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
   let disposable = vscode.commands.registerCommand(
     "tpvisualizer.tpVisualizer",
