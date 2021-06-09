@@ -21,8 +21,6 @@ Nous avons 1 serveur dont les caractéristiques sont :
 
 L'intégration sera faite dans un réseau déjà existant (celui de la DISI).
 
-## Table des matières
-
 ## Déploiement d'un cluster OKD sur proxmox (Pratique)
 
 Dans un premier temps, il est nécessaire de déployer un cluster OKD qui nous servira de support pour déployer Eclipse Che.
@@ -457,7 +455,7 @@ Rendez vous sur le lien Keycloak et connectez vous avec les identifiants précé
 
 Vous pouvez alors aller dans "User Federation" ⇒ "Add provider" et sélectionnez LDAP. Remplissez les informations de votre serveur LDAP. Vous pourrez alors utiliser le LDAP comme méthode d'authentification pour Eclipse Che.
 
-### Ajouter des utlisiateurs sur le LDAP
+### Ajouter des utlisateurs sur le LDAP
 
 > :warning: **Cette partie ne s'applique qu'au LDAP de notre projet**
 
