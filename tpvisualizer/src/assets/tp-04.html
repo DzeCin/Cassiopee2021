@@ -1,0 +1,1410 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<!-- 2020-10-07 Wed 11:59 -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TP n°4 - Interfaces habillées en CSS avec Bootstrap</title>
+<meta name="generator" content="Org mode">
+<meta name="author" content="Olivier Berger (TSP)">
+<meta name="description" content="CSC4101 Telecom SudParis - 2020-2021 - TP n°4"
+>
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+<meta name="copyright" content="&copy; 2017 Telecom SudParis + Olivier Berger" />
+<link rel="stylesheet" type="text/css" href="../media/tsp.css" />
+<style type="text/css">
+.floatrightclass {
+float: right;
+margin: 0 0 10px 10px;
+}
+.floatleftclass {
+float: left;
+margin: 0 0 10px 10px;
+}
+.clearrightclass {
+clear: right;
+}
+.clearleftclass {
+clear: left;
+}
+</style>
+<script type="text/javascript" src='../media/tsp.js'></script>
+<script type="text/javascript" src="../media/org-info-src.js"></script>
+<script type="text/javascript">
+/* <![CDATA[ */
+org_html_manager.set("TOC_DEPTH", "2");
+org_html_manager.set("LINK_HOME", "");
+org_html_manager.set("LINK_UP", "");
+org_html_manager.set("LOCAL_TOC", "0");
+org_html_manager.set("VIEW_BUTTONS", "0");
+org_html_manager.set("MOUSE_HINT", "#cccccc");
+org_html_manager.set("FIXED_TOC", "0");
+org_html_manager.set("TOC", "1");
+org_html_manager.set("VIEW", "showall");
+org_html_manager.set("HELP", "1");
+org_html_manager.setup ();
+/* ]]> */
+</script>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2019 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">TP n°4 - Interfaces habillées en CSS avec Bootstrap
+<br>
+<span class="subtitle">Application avec le <i>framework</i> Bootstrap</span>
+</h1>
+<div id="table-of-contents">
+<h2>Table des matières</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org4c0e2e9">Introduction</a></li>
+<li><a href="#orga45344a">Étape 1 : Intégration de <i>Bootstrap</i> dans l&rsquo;application <i>ToDo</i></a>
+<ul>
+<li><a href="#org819928e">Étape 1-a : Téléchargement de &laquo;&nbsp;<i>Start Bootstrap - Bare</i>&nbsp;&raquo;</a></li>
+<li><a href="#org7e9e7ff">Étape 1-b : Consultation de la page d&rsquo;exemple</a></li>
+<li><a href="#org7ee3416">Étape 1-c : Compréhension du mécanisme d&rsquo;intégration des ressources (<i>assets</i>)</a>
+<ul>
+<li><a href="#org7af807e">Principe de mise en ligne des ressources du site</a></li>
+<li><a href="#orgc4bf48d">Principe de fonctionnement de <code>asset()</code></a></li>
+</ul>
+</li>
+<li><a href="#org44c9d29">Étape 1-d : Intégration de Bootstrap dans vos templates</a>
+<ul>
+<li><a href="#org4727ff7">Intégration des feuilles de style CSS</a></li>
+<li><a href="#org2199964">Ajout du chargement des scripts JavaScript</a></li>
+<li><a href="#org616131f">Observations du comportement de Bootstrap</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#orgba4a26b">Étape 2 : Intégration des menus pour <i>Bootstrap</i></a>
+<ul>
+<li><a href="#orgec3bb3f">Étape 2.a : Test de menus codés &laquo;&nbsp;en dur&nbsp;&raquo;</a></li>
+<li><a href="#orgaefd7d9">Étape 2-b : Intégration du composant de gestion de menus</a></li>
+</ul>
+</li>
+<li><a href="#org42478b9">Étape 3 : Amélioration de la structure de la page d&rsquo;affichage d&rsquo;une tâche</a>
+<ul>
+<li><a href="#orgca2c6e8">Étape 3-a : Mise en place d&rsquo;une structure de pages Bootstrap</a>
+<ul>
+<li><a href="#orgd1c7a0e">Modification de la structure du gabarit de base</a></li>
+<li><a href="#org2e39325">Test de la nouvelle structure</a></li>
+</ul>
+</li>
+<li><a href="#org694d558">Étape 3-b : Application aux pages d&rsquo;affichage des tâches</a>
+<ul>
+<li><a href="#org1c4892d">Modification de la page de liste des tâches</a></li>
+<li><a href="#orgf8730f5">Modification de la page d&rsquo;affichage d&rsquo;une tâche</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#orgf1bdf34">Évaluation</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org4c0e2e9" class="outline-2">
+<h2 id="org4c0e2e9">Introduction</h2>
+<div class="outline-text-2" id="text-org4c0e2e9">
+<div class="objectif">
+<p>
+Expérimenter la mise en place d&rsquo;un
+<b>habillage graphique des pages</b> de l&rsquo;application fil-rouge ToDo en
+utilisant les feuilles de style CSS.<br>
+Pour ce faire, on utilisera le <i>framework</i> Bootstrap, qui
+permettra notamment de doter l&rsquo;application d&rsquo;une présentation réactive
+compatible avec la consultation sur mobile.<br>
+</p>
+
+</div>
+
+<p>
+Différents <b>outils de mise au point</b> seront mis à
+contribution pour ce faire, comme les outils du développeur de
+FireFox, et la barre d&rsquo;outils Symfony.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orga45344a" class="outline-2">
+<h2 id="orga45344a">Étape 1 : Intégration de <i>Bootstrap</i> dans l&rsquo;application <i>ToDo</i></h2>
+<div class="outline-text-2" id="text-orga45344a">
+<div class="objectif">
+<p>
+Comprendre la façon dont
+l&rsquo;application de <i>ToDo list</i> va être modifiée pour intégrer Bootstrap,
+pour la doter d&rsquo;une couche de présentation en CSS.
+</p>
+
+</div>
+
+<p>
+Nous allons modifier l&rsquo;application fil-rouge <code>todo-app</code> déjà étudiée dans la
+séance précédente, pour la doter d&rsquo;une couche de présentation avec
+des feuilles de style CSS, en intégrant le <i>framework</i>
+<a href="http://getbootstrap.com/">Bootstrap</a>. L&rsquo;application est
+fonctionnellement équivalente au TP précédent,
+toujours uniquement en mode consultation. Ce qui importe dans cette
+nouvelle version est la façon de
+mettre en forme avec du CSS nos pages HTML.
+</p>
+
+<p>
+Pour mettre en œuvre <i>Bootstrap</i>, nous allons intégrer une distribution
+provenant du projet &laquo;&nbsp;<a href="https://startbootstrap.com/"><i>Start Bootstrap</i></a>&nbsp;&raquo;, pour nous inspirer de leur exemple
+d&rsquo;application &laquo;&nbsp;<a href="https://startbootstrap.com/templates/bare/"><i>Bare</i></a>&nbsp;&raquo;.
+</p>
+</div>
+
+<div id="outline-container-org819928e" class="outline-3">
+<h3 id="org819928e">Étape 1-a : Téléchargement de &laquo;&nbsp;<i>Start Bootstrap - Bare</i>&nbsp;&raquo;</h3>
+<div class="outline-text-3" id="text-org819928e">
+<div class="objectif">
+<p>
+Récupération dans le projet d&rsquo;une distribution de <i>BootStrap</i> prête à l&rsquo;emploi.
+</p>
+
+</div>
+
+<p>
+<a href="https://startbootstrap.com/"><i>Start Bootstrap</i></a> propose différentes
+distributions prêtes à l&rsquo;emploi de Bootstrap. Nous vous suggérons de
+partir de cette distribution, en suivant les étapes ci-après, mais
+vous pourriez également partir de la distribution &laquo;&nbsp;standard&nbsp;&raquo; de
+bootstrap disponible sur le site du projet.
+</p>
+
+<p>
+L&rsquo;avantage de <i>Start Bootstrap</i> est de proposer des thèmes prêts à
+l&rsquo;emploi. 
+</p>
+
+<p>
+Vous pourrez adapter la mise en forme ultérieurement selon vos goûts,
+en explorant d&rsquo;autres variantes de mise en forme, de thèmes <i>Bootstrap</i>.
+</p>
+
+<ol class="org-ol">
+<li>Positionnez-vous dans le répertoire du projet Symfony de
+l&rsquo;application ToDo.</li>
+
+<li><p>
+Récupérez la distribution Start Bootstrap <i>Bare</i> et extrayez
+le contenu dans le répertoire <code>public/</code> :
+</p>
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #483d8b;">cd</span> public
+wget https://github.com/StartBootstrap/startbootstrap-bare/archive/gh-pages.zip
+unzip gh-pages.zip
+</pre>
+</div>
+
+<p>
+les ressources statiques ont été extraites dans <code>public/startbootstrap-bare-gh-pages/</code>
+</p></li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-org7e9e7ff" class="outline-3">
+<h3 id="org7e9e7ff">Étape 1-b : Consultation de la page d&rsquo;exemple</h3>
+<div class="outline-text-3" id="text-org7e9e7ff">
+<div class="objectif">
+<p>
+Récupération dans le projet d&rsquo;une distribution de <i>BootStrap</i> prête à l&rsquo;emploi.
+</p>
+
+</div>
+
+<ol class="org-ol">
+<li><p>
+Lancez le serveur Web Symfony depuis la racine du projet
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #483d8b;">cd</span> ..
+bin/console server:run
+</pre>
+</div></li>
+
+<li>Consultez la page de démo en la chargeant dans votre navigateur,
+par exemple sur <code>http://localhost:8000/startbootstrap-bare-gh-pages/index.html</code></li>
+
+<li>Utilisez l&rsquo;outil &laquo;&nbsp;Vue adaptative&nbsp;&raquo; des outils du développeur de
+Firefox pour afficher une prévisualisation de ce que donnerait la
+consultation de cette page avec un ordiphone dont l&rsquo;écran est plus
+petit. Remarquez comme les menus sont masqués derrière un bouton
+&laquo;&nbsp;<i>big mac</i>&nbsp;&raquo; (à trois trais horizontaux).</li>
+
+<li>Observez les ressources qui sont incluses dans cette page de démo :
+chargez le code source de 
+<code>public/startbootstrap-bare-gh-pages/index.html</code> dans Eclipse (ou
+dans le navigateur), pour identifier où sont chargées les
+ressources de Bootstrap :
+<ul class="org-ul">
+<li><p>
+la feuille de style CSS (<i>Bootstrap core CSS)</i>, référencée depuis
+l&rsquo;entête HTML :
+</p>
+
+<div class="org-src-container">
+<pre class="src src-html">&lt;<span style="color: #0000ff;">head</span>&gt;
+  ...
+  <span style="color: #b22222;">&lt;!-- </span><span style="color: #b22222;">Bootstrap core CSS </span><span style="color: #b22222;">--&gt;</span>
+  &lt;<span style="color: #0000ff;">link</span> <span style="color: #a0522d;">href</span>=<span style="color: #8b2252;">"vendor/bootstrap/css/bootstrap.min.css"</span> <span style="color: #a0522d;">rel</span>=<span style="color: #8b2252;">"stylesheet"</span>&gt;
+&lt;/<span style="color: #0000ff;">head</span>&gt;
+</pre>
+</div>
+
+<p>
+Quand le navigateur Web charge la page
+<code>public/startbootstrap-bare-gh-pages/index.html</code> qui contient
+<code>&lt;link href="vendor/bootstrap/css/bootstrap.min.css"
+     rel="stylesheet"&gt;</code>, deux requêtes HTTP se produisent :
+</p>
+<ul class="org-ul">
+<li><code>GET startbootstrap-bare-gh-pages/index.html</code></li>
+<li><code>GET startbootstrap-bare-gh-pages/vendor/bootstrap/css/bootstrap.min.css</code></li>
+</ul>
+
+<p>
+L&rsquo;URL de la ressource d&rsquo;accès à la feuille de style est ici relative à
+la page.
+</p>
+
+<div class="remarque">
+<p>
+Les feuilles de style sont chargées depuis le sous-répertoire
+<code>vendor/</code> de la distribution Bootstrap présente dans
+<code>startbootstrap-bare-gh-pages/</code>. Attention, car il y a aussi un
+répertoire <code>vendor/</code> à la racine du projet Symfony&#x2026; mais cela
+n&rsquo;a rien à voir.
+</p>
+
+</div></li>
+
+<li><p>
+les scripts Javascript (<i>Bootstrap core JavaScript</i>) chargés à la
+fin du corps du HTML :
+</p>
+
+<div class="org-src-container">
+<pre class="src src-html">  <span style="color: #b22222;">&lt;!-- </span><span style="color: #b22222;">Bootstrap core JavaScript </span><span style="color: #b22222;">--&gt;</span>
+  &lt;<span style="color: #0000ff;">script</span> <span style="color: #a0522d;">src</span>=<span style="color: #8b2252;">"vendor/jquery/jquery.slim.min.js"</span>&gt;&lt;/<span style="color: #0000ff;">script</span>&gt;
+  &lt;<span style="color: #0000ff;">script</span> <span style="color: #a0522d;">src</span>=<span style="color: #8b2252;">"vendor/bootstrap/js/bootstrap.bundle.min.js"</span>&gt;&lt;/<span style="color: #0000ff;">script</span>&gt;
+
+&lt;/<span style="color: #0000ff;">body</span>&gt;
+
+&lt;/<span style="color: #0000ff;">html</span>&gt;
+</pre>
+</div>
+
+<div class="remarque">
+<p>
+Nous étudierons le rôle du langage JavaScript dans une prochaine
+séance. Pour l&rsquo;instant, il est juste utile de savoir que cela
+permet de déclencher des programmes qui s&rsquo;exécutent dans le
+navigateur pour, par exemple, modifier l&rsquo;affichage de la
+page. Comme on le voit ici, 
+Bootstrap nécessite le chargement de scripts écrits en
+JavaScript, par exemple pour gérer le repositionnement des
+éléments de la page quand la largeur de l&rsquo;écran change. 
+</p>
+
+</div></li>
+</ul></li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-org7ee3416" class="outline-3">
+<h3 id="org7ee3416">Étape 1-c : Compréhension du mécanisme d&rsquo;intégration des ressources (<i>assets</i>)</h3>
+<div class="outline-text-3" id="text-org7ee3416">
+<div class="objectif">
+<p>
+Nous allons présenter dans cette section le mécanisme utilisé par
+Symfony pour permettre l&rsquo;inclusion de ressources statiques dans un
+site, avec la fonction <code>asset()</code> de Twig.
+</p>
+
+</div>
+
+<p>
+Cette section vous explique le principe, et la section suivante vous
+guide dans les modifications à effectuer.
+</p>
+
+<p>
+Pour ajouter <i>BootStrap</i> dans une page HTML, il faut que celle-ci
+charge les ressources (statiques) correspondant aux feuilles de style
+CSS, et aux scripts JavaScript associés.
+</p>
+
+<p>
+Vous allez donc vous inspirer du contenu du fichier HTML d&rsquo;exemple qui est
+fourni dans la distribution &laquo;&nbsp;<i>Bare</i>&nbsp;&raquo; de StartBoostrap, présent dans
+<code>public/startbootstrap-bare-gh-pages/index.html</code> pour
+reprendre ces éléments HTML et les ajouter dans les pages de ToDo.
+</p>
+
+<p>
+Il faudra donc adapter les gabarits Twig de ToDo en conséquence. Twig
+intègre une fonction, <code>asset( )</code> qui permet de gérer l&rsquo;inclusion de
+ressources. 
+</p>
+
+<p>
+Examinons donc tout d&rsquo;abord le principe de son fonctionnement.
+</p>
+</div>
+
+<div id="outline-container-org7af807e" class="outline-4">
+<h4 id="org7af807e">Principe de mise en ligne des ressources du site</h4>
+<div class="outline-text-4" id="text-org7af807e">
+<p>
+On souhaite modifier le gabarit Twig de base (<code>base.html.twig</code>) pour intégrer
+les en-têtes HTML nécessaires, pour faire référence aux
+ressources des fichiers CSS. Pas de mystère : ceci est réalisé via la balise standard de HTML : <code>&lt;link
+rel="stylesheet" href="...</code>.
+</p>
+
+<p>
+Vous allez ainsi devoir indiquer, dans son attribut <code>href</code>, le chemin
+d&rsquo;accès Web à la ressource. Ce chemin devra être exprimé du point de
+vue du serveur Web de Symfony, pour que ces ressources soient
+renvoyées au client HTTP qui les demandera.
+</p>
+
+<p>
+Comme on a installé la distribution <i>Start Bootstrap</i> à l&rsquo;intérieur du
+sous-répertoire <code>public/</code> du projet <code>todo-app</code>
+(<code>startbootstrap-bare-gh-pages/</code>), la ressource peut être servie par
+notre serveur Web.
+</p>
+
+<p>
+On pourrait donc spécifier les chemins avec :
+</p>
+<div class="org-src-container">
+<pre class="src src-html"><span style="color: #b22222;">&lt;!-- </span><span style="color: #b22222;">Bootstrap core CSS </span><span style="color: #b22222;">--&gt;</span>
+&lt;<span style="color: #0000ff;">link</span> <span style="color: #a0522d;">href</span>=<span style="color: #8b2252;">"/startbootstrap-bare-gh-pages/vendor/bootstrap/css/bootstrap.min.css"</span> <span style="color: #a0522d;">rel</span>=<span style="color: #8b2252;">"stylesheet"</span>&gt;
+</pre>
+</div>
+
+<p>
+Ainsi, le chargement par le navigateur des pages de l&rsquo;application,
+impliquera de charger aussi la ressource présente à l&rsquo;URL
+<code>http://localhost:8000/startbootstrap-base-gh-pages/vendor/bootstrap/css/bootstrap.min.css</code>
+se traduira par la requête auprès du serveur HTTP, du chemin
+<code>/startbootstrap-base-gh-pages/vendor/bootstrap/css/bootstrap.min.css</code>.
+</p>
+
+<p>
+Souvenez-vous que le framework Symfony s&rsquo;exécute grâce au script
+<code>index.php</code> présent dans le sous-répertoire <code>public/</code> du projet.
+</p>
+
+<p>
+Si tout est correct, le répertoire <code>public/</code> du projet Symfony contient bien les
+fichiers correspondants, dans un sous-répertoire
+<code>startbootstrap-base-gh-pages/</code>, là où nous avons recopié la distribution
+boostrap provenant de &laquo;&nbsp;<i>Start Bootstrap</i>&nbsp;&raquo;. 
+</p>
+
+<p>
+En l&rsquo;occurrence, le fichier de feuille de style est bien chargé ici :
+<code>public/startbootstrap-base-gh-pages/vendor/bootstrap/css/bootstrap.min.css</code>.
+</p>
+
+<p>
+Mais si l&rsquo;on souhaite changer de jeu de feuille de style, le fait de
+mentionner <code>startbootstrap-bare-gh-pages</code> &laquo;&nbsp;en dur&nbsp;&raquo; dans le code du
+gabarit est assez peu pratique.
+</p>
+
+<p>
+Pour spécifier ce chemin, on va donc préférer ajouter un degré de
+flexibilité et utiliser la macro <code>asset()</code> de Twig. Elle va faire le
+lien avec l&rsquo;emplacement dans lequel vous avez extrait la distribution
+&laquo;&nbsp;<i>Bare</i>&nbsp;&raquo; de StartBoostrap (<code>startbootstrap-bare-gh-pages</code>), pour dire
+où sont les &laquo;&nbsp;<i>assets</i>&nbsp;&raquo;, les ressources du site.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgc4bf48d" class="outline-4">
+<h4 id="orgc4bf48d">Principe de fonctionnement de <code>asset()</code></h4>
+<div class="outline-text-4" id="text-orgc4bf48d">
+<p>
+On peut ainsi configurer l&rsquo;emplacement des ressources (<code>assets</code>) de Symfony pour
+pointer dans ce sous-répertoire. Il faut modifier <code>config/packages/framework.yaml</code>
+pour ajouter :
+</p>
+
+<div class="org-src-container">
+<pre class="src src-yaml">framework:
+  ...
+    assets:
+	base_path: '/startbootstrap-bare-gh-pages'
+</pre>
+</div>
+
+<p>
+Ceci permet d&rsquo;utiliser la fonction <code>asset()</code> de Twig dans les
+gabarits, de façon à aller charger des ressources statiques présentes
+à l&rsquo;intérieur du sous-répertoire spécifié dans <code>base_path</code>, <code>startbootstrap-bare-gh-pages</code>.
+</p>
+
+<p>
+On va spécifier les chemins dans nos gabarits Twig, presque comme ce qu&rsquo;on
+trouvait dans l&rsquo;exemple <code>index.html</code>, dans lequel on a juste intercalé
+l&rsquo;appel à <code>asset()</code> :
+</p>
+<div class="org-src-container">
+<pre class="src src-html"><span style="color: #b22222;">&lt;!-- </span><span style="color: #b22222;">Bootstrap core CSS </span><span style="color: #b22222;">--&gt;</span>
+&lt;<span style="color: #0000ff;">link</span> <span style="color: #a0522d;">href</span>=<span style="color: #8b2252;">"{{ asset('vendor/bootstrap/css/bootstrap.min.css') }}"</span> <span style="color: #a0522d;">rel</span>=<span style="color: #8b2252;">"stylesheet"</span>&gt;
+</pre>
+</div>
+
+<p>
+Celle-ci permet d&rsquo;effectuer un changement de jeu de feuilles de style
+par une simple reconfiguration de la configuration de  <code>framework</code> / <code>assets</code> / <code>base_path</code> dans
+le fichier de configuration du projet, sans rien à retoucher dans les
+sources des gabarits Twig. 
+</p>
+
+
+<div class="remarque">
+<p>
+Si vous décidez d&rsquo;ajouter des images dans votre projet, vous aurez à
+définir de la même façon leur emplacement pour qu&rsquo;elles s&rsquo;affichent
+correctement dans les pages.
+</p>
+
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org44c9d29" class="outline-3">
+<h3 id="org44c9d29">Étape 1-d : Intégration de Bootstrap dans vos templates</h3>
+<div class="outline-text-3" id="text-org44c9d29">
+<div class="objectif">
+<p>
+Modification de l&rsquo;application ToDo pour tester l&rsquo;ajout des feuilles de
+style de Bootstrap.
+</p>
+
+</div>
+</div>
+
+<div id="outline-container-org4727ff7" class="outline-4">
+<h4 id="org4727ff7">Intégration des feuilles de style CSS</h4>
+<div class="outline-text-4" id="text-org4727ff7">
+<p>
+Bootstrap est prêt à être intégré dans les gabarits pour que le HTML
+l&rsquo;utilise, pourvu qu&rsquo;on inclue le bon jeu de feuilles de style. C&rsquo;est ce que
+nous allons faire maintenant.
+</p>
+
+<ol class="org-ol">
+<li>Modifiez le contenu du fichier <code>config/packages/framework.yaml</code>
+comme indiqué plus haut</li>
+
+<li><p>
+Modifiez <code>templates/base.html.twig</code> pour contenir la balise
+<code>&lt;link&gt;</code> dans le bloc Twig <code>stylesheets</code> de <code>base.html.twig</code> :
+</p>
+
+<div class="org-src-container">
+<pre class="src src-html"><span style="color: #8b2252;">&lt;!DOCTYPE html&gt;</span>
+&lt;<span style="color: #0000ff;">html</span>&gt;
+    &lt;<span style="color: #0000ff;">head</span>&gt;
+      ...
+      {% block stylesheets %}
+        <span style="color: #b22222;">&lt;!-- </span><span style="color: #b22222;">Bootstrap core CSS </span><span style="color: #b22222;">--&gt;</span>
+        &lt;<span style="color: #0000ff;">link</span> <span style="color: #a0522d;">href</span>=<span style="color: #8b2252;">"{{ asset('vendor/bootstrap/css/bootstrap.min.css') }}"</span> <span style="color: #a0522d;">rel</span>=<span style="color: #8b2252;">"stylesheet"</span>&gt;
+      {% endblock %} {# stylesheets #}
+    &lt;/<span style="color: #0000ff;">head</span>&gt;
+</pre>
+</div>
+
+<p>
+De cette façon, pour la plupart des gabarits, le block
+<code>stylesheets</code> par défaut contiendra la bonne valeur, incluant la
+feuille CSS de Bootstrap. Mais si une page particulière doit
+redéfinir d&rsquo;autres feuilles de style, elle pourra toujours changer
+le bloc pour créer une spécialisation locale.
+</p></li>
+
+<li>Lancez l&rsquo;exécution de l&rsquo;application Symfony (<code>server:run</code>) dans un terminal.
+<ul class="org-ul">
+<li><p>
+Si jamais vous avez une erreur sur la fonction <code>asset()</code> manquante,
+il est nécessaire d&rsquo;installer le composant ad-hoc via une
+commande du type :
+</p>
+<pre class="example">
+php -d memory_limit=-1 /usr/bin/composer require symfony/asset
+</pre></li>
+</ul></li>
+<li>Testez le chargement des pages, par exemple sur
+<code>http://localhost:8000/todo/</code></li>
+<li><p>
+Observez les requêtes HTTP transmises par le navigateur dans
+l&rsquo;outil <i>Réseau</i> du développeur Web, d&rsquo;inspection des
+requêtes/réponses.
+</p>
+
+<p>
+Vous devez constater qu&rsquo;une ressource <code>bootstrap.min.css</code> est bien
+chargée par le navigateur (200)
+</p></li>
+<li><p>
+Observez les traces d&rsquo;exécution du serveur Web dans le terminal
+</p>
+
+<p>
+Vous devez observer également un code de réponse 200, pour la
+ressource située dans
+<code>/startbootstrap-bare-gh-pages/vendor/bootstrap/css/bootstrap.min.css</code> 
+</p></li>
+</ol>
+
+
+<p>
+Ce &laquo;&nbsp;jeu de piste&nbsp;&raquo; paraît un peu compliqué, mais il nous montre que la macro <code>asset()</code> a bien fait le <i>job</i>.
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-org2199964" class="outline-4">
+<h4 id="org2199964">Ajout du chargement des scripts JavaScript</h4>
+<div class="outline-text-4" id="text-org2199964">
+<p>
+De façon similaire, intégrez le chargement des scripts JavaScript
+nécessaires à Bootstrap, en recopiant les balises <code>&lt;script</code> du fichier
+d&rsquo;exemple, pour les intégrer via <code>asset()</code> au bon endroit dans le
+gabarit de base :
+</p>
+
+<div class="org-src-container">
+<pre class="src src-html">{% block javascripts %}
+  <span style="color: #b22222;">&lt;!-- </span><span style="color: #b22222;">Bootstrap core JavaScript </span><span style="color: #b22222;">--&gt;</span>
+  &lt;<span style="color: #0000ff;">script</span> <span style="color: #a0522d;">src</span>=<span style="color: #8b2252;">"{{ asset('vendor/jquery/jquery.slim.min.js') }}"</span>&gt;&lt;/<span style="color: #0000ff;">script</span>&gt;
+  &lt;<span style="color: #0000ff;">script</span> <span style="color: #a0522d;">src</span>=<span style="color: #8b2252;">"{{ asset('vendor/bootstrap/js/bootstrap.bundle.min.js') }}"</span>&gt;&lt;/<span style="color: #0000ff;">script</span>&gt;
+{% endblock %} {# javascripts #}
+</pre>
+</div>
+
+<p>
+Observez également comment les fichiers JS sont bien chargés via des
+requêtes HTTP supplémentaires.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org616131f" class="outline-4">
+<h4 id="org616131f">Observations du comportement de Bootstrap</h4>
+<div class="outline-text-4" id="text-org616131f">
+<p>
+Si vous rechargez les pages de l&rsquo;application, elles incluent désormais
+la mise en forme par défaut de <i>BootStrap</i>.
+</p>
+
+
+<p>
+Vous devriez voir immédiatement un impact sur la mise en forme des
+tableaux des pages de consultation des listes de tâches ou des
+attributs d&rsquo;une tâche.
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgba4a26b" class="outline-2">
+<h2 id="orgba4a26b">Étape 2 : Intégration des menus pour <i>Bootstrap</i></h2>
+<div class="outline-text-2" id="text-orgba4a26b">
+<div class="objectif">
+<p>
+Ajout d&rsquo;un composant de gestion de menus de navigation dans l&rsquo;application.
+</p>
+
+</div>
+
+<p>
+La plupart des applications Web intègrent des menus facilitant la
+navigation dans les grandes fonctions de l&rsquo;application.
+</p>
+
+<p>
+Nous allons ajouter un menu utilisant les fonctionnalités de Bootstrap
+dans l&rsquo;application ToDo.
+</p>
+
+<p>
+Pour commencer, on va effectuer un ajout &laquo;&nbsp;manuel&nbsp;&raquo; du code gérant les
+menus.
+</p>
+</div>
+
+<div id="outline-container-orgec3bb3f" class="outline-3">
+<h3 id="orgec3bb3f">Étape 2.a : Test de menus codés &laquo;&nbsp;en dur&nbsp;&raquo;</h3>
+<div class="outline-text-3" id="text-orgec3bb3f">
+<div class="objectif">
+<p>
+Ajout du code HTML générant un menu avec Bootstrap, en recopiant le code HTML du fichier d&rsquo;exemple.
+</p>
+
+</div>
+
+<p>
+La page d&rsquo;exemple de <i>Start BootStrap Bare</i> contient un exemple de
+menu intégré dans une section <code>&lt;nav&gt;</code> du HTML. La documentation de
+Bootstrap explique comment on peut configurer les
+<a href="https://getbootstrap.com/docs/4.1/components/navs/">composants de
+navigation</a>, mais plutôt que de lire toute la documentation, on va
+recopier l&rsquo;exemple directement.
+</p>
+
+<ol class="org-ol">
+<li><p>
+Copiez le contenu de la section <code>&lt;nav&gt;</code> de
+<code>public/startbootstrap-bare-gh-pages/index.html</code> et ajoutez-le dans
+le block <code>body</code> du gabarit <code>templates/index.html.twig</code>.
+</p>
+
+<p>
+Le principe d&rsquo;organisation des menus est l&rsquo;utilisation de listes à
+puces qui constituent une arborescence de liens, et que les
+feuilles de style de Bootstrap affichent sous forme de menus.
+</p></li>
+<li>Observez le résultat avec un menu qui s&rsquo;affiche. Utilisez
+l&rsquo;inspecteur HTML du navigateur pour repérer les balises concernées
+(<code>&lt;ul&gt;</code>, <code>&lt;li&gt;</code>, &#x2026;).</li>
+<li>Les liens des entrées de menu sont-elles actives ? Pourquoi ?</li>
+<li>Adaptez le code du gabarit pour faire un seul menu &laquo;&nbsp;Tasks&nbsp;&raquo; en
+utilisant l&rsquo;instruction <code>path()</code> de Twig, pour spécifier
+les routes à intégrer dans les chemins des attributs <code>href</code>, et
+rendre les liens des entrées de menus actifs.</li>
+</ol>
+
+<p>
+Le menu est maintenant opérationnel. Par contre, sa mise-à-jour au fur
+et à mesure de l&rsquo;ajout de nouvelles routes dans l&rsquo;application est un
+peu pénible : il faut se replonger dans la structure du HTML de cette
+section <code>&lt;nav&gt;</code>.
+</p>
+
+<p>
+Voyons comment on peut configurer la structure de ces menus plus simplement.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgaefd7d9" class="outline-3">
+<h3 id="orgaefd7d9">Étape 2-b : Intégration du composant de gestion de menus</h3>
+<div class="outline-text-3" id="text-orgaefd7d9">
+<div class="objectif">
+<p>
+Intégrer un nouveau composant permettant de générer le code des menus
+Bootstrap plutôt que d&rsquo;avoir à le coder &laquo;&nbsp;en dur&nbsp;&raquo;.
+</p>
+
+</div>
+
+<p>
+Si on simplifie, les menus ne sont, après-tout qu&rsquo;une arborescence de
+balises <code>&lt;ul&gt;</code> et <code>&lt;li&gt;</code> contenant des liens vers les routes de
+l&rsquo;application.
+</p>
+
+<p>
+On va utiliser le <i>bundle</i> &laquo;&nbsp;<a href="https://github.com/cameronmurphy/bootstrap-menu-bundle">Bootstrap Menu</a>&nbsp;&raquo; pour Symfony
+de Cameron Murphy, qui va faciliter la génération de cette
+arborescence de balises HTML.
+</p>
+
+<p>
+Cette bibliothèque permet d&rsquo;ajouter assez simplement une définition de
+menus dans un fichier YAML, présent dans
+<code>config/packages/bootstrap_menu.yaml</code> et de les utiliser ensuite via la
+macro <code>render_bootstrap_menu()</code> disponible dans les gabarits Twig.
+</p>
+
+<p>
+Cette macro générera une liste à puce (balises <code>&lt;li&gt;</code>) qui seront mises
+en forme par Bootstrap comme il faut sous forme d&rsquo;entrées de menus.
+</p>
+
+<p>
+Procédez aux étapes suivantes :
+</p>
+
+<ol class="org-ol">
+<li><p>
+Installez le <i>bundle</i> correspondant :
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">php -d <span style="color: #a0522d;">memory_limit</span>=-1 /usr/bin/composer require camurphy/bootstrap-menu-bundle
+</pre>
+</div></li>
+
+<li><p>
+Créez le fichier de configuration
+<code>config/packages/bootstrap_menu.yaml</code>, en y plaçant ceci :
+</p>
+
+<pre class="example">
+bootstrap_menu:
+  menus:
+    main:
+      items:
+        todos:
+          label: 'Tasks'
+          route: 'todo_list'
+
+</pre></li>
+
+<li><p>
+Modifiez le gabarit <code>templates/base.html.twig</code> pour y définir la
+structure des menus des balises <code>&lt;nav&gt;</code> à inclure dans toutes les 
+pages de l&rsquo;application.
+</p>
+
+<p>
+On va placer le contenu de la balise <code>&lt;nav&gt;</code> dans un nouveau bloc
+Twig <code>menu</code>, qu&rsquo;on placera au début du contenu de la page, dans la
+balise <code>&lt;body&gt;</code>, avant l&rsquo;inclusion du block Twig <code>body</code>. De cette
+façon, ce même code apparaîtra dans toutes les pages de
+l&rsquo;application, sauf si une page surcharge le contenu du block <code>menu</code>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-html">&lt;<span style="color: #0000ff;">body</span>&gt;
+
+  {% block menu %}
+  <span style="color: #b22222;">&lt;!-- </span><span style="color: #b22222;">Navigation </span><span style="color: #b22222;">--&gt;</span>
+  &lt;<span style="color: #0000ff;">nav</span> <span style="color: #a0522d;">class</span>=<span style="color: #8b2252;">"navbar navbar-expand-lg navbar-dark bg-dark static-top"</span>&gt;
+    &lt;<span style="color: #0000ff;">div</span> <span style="color: #a0522d;">class</span>=<span style="color: #8b2252;">"container"</span>&gt;
+      &lt;<span style="color: #0000ff;">a</span> <span style="color: #a0522d;">class</span>=<span style="color: #8b2252;">"navbar-brand"</span> <span style="color: #a0522d;">href</span>=<span style="color: #8b2252;">"#"</span>&gt;Todo App&lt;/<span style="color: #0000ff;">a</span>&gt;
+      &lt;<span style="color: #0000ff;">button</span> <span style="color: #a0522d;">class</span>=<span style="color: #8b2252;">"navbar-toggler"</span> <span style="color: #a0522d;">type</span>=<span style="color: #8b2252;">"button"</span> <span style="color: #a0522d;">data-toggle</span>=<span style="color: #8b2252;">"collapse"</span> <span style="color: #a0522d;">data-target</span>=<span style="color: #8b2252;">"#navbarResponsive"</span> <span style="color: #a0522d;">aria-controls</span>=<span style="color: #8b2252;">"navbarResponsive"</span> <span style="color: #a0522d;">aria-expanded</span>=<span style="color: #8b2252;">"false"</span> <span style="color: #a0522d;">aria-label</span>=<span style="color: #8b2252;">"Toggle navigation"</span>&gt;
+        &lt;<span style="color: #0000ff;">span</span> <span style="color: #a0522d;">class</span>=<span style="color: #8b2252;">"navbar-toggler-icon"</span>&gt;&lt;/<span style="color: #0000ff;">span</span>&gt;
+      &lt;/<span style="color: #0000ff;">button</span>&gt;
+      &lt;<span style="color: #0000ff;">div</span> <span style="color: #a0522d;">class</span>=<span style="color: #8b2252;">"collapse navbar-collapse"</span> <span style="color: #a0522d;">id</span>=<span style="color: #8b2252;">"navbarResponsive"</span>&gt;
+        &lt;<span style="color: #0000ff;">ul</span> <span style="color: #a0522d;">class</span>=<span style="color: #8b2252;">"navbar-nav ml-auto"</span>&gt;
+          {{ render_bootstrap_menu('main') }}
+        &lt;/<span style="color: #0000ff;">ul</span>&gt;
+      &lt;/<span style="color: #0000ff;">div</span>&gt;
+    &lt;/<span style="color: #0000ff;">div</span>&gt;
+  &lt;/<span style="color: #0000ff;">nav</span>&gt;
+  {% endblock %}{# menu #}
+
+  {% block body %}{% endblock %}
+  ...
+</pre>
+</div>
+
+<p>
+On a repris ici les indications du <a href="https://github.com/cameronmurphy/bootstrap-menu-bundle/blob/master/README.md">README</a> du bundle (installé par
+composer dans <code>vendor/camurphy/bootstrap-menu-bundle/README.md</code>), pour obtenir
+le code HTML souhaité.
+</p></li>
+
+<li>Vous pouvez maintenant tester et vérifier que le menu permet de
+naviguer vers la route <code>todo_list</code>.</li>
+</ol>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org42478b9" class="outline-2">
+<h2 id="org42478b9">Étape 3 : Amélioration de la structure de la page d&rsquo;affichage d&rsquo;une tâche</h2>
+<div class="outline-text-2" id="text-org42478b9">
+<div class="objectif">
+<p>
+Tirer parti des fonctionnalités de la grille Bootstrap pour mettre en œuvre les pages de
+l&rsquo;application &laquo;&nbsp;fil-rouge&nbsp;&raquo;.
+</p>
+
+</div>
+
+<p>
+Bootstrap fournit des fonctions permettant notamment de modifier
+l&rsquo;emplacement des éléments sur la page, pour s&rsquo;adapter à la place
+disponible sur les petits écrans.
+</p>
+
+<p>
+Vous avez déjà expérimenté celà dans l&rsquo;étape précédente au niveau du
+menu de l&rsquo;application. Nous allons maintenant modifier la structure
+des pages de l&rsquo;application afin d&rsquo;en tirer parti.
+</p>
+</div>
+
+<div id="outline-container-orgca2c6e8" class="outline-3">
+<h3 id="orgca2c6e8">Étape 3-a : Mise en place d&rsquo;une structure de pages Bootstrap</h3>
+<div class="outline-text-3" id="text-orgca2c6e8">
+<div class="objectif">
+<p>
+Modifier le corps des pages HTML de l&rsquo;application pour intégrer la
+structure de conteneurs Bootstrap.
+</p>
+
+</div>
+
+<p>
+Nous allons utiliser la structure de grille de Bootstrap pour mettre
+en forme le contenu des pages, à la fois pour la présentation
+générale, mais aussi pour certains détails des propriétés d&rsquo;une
+entité.
+</p>
+</div>
+
+<div id="outline-container-orgd1c7a0e" class="outline-4">
+<h4 id="orgd1c7a0e">Modification de la structure du gabarit de base</h4>
+<div class="outline-text-4" id="text-orgd1c7a0e">
+<p>
+Vous allez modifier le gabarit de base <code>templates/base.html.twig</code> pour
+structurer le contenu du bloc Twig <code>body</code> de façon à inclure deux
+parties : <i>main</i> et <i>footer</i> qui seront deux lignes au sein d&rsquo;un
+conteneur Bootstrap.
+</p>
+
+<p>
+Ces deux parties seront elles-mêmes des blocs Twig permettant une
+surcharge pour que chaque gabarit de page n&rsquo;inclue finalement que la
+partie utile à insérer au sein de ces deux lignes.
+</p>
+
+<p>
+Ces parties sont gérées via des
+<a href="https://getbootstrap.com/docs/4.1/layout/overview/#containers">conteneurs</a>
+définis grâce aux balises HTML <code>&lt;div&gt;</code> et à la classe <code>container</code> de
+Bootstrap.
+</p>
+
+<p>
+Modifiez le gabarit de base pour reprendre la structure suivante :
+</p>
+
+<div class="org-src-container">
+<pre class="src src-html">...
+{% block body %}
+
+  &lt;<span style="color: #0000ff;">div</span> <span style="color: #a0522d;">class</span>=<span style="color: #8b2252;">"container body-container"</span>&gt;
+
+    &lt;<span style="color: #0000ff;">main</span>&gt;
+
+      {% block main %}
+      &lt;<span style="color: #0000ff;">div</span> <span style="color: #a0522d;">class</span>=<span style="color: #8b2252;">"row"</span>&gt;
+        &lt;<span style="color: #0000ff;">div</span> <span style="color: #a0522d;">class</span>=<span style="color: #8b2252;">"col-md-12"</span>&gt;
+          &lt;<span style="color: #0000ff;">p</span>&gt;
+            &lt;<span style="color: #0000ff;">i</span>&gt;<span style="text-decoration: underline;">MAIN</span>&lt;/<span style="color: #0000ff;">i</span>&gt;
+          &lt;/<span style="color: #0000ff;">p</span>&gt;
+        &lt;/<span style="color: #0000ff;">div</span>&gt;
+      &lt;/<span style="color: #0000ff;">div</span>&gt;
+      {% endblock %} {# main #}
+
+    &lt;/<span style="color: #0000ff;">main</span>&gt;
+
+  &lt;/<span style="color: #0000ff;">div</span>&gt; <span style="color: #b22222;">&lt;!-- </span><span style="color: #b22222;">/.body-container </span><span style="color: #b22222;">--&gt;</span>
+
+  {% block footer %}
+  &lt;<span style="color: #0000ff;">div</span> <span style="color: #a0522d;">class</span>=<span style="color: #8b2252;">"row"</span>&gt;
+    &lt;<span style="color: #0000ff;">div</span> <span style="color: #a0522d;">class</span>=<span style="color: #8b2252;">"col-md-12"</span>&gt;
+      &lt;<span style="color: #0000ff;">footer</span>&gt;
+        &lt;<span style="color: #0000ff;">p</span>&gt;FOOTER&lt;/<span style="color: #0000ff;">p</span>&gt;
+      &lt;/<span style="color: #0000ff;">footer</span>&gt;
+    &lt;/<span style="color: #0000ff;">div</span>&gt;
+  &lt;/<span style="color: #0000ff;">div</span>&gt;
+  {% endblock %}{# footer #}
+
+
+{% endblock %} {# body #}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org2e39325" class="outline-4">
+<h4 id="org2e39325">Test de la nouvelle structure</h4>
+<div class="outline-text-4" id="text-org2e39325">
+<p>
+Testez que cela fonctionne à partir du moment où on surcharge ce
+nouveau bloc Twig <code>main</code>. 
+</p>
+
+<p>
+Modifiez par exemple <code>templates/index.html</code> pour utiliser cette nouvelle
+organisation de la page, en remplaçant le bloc <code>body</code> par un bloc <code>main</code> :
+</p>
+
+<div class="org-src-container">
+<pre class="src src-html">{% extends 'base.html.twig' %}
+
+{% block title %}Welcome!{% endblock %}
+
+{% block main %}
+
+&lt;<span style="color: #0000ff;">h1</span>&gt;<span style="font-weight: bold; text-decoration: underline;">Welcome</span>&lt;/<span style="color: #0000ff;">h1</span>&gt;
+
+    &lt;<span style="color: #0000ff;">p</span>&gt;{{ welcome }}&lt;/<span style="color: #0000ff;">p</span>&gt;
+
+{% endblock %} {# main #}
+</pre>
+</div>
+
+<p>
+Testez, et vérifiez dans l&rsquo;outil des <i>templates</i> de la barre d&rsquo;outils de symfony, que l&rsquo;on a bien la bonne compilation
+des gabarits, avec une surcharge de <code>main</code> à l&rsquo;intérieur de <code>body</code>.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org694d558" class="outline-3">
+<h3 id="org694d558">Étape 3-b : Application aux pages d&rsquo;affichage des tâches</h3>
+<div class="outline-text-3" id="text-org694d558">
+<div class="objectif">
+<p>
+Modification des pages de l&rsquo;application pour utiliser cette nouvelle
+structure.
+</p>
+
+</div>
+</div>
+
+<div id="outline-container-org1c4892d" class="outline-4">
+<h4 id="org1c4892d">Modification de la page de liste des tâches</h4>
+<div class="outline-text-4" id="text-org1c4892d">
+<p>
+Remplacez le bloc <code>body</code> par un bloc <code>main</code> dans le gabarit de la page d&rsquo;affichage de la liste des tâches, <code>templates/todo/index.html</code>.
+</p>
+
+<p>
+La différence d&rsquo;affichage se voit principalement au niveau de l&rsquo;occupation de toute la largeur de
+la page, ou de l&rsquo;affichage seulement sur une portion de la largeur, et
+sur l&rsquo;affichage du <i>footer</i>.
+</p>
+
+<p>
+Jusque-là, rien de très difficile, mais vous constatez comment on peut
+relativement simplement modifier tout le contenu d&rsquo;un site, à partir
+du moment où la structure d&rsquo;imbrication des blocs et sous-blocs est
+bien conçue dans les gabarits de base.
+</p>
+
+<p>
+En pratique, sur de &laquo;&nbsp;vraies&nbsp;&raquo; applications Web, cela nécessitera d&rsquo;avoir bien réfléchi à l&rsquo;avance à cette
+structure, sous peine de devoir retoucher de très nombreux gabarits.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgf8730f5" class="outline-4">
+<h4 id="orgf8730f5">Modification de la page d&rsquo;affichage d&rsquo;une tâche</h4>
+<div class="outline-text-4" id="text-orgf8730f5">
+<p>
+Vous allez maintenant ajuster le contenu de la page d&rsquo;affichage des tâches, correspondant
+aux URL de type <code>.../show/N</code>, pour intégrer une structure de type
+formulaire Bootstrap. 
+</p>
+
+<p>
+Dans cette page, on utilise la mise en page des formulaires, pour
+afficher des données en consultation uniquement (on verra les
+formulaires de saisie dans des séances ultérieures).
+</p>
+
+<ol class="org-ol">
+<li><p>
+Modifiez maintenant le gabarit de la page d&rsquo;affichage des détails
+d&rsquo;une tâche <code>show.html.twig</code>, de façon à ce que le coeur de la page
+(dans le bloc <code>main</code>), contienne quelque chose du type de ce code Twig :
+</p>
+
+<div class="org-src-container">
+<pre class="src src-html">&lt;<span style="color: #0000ff;">div</span> <span style="color: #a0522d;">class</span>=<span style="color: #8b2252;">"form-horizontal"</span>&gt;
+
+     &lt;<span style="color: #0000ff;">div</span> <span style="color: #a0522d;">class</span>=<span style="color: #8b2252;">"form-group row"</span>&gt;
+             &lt;<span style="color: #0000ff;">label</span> <span style="color: #a0522d;">class</span>=<span style="color: #8b2252;">"col-sm-2 col-form-label"</span>&gt;Id&lt;/<span style="color: #0000ff;">label</span>&gt;
+             &lt;<span style="color: #0000ff;">div</span> <span style="color: #a0522d;">class</span>=<span style="color: #8b2252;">"col-sm-10"</span>&gt;
+                     &lt;<span style="color: #0000ff;">div</span> <span style="color: #a0522d;">class</span>=<span style="color: #8b2252;">"form-control form-control-plaintext"</span>&gt;
+                             {{ todo.id }}
+                     &lt;/<span style="color: #0000ff;">div</span>&gt;
+             &lt;/<span style="color: #0000ff;">div</span>&gt;
+     &lt;/<span style="color: #0000ff;">div</span>&gt;
+
+     &lt;<span style="color: #0000ff;">div</span> <span style="color: #a0522d;">class</span>=<span style="color: #8b2252;">"form-group row"</span>&gt;
+             &lt;<span style="color: #0000ff;">label</span> <span style="color: #a0522d;">class</span>=<span style="color: #8b2252;">"col-sm-2 col-form-label-lg"</span>&gt;Libell&#233;&lt;/<span style="color: #0000ff;">label</span>&gt;
+             &lt;<span style="color: #0000ff;">div</span> <span style="color: #a0522d;">class</span>=<span style="color: #8b2252;">"col-sm-10"</span>&gt;
+                     &lt;<span style="color: #0000ff;">div</span> <span style="color: #a0522d;">class</span>=<span style="color: #8b2252;">"form-control form-control-plaintext form-control-lg"</span>&gt;
+                             {{ todo.title }}
+                     &lt;/<span style="color: #0000ff;">div</span>&gt;
+             &lt;/<span style="color: #0000ff;">div</span>&gt;
+     &lt;/<span style="color: #0000ff;">div</span>&gt;
+
+     &lt;<span style="color: #0000ff;">div</span> <span style="color: #a0522d;">class</span>=<span style="color: #8b2252;">"form-group row"</span>&gt;
+             &lt;<span style="color: #0000ff;">label</span> <span style="color: #a0522d;">class</span>=<span style="color: #8b2252;">"col-sm-2 col-form-label"</span>&gt;Termin&#233;&lt;/<span style="color: #0000ff;">label</span>&gt;
+             &lt;<span style="color: #0000ff;">div</span> <span style="color: #a0522d;">class</span>=<span style="color: #8b2252;">"col-sm-10"</span>&gt;
+                     &lt;<span style="color: #0000ff;">div</span> <span style="color: #a0522d;">class</span>=<span style="color: #8b2252;">"form-control form-control-plaintext"</span>&gt;
+                             {{ todo.completed ? <span style="color: #8b2252;">"oui"</span> : <span style="color: #8b2252;">"non"</span> }}
+                     &lt;/<span style="color: #0000ff;">div</span>&gt;
+             &lt;/<span style="color: #0000ff;">div</span>&gt;
+     &lt;/<span style="color: #0000ff;">div</span>&gt;
+
+     &lt;<span style="color: #0000ff;">div</span> <span style="color: #a0522d;">class</span>=<span style="color: #8b2252;">"form-group row"</span>&gt;
+             &lt;<span style="color: #0000ff;">label</span> <span style="color: #a0522d;">class</span>=<span style="color: #8b2252;">"col-sm-2 col-form-label"</span>&gt;Created&lt;/<span style="color: #0000ff;">label</span>&gt;
+             &lt;<span style="color: #0000ff;">div</span> <span style="color: #a0522d;">class</span>=<span style="color: #8b2252;">"col-sm-10 form-control form-control-plaintext"</span>&gt;
+                     {{ todo.created ? todo.created|date('Y-m-d H:i:s') : '' }}
+             &lt;/<span style="color: #0000ff;">div</span>&gt;
+     &lt;/<span style="color: #0000ff;">div</span>&gt;
+
+
+     &lt;<span style="color: #0000ff;">div</span> <span style="color: #a0522d;">class</span>=<span style="color: #8b2252;">"form-group row"</span>&gt;
+             &lt;<span style="color: #0000ff;">label</span> <span style="color: #a0522d;">class</span>=<span style="color: #8b2252;">"col-sm-2 col-form-label"</span>&gt;Updated&lt;/<span style="color: #0000ff;">label</span>&gt;
+             &lt;<span style="color: #0000ff;">div</span> <span style="color: #a0522d;">class</span>=<span style="color: #8b2252;">"col-sm-10 form-control form-control-plaintext"</span>&gt;
+                     {{ todo.updated ? todo.updated|date('Y-m-d H:i:s') : '' }}
+             &lt;/<span style="color: #0000ff;">div</span>&gt;
+     &lt;/<span style="color: #0000ff;">div</span>&gt;
+
+&lt;/<span style="color: #0000ff;">div</span>&gt; <span style="color: #b22222;">&lt;!-- </span><span style="color: #b22222;">form-horizontal </span><span style="color: #b22222;">--&gt;</span>
+</pre>
+</div></li>
+
+<li><p>
+Examinez les informations dans l&rsquo;outil des templates Twig de la barre
+d&rsquo;outils Symfony pour observer la compilation du gabarit effectuée.
+</p>
+
+<p>
+Observez la façon dont les éléments structurants du document HTML
+(<code>&lt;div&gt;</code> utilisés par Bootstrap) insérés par les différents blocs,
+pour obtenir le code HTML final :
+</p>
+
+<ol class="org-ol">
+<li><code>templates/todo/show.html.twig</code>, qui définit le contenu de la ligne
+centrale, présente dans le bloc <code>main</code></li>
+<li>et en remontant finalement à <code>templates/base.html.twig</code></li>
+</ol></li>
+
+<li>Examinez les détails de l&rsquo;affichage de la &laquo;&nbsp;fiche&nbsp;&raquo; qui liste les propriétés
+d&rsquo;une tâche. Notez comme on a utilisé une mise en place &laquo;&nbsp;tabulaire&nbsp;&raquo;,
+avec un &laquo;&nbsp;formulaire&nbsp;&raquo; en lecture seule, au lieu d&rsquo;une <code>table</code> HTML :
+<ul class="org-ul">
+<li><p>
+on utilise une section <code>&lt;div&gt;</code>,
+qui reproduit une présentation de formulaire avec les libellés et
+leurs valeurs sur la même ligne
+(cf. <a href="https://getbootstrap.com/docs/4.1/components/forms/#horizontal-form">&laquo;&nbsp;Horizontal form&nbsp;&raquo;</a>). 
+</p>
+
+<p>
+On peut tester la construction d&rsquo;un tel &laquo;&nbsp;formulaire&nbsp;&raquo; non-interactif avec
+une balise <code>&lt;form&gt;</code> et la remplacer ensuite par un <code>&lt;div&gt;</code>.
+</p></li>
+
+<li>Les éléments de la fiche sont mis en page via des lignes <code>row</code> et
+des largeurs de colonne sur la grille (<code>col-sm-...</code>)</li>
+
+<li>Les valeurs des champs (<code>&lt;div class="form-control"&gt;</code>) sont rendus
+en &laquo;&nbsp;lecture seule&nbsp;&raquo; au lieu d&rsquo;être des champs de saisie de
+formulaires, via la classe <code>form-control-plaintext</code>
+(cf. <a href="https://getbootstrap.com/docs/4.1/components/forms/#readonly-plain-text">&laquo;&nbsp;Readonly
+plain text&nbsp;&raquo;</a>).</li>
+</ul></li>
+
+<li>Testez le redimensionnement de l&rsquo;écran, via l&rsquo;outil de &laquo;&nbsp;Vue
+adaptative&nbsp;&raquo;, qui permet de faire une prévisualisation en mode petit
+écran de smartphone, dans les outils du développeur de
+FireFox. Vous constatez que l&rsquo;interface reste utilisable, et que la
+mise en forme initiale évolue, grâce à Bootstrap qui intègre des fonctions
+d&rsquo;adaptation du rendu de l&rsquo;interface.</li>
+</ol>
+
+<p>
+Pour arriver jusqu&rsquo;ici, vous avez utilisé ici les outils qui vous semblent utiles pour
+comprendre ces éléments :
+</p>
+<ul class="org-ul">
+<li>inspecteur HTML et propriétés du CSS associé</li>
+<li>barre d&rsquo;outils Symfony, avec notamment l&rsquo;onglet correspondant aux
+gabarits Twig</li>
+<li>navigation dans le code dans l&rsquo;IDE Eclipse</li>
+</ul>
+
+<p>
+Bien évidemment, nous n&rsquo;avons fait que survoler beaucoup de détails,
+notamment la façon dont Bootstrap fonctionne &laquo;&nbsp;sous le capôt&nbsp;&raquo;, au
+niveau CSS et JavaScript&#x2026; nous n&rsquo;avons pas le temps de rentrer
+beaucoup plus loin dans les détails.
+</p>
+
+<p>
+L&rsquo;essentiel à retenir, est que Bootstrap fonctionne sur la base d&rsquo;une
+grille, et va prendre des décisions utiles pour gérer au mieux
+l&rsquo;affichage du contenu, lorsqu&rsquo;on devra utiliser l&rsquo;application avec un
+navigateur sur un terminalà écran réduit.
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgf1bdf34" class="outline-2">
+<h2 id="orgf1bdf34">Évaluation</h2>
+<div class="outline-text-2" id="text-orgf1bdf34">
+<p>
+Vous avez expérimenté avec les éléments suivants :
+</p>
+<ul class="org-ul">
+<li>comment ajouter des feuilles CSS et scripts JavaScript dans une application</li>
+<li>ajout de composantes de Boostrap avec les balises structurantes
+<code>&lt;div&gt;</code> (dans les templates Twig)</li>
+<li>structure de la grille utilisée par Bootstrap</li>
+<li>surcharge de blocs Twig et sélecteurs CSS associés</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Auteur: Olivier Berger (TSP)</p>
+<p class="date">Created: 2020-10-07 Wed 11:59</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

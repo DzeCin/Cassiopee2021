@@ -7,11 +7,34 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="./bootstrap.min.css" type="text/css" />
   <title>Visualiseur de TP PHP</title>
+  <style>
+    .subtitle {
+      font-size: 20px;
+    }
+
+    #container {
+      visibility: hidden;
+    }
+
+    #navbar {
+      visibility: hidden;
+    }
+  </style>
 </head>
 
 <body>
-  <div id="container" class="container-fluid"></div>
-  <nav class="navbar fixed-bottom">
+  <h1 id="title">
+    Erreur.
+    <br />
+    <span class="subtitle">Veuillez fermer cet onglet et relancer la commande "Visualiseur de TP".</span>
+  </h1>
+  <hr />
+  <div id="container" class="container-fluid">
+    <h1 id="step-title"></h1>
+    <div id="step-description"></div>
+    <div id="current-substep"></div>
+  </div>
+  <nav id="navbar" class="navbar fixed-bottom">
     <div class="container-fluid">
       <button id="previous">Précédent</button>
       <button id="next">Suivant</button>
@@ -19,24 +42,51 @@
   </nav>
   <script src="./bootstrap.min.js"></script>
   <script>
-    var tpSteps = [];
-    var currentIndex = 0;
+    var tp = {};
+    var currentStepIndex = 0;
+    var currentSubstepIndex = 0;
     var isTpLoaded = false;
 
-    function setContainerContent(html) {
-      document.getElementById("container").innerHTML = html;
-      document.getElementById("previous").disabled = currentIndex == 0;
-      document.getElementById("next").disabled = currentIndex == tpSteps.length - 1;
+    function canGoBackwards() {
+      return currentStepIndex > 0 || currentSubstepIndex > 0;
+    }
+
+    function canGoForwards() {
+      return currentStepIndex < tp.steps.length - 1 || currentSubstepIndex < tp.steps[currentStepIndex].length - 1;
+    }
+
+    function updateContent() {
+      var currentStep = tp.steps[currentStepIndex];
+      var currentSubstep = tp.steps[currentStepIndex].substeps[currentSubstepIndex];
+      document.getElementById("step-title").innerHTML = currentStep.title;
+      document.getElementById("step-description").innerHTML = currentSubstepIndex == 0 ? currentStep.description : "";
+      document.getElementById("current-substep").innerHTML = currentSubstep ?? "";
+      document.getElementById("previous").disabled = !canGoBackwards();
+      document.getElementById("next").disabled = !canGoForwards();
     }
 
     function navigateTp(next) {
-      if (next && currentIndex < tpSteps.length - 1) {
-        currentIndex++;
+      if (next && canGoForwards()) {
+        if (currentSubstepIndex >= tp.steps[currentStepIndex].substeps.length - 1) {
+          currentStepIndex++;
+          currentSubstepIndex = 0;
+        } else {
+          currentSubstepIndex++;
+        }
       }
-      if (!next && currentIndex > 0) {
-        currentIndex--;
+      if (!next && canGoBackwards()) {
+        if (currentSubstepIndex == 0) {
+          currentStepIndex--;
+          currentSubstepIndex =
+            tp.steps[currentStepIndex].substeps.length > 0
+              ? tp.steps[currentStepIndex].substeps.length - 1
+              : 0;
+        } else {
+          currentSubstepIndex--;
+        }
       }
-      setContainerContent(tpSteps[currentIndex]);
+      console.log(currentStepIndex, currentSubstepIndex);
+      updateContent();
     }
 
     (function() {
@@ -52,9 +102,13 @@
       window.addEventListener('message', event => {
         const message = event.data;
         switch (message.command) {
-          case "tpSteps":
-            tpSteps = message.data;
-            setContainerContent(tpSteps[0]);
+          case "tp":
+            tp = message.data;
+            document.getElementById("title").innerHTML = tp.title;
+            // document.getElementById("subtitle").innerHTML = tp.subtitle;
+            updateContent();
+            document.getElementById("container").style.visibility = "visible";
+            document.getElementById("navbar").style.visibility = "visible";
             isTpLoaded = true;
             break;
 

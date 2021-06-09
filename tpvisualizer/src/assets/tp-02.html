@@ -1,0 +1,1834 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<!-- 2020-09-22 Tue 11:44 -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TP n°2 -  Programmation contrôleur Web Symfony</title>
+<meta name="generator" content="Org mode">
+<meta name="author" content="Olivier Berger (TSP)">
+<meta name="description" content="CSC4101 Telecom SudParis - 2018-2019 - TP n°2"
+>
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+<meta name="copyright" content="&copy; 2017 Telecom SudParis + Olivier Berger" />
+<link rel="stylesheet" type="text/css" href="../media/tsp.css" />
+<style type="text/css">
+.floatrightclass {
+float: right;
+margin: 0 0 10px 10px;
+}
+.floatleftclass {
+float: left;
+margin: 0 0 10px 10px;
+}
+.clearrightclass {
+clear: right;
+}
+.clearleftclass {
+clear: left;
+}
+</style>
+<script type="text/javascript" src='../media/tsp.js'></script>
+<script type="text/javascript" src="../media/org-info-src.js"></script>
+<script type="text/javascript">
+/* <![CDATA[ */
+org_html_manager.set("TOC_DEPTH", "2");
+org_html_manager.set("LINK_HOME", "");
+org_html_manager.set("LINK_UP", "");
+org_html_manager.set("LOCAL_TOC", "0");
+org_html_manager.set("VIEW_BUTTONS", "0");
+org_html_manager.set("MOUSE_HINT", "#cccccc");
+org_html_manager.set("FIXED_TOC", "0");
+org_html_manager.set("TOC", "1");
+org_html_manager.set("VIEW", "showall");
+org_html_manager.set("HELP", "1");
+org_html_manager.setup ();
+/* ]]> */
+</script>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2019 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">TP n°2 -  Programmation contrôleur Web Symfony
+<br>
+<span class="subtitle">Code applicatif PHP déclenché en réponse aux requêtes HTTP</span>
+</h1>
+<div id="table-of-contents">
+<h2>Table des matières</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org3c2bd87">Introduction</a></li>
+<li><a href="#org9c1d51c">Étape 1 : Récupération du code exemple de l&rsquo;application fil-rouge</a>
+<ul>
+<li><a href="#orgdbd0e6d">Étape 1.a : Récupérer le code de l&rsquo;application <code>ToDo</code></a></li>
+<li><a href="#orgc6b90a9">Étape 1.b : Chargement du projet <code>todo-app</code> dans l&rsquo;IDE</a></li>
+</ul>
+</li>
+<li><a href="#org12d2ec4">Étape 2 : Prise de connaissance du code de l&rsquo;application <code>ToDo</code></a>
+<ul>
+<li><a href="#org2a67284">Étape 2.a : Interface ligne de commande de l&rsquo;application <code>ToDo</code></a></li>
+<li><a href="#orgace52da">Étape 2.b : Base de données</a></li>
+</ul>
+</li>
+<li><a href="#orga6e60ba">Étape 3 : Exécution d&rsquo;une application Web Symfony</a>
+<ul>
+<li><a href="#org5083673">Étape 3.a : Lancement du serveur HTTP intégré de PHP sur l&rsquo;application <code>ToDo</code></a></li>
+<li><a href="#orga5d3225">Étape 3.b : Affichage des informations de mise au point dans la barre d&rsquo;outils Symfony</a></li>
+<li><a href="#org230fe35">Étape 3.c : Accès réussi à une ressource de l&rsquo;application <code>ToDo</code></a></li>
+<li><a href="#org915cbd8">Étape 3.d : Examen de la table de routage de <code>ToDo</code></a></li>
+<li><a href="#org7c42d96">Étape 3.e : Examen du point d&rsquo;entrée PHP de l&rsquo;application Symfony</a></li>
+</ul>
+</li>
+<li><a href="#org6d15205">Étape 4 : Examen du code du contrôleur HTTP de <code>ToDo</code></a>
+<ul>
+<li><a href="#orgb1e176b">Test des routes existantes</a></li>
+</ul>
+</li>
+<li><a href="#org8a42992">Étape 5 : Ajout d&rsquo;un Contrôleur Web dans MiniAlloCiné</a>
+<ul>
+<li><a href="#orgdfdd070">Étape 5.a : Génération d&rsquo;un Contrôleur Symfony</a>
+<ul>
+<li><a href="#org85c2784">Repositionnement dans le projet &laquo;&nbsp;mini-allociné&nbsp;&raquo;</a></li>
+<li><a href="#org47f0dd2">Génération de la classe Contrôleur</a></li>
+</ul>
+</li>
+<li><a href="#orge4ab3c4">Étape 5.b : Test du contrôleur généré</a></li>
+<li><a href="#org6461a1a">Étape 5.c : Découverte de la barre d&rsquo;outil Symfony</a></li>
+<li><a href="#orgbead38f">Étape 5.d : Ajout de la consultation de la liste des films</a></li>
+<li><a href="#org52a6802">Étape 5.e : Ajout de la consultation d&rsquo;un film</a></li>
+<li><a href="#orgfba6658">Étape 5.f : Ajout du lien de consultation d&rsquo;un film</a></li>
+<li><a href="#org3040343">Étape 5.g : Ajoutez la consultation des recommendations des films</a></li>
+</ul>
+</li>
+<li><a href="#orge300d94">Évaluation</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org3c2bd87" class="outline-2">
+<h2 id="org3c2bd87">Introduction</h2>
+<div class="outline-text-2" id="text-org3c2bd87">
+<div class="objectif">
+<p>
+Cette séance vise à expérimenter la façon dont les programmes PHP sont invoqués
+côté serveur pour traiter les requêtes émises par les clients. On
+observera la mise en œuvre qui a été faite sur l&rsquo;application &laquo;&nbsp;fil-rouge&nbsp;&raquo; <code>ToDo</code> dans le <i>framework</i>
+Symfony, avec un serveur PHP s&rsquo;exécutant en local. On appliquera
+ensuite ces mécanismes pour ajouter une interface Web à l&rsquo;application
+&laquo;&nbsp;Mini-AlloCiné&nbsp;&raquo; étudiée précédemment.
+</p>
+
+</div>
+</div>
+</div>
+
+
+
+<div id="outline-container-org9c1d51c" class="outline-2">
+<h2 id="org9c1d51c">Étape 1 : Récupération du code exemple de l&rsquo;application fil-rouge</h2>
+<div class="outline-text-2" id="text-org9c1d51c">
+<div class="objectif">
+<p>
+Cette étape consiste à récupérer une première version minimaliste le
+code de l&rsquo;application Web &laquo;&nbsp;<code>ToDo</code>&nbsp;&raquo; qui est notre fil-rouge.
+</p>
+
+</div>
+
+<p>
+Cette application Web très
+simple permet pour l&rsquo;instant d&rsquo;effectuer la consultation d&rsquo;une liste de tâches (<i>todo list</i>). Elle est codée en PHP avec les
+bibliothèques de Symfony.
+</p>
+
+<p>
+Cette version offre à la fois une interface fonctionnant en ligne de commande
+(de façon similaire à ce qui a été vu pour l&rsquo;application
+&laquo;&nbsp;mini-allociné&nbsp;&raquo;), mais également des fonctions correspondant à un
+fonctionnement en environnement Web, accessible via HTTP.
+</p>
+
+<p>
+Nous allons étudier ce deuxième ensemble de fonctions, dans cette séance.
+</p>
+</div>
+
+<div id="outline-container-orgdbd0e6d" class="outline-3">
+<h3 id="orgdbd0e6d">Étape 1.a : Récupérer le code de l&rsquo;application <code>ToDo</code></h3>
+<div class="outline-text-3" id="text-orgdbd0e6d">
+<div class="objectif">
+<p>
+Récupérer une première version de <code>Todo</code>, prête à fonctionner derrière un
+serveur HTTP.
+</p>
+
+</div>
+
+<p>
+Exécutez les commandes suivantes :
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #483d8b;">cd</span> $<span style="color: #a0522d;">HOME</span>/CSC4101/
+mkdir tp-02
+<span style="color: #483d8b;">cd</span> tp-02
+php -d <span style="color: #a0522d;">memory_limit</span>=-1 /usr/bin/composer create-project oberger/tspcsc4101-todo-skeleton todo-app <span style="color: #8b2252;">"v2.*"</span>
+</pre>
+</div>
+
+<p>
+Composer télécharge une version spécifique (2.x) de l&rsquo;application <code>ToDo</code> dans le
+répertoire <code>~/CSC4101/tp-02/todo-app/</code>.
+</p>
+
+<p>
+Vous devriez retrouver, dans ce nouveau répertoire <code>todo-app</code>, une structure
+similaire à celle déjà observée pour l&rsquo;application &laquo;&nbsp;mini-allociné&nbsp;&raquo;.
+</p>
+
+<p>
+Dans la séquence précédente du cours, vous aviez installé une application avec
+composer, mais en partant d&rsquo;un projet &laquo;&nbsp;standard&nbsp;&raquo; Symfony, et vous
+aviez ajouté le code au fur et à mesure, soit avec les assistants
+(<i>makers</i>) soit en programmant directement.
+</p>
+
+<p>
+Cette fois, on vient d&rsquo;utiliser composer pour créer un projet à partir
+du squelette &laquo;&nbsp;oberger/tspcsc4101-todo-skeleton&nbsp;&raquo;, qui a été préparé
+pour les besoins du cours. Il est publié sur Internet, même s&rsquo;il ne
+s&rsquo;agit pas d&rsquo;un code très élaboré.
+</p>
+
+<div class="remarque">
+<p>
+La commande ci-dessus est une invocation un peu inhabituelle de
+composer, pour éviter de rencontrer une limite de taille mémoire, du
+fait de la configuration de l&rsquo;interpréteur PHP.
+</p>
+
+</div>
+
+<p>
+Explications de la signification des différents éléments :
+</p>
+
+<dl class="org-dl">
+<dt>php</dt><dd>on lance l&rsquo;interpréteur de commande PHP (CLI)</dd>
+
+<dt>-d memory_limit=-1</dt><dd>on passe outre une éventuelle limite de
+taille mémoire de PHP (utile si la config de votre
+installation PHP est un peu limitée, selon le contenu du
+<code>php.ini</code> par défaut&#x2026;), pour permettre de gérer le graphe de
+dépendances des bibliothèques composer</dd>
+
+<dt>/usr/bin/composer</dt><dd>script PHP à exécuter : composer lui-même,
+pour permettre de passer l&rsquo;option <code>memory_limit</code> <sup><a id="fnr.1" class="footref" href="#fn.1">1</a></sup>.</dd>
+
+<dt>create-project</dt><dd>commande <code>create-project</code> de composer
+(cf. <a href="https://getcomposer.org/doc/03-cli.md#create-project">documentation composer</a>)</dd>
+
+<dt>oberger/tspcsc4101-todo-skeleton</dt><dd>référence du squelette
+d&rsquo;application préparé pour le cours, à télécharger via <code>packagist.org</code></dd>
+
+<dt>todo-app</dt><dd>répertoire du projet à créer</dd>
+
+<dt><code>v2.*</code></dt><dd>version particuilère à télécharger via <code>packagist.org</code> : 2.x</dd>
+</dl>
+</div>
+</div>
+
+
+<div id="outline-container-orgc6b90a9" class="outline-3">
+<h3 id="orgc6b90a9">Étape 1.b : Chargement du projet <code>todo-app</code> dans l&rsquo;IDE</h3>
+<div class="outline-text-3" id="text-orgc6b90a9">
+<ol class="org-ol">
+<li><p>
+Lancer la bonne version d&rsquo;Eclipse correspondant à <b>Eclipse PDT</b>
+(<i>Eclipse for PHP Developers</i>) qui a déjà été pré-configurée pour le
+cours :
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">/opt/eclipse/CSC4101/php-2019-06/eclipse/eclipse
+</pre>
+</div>
+
+<div class="remarque">
+<p>
+Attention à ne pas lancer &laquo;&nbsp;<code>eclipse</code>&nbsp;&raquo; tout court, si vous n&rsquo;avez pas
+configuré d&rsquo;alias correct.
+</p>
+
+</div>
+
+<ul class="org-ul">
+<li>Sélectionner votre espace de travail (<i>workspace</i>) pour ce cours : <code>$HOME/CSC4101/workspace</code></li>
+
+<li>Cliquer sur &laquo;&nbsp;Lancer&nbsp;&raquo;</li>
+</ul>
+
+<p>
+L&rsquo;écran d&rsquo;accueil s&rsquo;affiche : <i>Welcome to Eclipse IDE for PHP
+Developers</i>. Fermez cet écran d&rsquo;accueil.
+</p></li>
+
+<li><p>
+Importer le projet PHP Symfony correspondant à l&rsquo;application ToDo
+vue en séances de TP :
+</p>
+<ul class="org-ul">
+<li>&laquo;&nbsp;Fichier&nbsp;&raquo; / &laquo;&nbsp;Importer&nbsp;&raquo;</li>
+<li>Choisir l&rsquo;assistant d&rsquo;import &laquo;&nbsp;PHP / Symfony project&nbsp;&raquo; (puis &laquo;&nbsp;Suivant&nbsp;&raquo;)</li>
+<li>Définir le nom du projet (<i>Project name</i>) : par exemple le nom d&rsquo;une séance de TP :
+&laquo;&nbsp;ToDo TP 2&nbsp;&raquo;</li>
+<li><p>
+Sélectionner le répertoire du projet (<i>Source folder</i>) :
+la racine du code de l&rsquo;application <code>ToDo</code> 
+(<code>$HOME/CSC4101/tp-02/todo-app/</code>)
+</p>
+
+<p>
+Eclipse scanne les sources du projet Symfony
+</p></li>
+<li>Cliquer sur Terminer</li>
+</ul>
+
+<p>
+Eclipse indexe les sources avec son moteur d&rsquo;analyse du langage PHP DLTK
+(y compris pour les dépendances du projet présentes dans <code>vendor/</code>),
+ce qui prend un certain temps&#x2026;
+</p></li>
+</ol>
+
+<p>
+Vous disposez maintenant du projet &laquo;&nbsp;ToDo&nbsp;&raquo; dans l&rsquo;espace de travail
+Eclipse, en plus du projet &laquo;&nbsp;Mini-Allociné&nbsp;&raquo;,
+et pouvez naviguer dans le code, grâce aux outils de la &laquo;&nbsp;perspective PHP&nbsp;&raquo;.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org12d2ec4" class="outline-2">
+<h2 id="org12d2ec4">Étape 2 : Prise de connaissance du code de l&rsquo;application <code>ToDo</code></h2>
+<div class="outline-text-2" id="text-org12d2ec4">
+<div class="objectif">
+<p>
+Cette étape consiste à découvrir le code de l&rsquo;application, pour
+approfondir la présentation rapide effectuée en cours magistral.
+</p>
+
+</div>
+
+<p>
+Ne passez pas trop de temps sur cette étape, dont les premières
+sous-étapes concernent des éléments déjà étudiés sur Mini-AlloCiné
+dans les séquences de cours qui précèdent (commandes en console,
+gestion de la base de donnée avec Doctrine).
+</p>
+</div>
+
+<div id="outline-container-org2a67284" class="outline-3">
+<h3 id="org2a67284">Étape 2.a : Interface ligne de commande de l&rsquo;application <code>ToDo</code></h3>
+<div class="outline-text-3" id="text-org2a67284">
+<ol class="org-ol">
+<li><p>
+Vérifiez que l&rsquo;application fonctionne en ligne de commande
+</p>
+<pre class="example">
+cd $HOME/CSC4101/tp-02/todo-app/
+bin/console app:list-todos
+</pre>
+
+<p>
+Sans surprise, cette commande affiche la liste des tâches connues dans la base de
+données de l&rsquo;application (une base d&rsquo;exemple est incluse dans le squelette que
+vous avez téléchargé).
+</p></li>
+
+<li><p>
+Vérifiez les autres sous-commande <code>app:*</code> présentes :
+</p>
+<div class="org-src-container">
+<pre class="src src-shell">bin/console list app
+</pre>
+</div></li>
+
+<li>Utilisez la commande <code>app:show-todo</code> pour afficher les détails d&rsquo;une tâche.</li>
+</ol>
+
+<p>
+Comme vous pouvez le constater, notre application se présente, pour
+l&rsquo;instant, de façon très similaire à ce qui a déjà été vu pour mini-allociné.
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-orgace52da" class="outline-3">
+<h3 id="orgace52da">Étape 2.b : Base de données</h3>
+<div class="outline-text-3" id="text-orgace52da">
+<p>
+Comme précédamment, les données affichées par l&rsquo;application proviennent de la base de
+données <i>SQLite</i> fournie avec le squelette d&rsquo;application, et stockée
+dans un fichier présent dans le répertoire du projet Symfony.
+</p>
+
+
+<ol class="org-ol">
+<li><p>
+Vérifiez la définition pour la variable d&rsquo;environnement
+<code>DATABASE_URL</code> qui est présente dans la section <code>doctrine/doctrine-bundle</code> du
+fichier &laquo;&nbsp;<code>.env</code>&nbsp;&raquo; à la racine du projet Symfony :
+</p>
+
+<pre class="example">
+ls -a
+cat .env
+</pre>
+
+<p>
+Le fichier <code>.env</code> définit les valeurs de certaines variables de
+configuration du projet Symfony, dans le répertoire
+courant. Ces valeurs définissent les spécificités de
+l&rsquo;&laquo;&nbsp;environnement Symfony&nbsp;&raquo; <code>dev</code>, qui diffèrent des valeurs cibles
+pour le déploiement futur (cf. les valeurs par défaut du fichier
+&laquo;&nbsp;<code>.env.dist</code>&nbsp;&raquo;). Ce choix de base de données qui est actuellement
+sur SQLite, pour les besoins du développeur, pourrait donc être
+plus tard sur MySQL, une fois en production.
+</p></li>
+
+<li><p>
+Vérifiez que la base de données est présente
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">ls -l todo.sqlite
+sqlite3 todo.sqlite <span style="color: #8b2252;">".tables"</span>
+</pre>
+</div>
+
+<p>
+Elle doit contenir la relation (&laquo;&nbsp;table&nbsp;&raquo;) suivante :
+</p>
+<pre class="example">
+todos
+</pre>
+
+
+<div class="remarque">
+<p>
+Vous pouvez aussi utiliser l&rsquo;outil GUI <code>sqlitebrowser</code> pour
+consulter le contenu de la base de données.
+</p>
+
+</div></li>
+
+<li><p>
+Consultez les détails du contenu de la <i>relation</i> <code>todos</code>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">sqlite3 todo.sqlite <span style="color: #8b2252;">"select * from todos"</span>
+</pre>
+</div></li>
+
+<li><p>
+Affichez le schéma de cette table :
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">sqlite3 todo.sqlite <span style="color: #8b2252;">".schema todos"</span>
+</pre>
+</div></li>
+</ol>
+
+<p>
+Sans surprise, cette base de données correspond au <i>modèle de données</i> de notre
+application, tel qu&rsquo;il est défini dans les classes présentes dans <code>src/Entity/</code>.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orga6e60ba" class="outline-2">
+<h2 id="orga6e60ba">Étape 3 : Exécution d&rsquo;une application Web Symfony</h2>
+<div class="outline-text-2" id="text-orga6e60ba">
+<div class="objectif">
+<p>
+Cette étape permet de prendre en main la façon dont on peut tester le
+fonctionnement d&rsquo;une application Symfony, en contexte Web, derrière le
+serveur HTTP local.
+</p>
+
+</div>
+
+<p>
+L&rsquo;application ToDo dispose en effet, en plus de l&rsquo;interface en ligne
+de commande, d&rsquo;une interface pour HTTP.
+</p>
+</div>
+
+<div id="outline-container-org5083673" class="outline-3">
+<h3 id="org5083673">Étape 3.a : Lancement du serveur HTTP intégré de PHP sur l&rsquo;application <code>ToDo</code></h3>
+<div class="outline-text-3" id="text-org5083673">
+<div class="objectif">
+<p>
+Démarrer le serveur Web local intégré à l&rsquo;interpréteur PHP pour pouvoir tester les interactions HTTP en local.
+</p>
+
+</div>
+
+<p>
+Depuis la ligne de commande, vous aller lancez le serveur HTTP intégré à
+l&rsquo;interpréteur PHP, qui peut être démarré avec l&rsquo;option <code>-S</code>.
+</p>
+
+<p>
+Le serveur rend accessible via HTTP des ressources disponibles dans
+le répertoire d&rsquo;où il a été lancé. Quand ces ressources correspondent
+à des programmes PHP, il les exécute pour faire interpréter les requêtes
+HTTP par ces programmes.
+</p>
+
+<ol class="org-ol">
+<li><p>
+Vérifiez le contenu du sous-répertoire <code>public/</code> du projet
+Symfony :
+</p>
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #483d8b;">cd</span> $<span style="color: #a0522d;">HOME</span>/CSC4101/tp-02/todo-app/
+ls public/
+</pre>
+</div>
+
+<p>
+Ce répertoire contient le programme PHP par défaut nécessaire pour l&rsquo;exécution
+des applications Symfony en contexte Web (<code>index.php</code>). On étudiera le contenu de ce programme plus tard dans la séance.
+</p></li>
+
+<li><p>
+Lancez la commande suivante :
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">php -S <span style="color: #8b2252;">"[::0]"</span>:8000 -t public
+</pre>
+</div>
+
+<p>
+Explication des arguments :
+</p>
+<dl class="org-dl">
+<dt><code>-S</code></dt><dd>lance le serveur local intégré à l&rsquo;interpréteur PHP en
+ligne de commande, pour qu&rsquo;il écoute sur les ports
+suivants :</dd>
+
+<dt><code>"[::0]":8000</code></dt><dd>le serveur écoute sur toutes les adresses de la
+machine (<code>"[::0]"</code>)<sup><a id="fnr.2" class="footref" href="#fn.2">2</a></sup>, sur le port <code>8000</code>.</dd>
+
+<dt><code>-t</code></dt><dd>au lieu de rendre accessible le répertoire de lancement
+via HTTP, rend seulement accessible la sous-arborescence
+suivante comme &laquo;&nbsp;<i>docroot</i>&nbsp;&raquo; (racine des documents du
+serveur Web).</dd>
+
+<dt><code>public</code></dt><dd><i>docroot</i> spécifique : seul le contenu de public/
+(et donc son script par défaut <code>index.php</code>) sera
+accessible sur le serveur Web exposé par le serveur HTTP.</dd>
+</dl>
+
+<p>
+Le serveur se lance et affiche :
+</p>
+
+<pre class="example">
+PHP 7.2.7 Development Server started at Mon Aug  6 17:51:27 2018
+Listening on http://[::0]:8000
+Document root is /home/olivier/CSC4101/tp-02/todo-app/public
+Press Ctrl-C to quit.
+</pre></li>
+
+<li><p>
+Naviguez sur l&rsquo;URL <code>http://localhost:8000/</code> dans un navigateur Web
+(lancé sur la même machine)
+</p>
+
+<p>
+Vous constatez le comportement suivant :
+</p>
+
+<ul class="org-ul">
+<li>Une page Web affiche &laquo;&nbsp;Welcome to Symfony 4.4.x&nbsp;&raquo;</li>
+
+<li><p>
+dans le terminal, le serveur Web affiche quelque chose du style :
+</p>
+
+<pre class="example">
+[Mon Aug  6 17:52:54 2018] ::1:33926 [404]: /
+[Mon Aug  6 17:52:54 2018] ::1:33928 [200]: /_wdt/8d2198
+</pre></li>
+</ul>
+
+<p>
+Le serveur fonctionne, et affiche les traces (<i>logs</i>) de
+fonctionnement au fur et à mesure des connexions des clients HTTP.
+</p></li>
+
+<li><p>
+Remarquez la structure des traces : la première ligne affiche
+différentes informations :
+</p>
+
+<pre class="example">
+[Mon Aug  6 17:52:54 2018] ::1:33926 [404]: /
+</pre>
+
+<dl class="org-dl">
+<dt><code>Mon Aug  6 17:52:54 2018</code></dt><dd>date de réception de la requête HTTP lors du chargement de l&rsquo;URL
+<a href="http://localhost:8000/">http://localhost:8000/</a> à partir du navigateur</dd>
+
+<dt><code>::1:33926</code></dt><dd>source de la requête : ici, client HTTP (le
+navigateur Web) connecté depuis localhost (<code>::1</code>),
+émettant sa requête depuis le port source <code>33926</code></dd>
+
+<dt>(no term)</dt><dd><code>404</code> : code de réponse HTTP (<i>404 Not Found</i>)</dd>
+
+<dt><code>/</code></dt><dd>chemin d&rsquo;accès à la ressource demandée : le client a
+accédé à <a href="http://localhost:8000/">http://localhost:8000/</a>, donc la ressource racine
+(<code>/</code>) du serveur Web.</dd>
+</dl>
+
+<div class="attention">
+<p>
+On constate que le serveur Web répond avec un code d&rsquo;erreur HTTP
+(404).
+</p>
+
+</div></li>
+
+<li><p>
+Comment expliquer que ce code de réponse est renvoyé, alors que le
+navigateur affiche des données ?
+</p>
+
+<p>
+Le serveur a bien effectué un traitement, en réponse au client
+HTTP, pour répondre à sa requête. Il a en fait exécuté le programme
+par défaut présent dans son <i>docroot</i> <code>public/</code> (<code>index.php</code>) et
+c&rsquo;est ce programme qui a décidé de renvoyer une page HTML, et un
+code de réponse 404.
+</p>
+
+<p>
+Par exception, comme nous sommes en environnement de développement,
+et qu&rsquo;on est sur la ressource racine du site, Symfony nous
+accueille avec un message informatif.
+</p></li>
+</ol>
+
+
+<p>
+Dans la suite de la séance, vous allez tester l&rsquo;exécution de
+l&rsquo;application &laquo;&nbsp;fil rouge&nbsp;&raquo; <code>ToDo</code> dans un contexte Web. L&rsquo;application
+s&rsquo;exécutera en &laquo;&nbsp;boucle&nbsp;&raquo;, réagissant en réponse aux requêtes transmises
+à travers le serveur HTTP de PHP. Si vous mettez à jour le code, ces
+mises à jour seront prises en compte sans avoir à relancer le serveur
+HTTP. Gardez le terminal ouvert avec le serveur lancé dedans, pour
+pouvoir consulter les logs sur la sortie dans le terminal au fur et à
+mesure de la mise au point.
+</p>
+</div>
+</div>
+
+
+
+<div id="outline-container-orga5d3225" class="outline-3">
+<h3 id="orga5d3225">Étape 3.b : Affichage des informations de mise au point dans la barre d&rsquo;outils Symfony</h3>
+<div class="outline-text-3" id="text-orga5d3225">
+<div class="objectif">
+<p>
+Explorer les fonctionnalités de la barre d&rsquo;outils
+Symfony facilitant la mise au point au niveau du routage des requêtes
+vers les contrôleurs.
+</p>
+
+</div>
+
+
+<ol class="org-ol">
+<li><p>
+Consultez la page affichée pour <a href="http://localhost:8000/">http://localhost:8000/</a> dans le
+navigateur.
+</p>
+
+<p>
+Remarquez la &laquo;&nbsp;barre d&rsquo;outils&nbsp;&raquo; située en bas de page.
+</p></li>
+
+<li><p>
+Vérifiez ce qui se passe quand on place la souris au-dessus du code
+de réponse (404)
+</p>
+
+<p>
+Remarquez le <code>Route name</code> &laquo;&nbsp;n/a&nbsp;&raquo; affiché dans le &laquo;&nbsp;pop-up&nbsp;&raquo;
+</p></li>
+
+<li><p>
+Cliquez sur cette case avec le code de retour. Une page s&rsquo;affiche
+qui donne des détails sur le contexte d&rsquo;exécution Symfony qui a
+donné lieu à la réponse HTTP en question/
+</p>
+
+<p>
+Examinez la page du &laquo;&nbsp;Profiler Symfony&nbsp;&raquo; qui s&rsquo;affiche.
+</p>
+
+<p>
+Identifiez les informations de mise au point utiles, expliquant le
+contexte détaillé de la requête HTTP en question.
+</p></li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-org230fe35" class="outline-3">
+<h3 id="org230fe35">Étape 3.c : Accès réussi à une ressource de l&rsquo;application <code>ToDo</code></h3>
+<div class="outline-text-3" id="text-org230fe35">
+<div class="objectif">
+<p>
+Examiner le comportement de l&rsquo;application Symfony visible dans les
+outils du développeur Symfony, quand une requête HTTP est réussie.
+</p>
+
+</div>
+
+<ol class="org-ol">
+<li><p>
+Naviguez sur l&rsquo;URL <code>http://localhost:8000/todo/</code>
+</p>
+
+<p>
+Une page d&rsquo;accueil sommaire de l&rsquo;application s&rsquo;affiche. Quel est le
+code de réponse de la réponse HTTP ?
+</p>
+
+<p>
+Vérifiez ce code aussi bien :
+</p>
+<ul class="org-ul">
+<li>dans les traces du serveur sur sa sortie standard dans le terminal,</li>
+
+<li>que dans la barre d&rsquo;outils de Symfony affichée en bas de page.</li>
+</ul></li>
+
+<li><p>
+Cliquez sur la case du code de retour &laquo;&nbsp;200&nbsp;&raquo; en bas à gauche de la
+barre d&rsquo;outils Symfony
+</p>
+
+<p>
+Constatez les informations affichées dans la page &laquo;&nbsp;Request /
+Response&nbsp;&raquo; qui s&rsquo;affiche, comme :
+</p>
+
+<dl class="org-dl">
+<dt>le lien &laquo;&nbsp;<code>TodoController::indexAction</code>&nbsp;&raquo;</dt><dd>nom du point d&rsquo;entrée
+Symfony exécuté en réponse à la requête</dd>
+
+<dt>les &laquo;&nbsp;Request Headers&nbsp;&raquo;</dt><dd>les en-têtes de la requête envoyés par
+le navigateur comme <code>host</code>, que vous connaissez</dd>
+
+<dt>le paramètre <code>DATABASE_URL</code> dans les &laquo;&nbsp;Server Parameters / Defined in .env&nbsp;&raquo;</dt><dd>la
+variable de connexion à la base de données que vous connaissez aussi</dd>
+
+<dt>&#x2026;</dt><dd></dd>
+</dl></li>
+
+<li><p>
+Cliquez sur le menu &laquo;&nbsp;Routing&nbsp;&raquo; à gauche
+</p>
+
+<p>
+Remarquez le nom de la &laquo;&nbsp;route&nbsp;&raquo; correspant à cette requête : <code>home</code> et la correspondance avec le chemin d&rsquo;URL <code>/todo/</code>.
+</p>
+
+<p>
+L&rsquo;application Symfony maintient une table de routage des chemins d&rsquo;accès aux ressources, et des codes PHP gestionnaires.
+</p>
+
+<p>
+Ici, la requête est réussie (code de retour <code>200</code>) car on est sur une route connue.
+</p>
+
+<p>
+Le code du contrôleur Symfony gérant cette route qui a été invoqué
+est dans la méthode <code>App\Controller\TodoController::indexAction</code>,
+que nous verrons plus loin dans le code PHP.
+</p></li>
+
+<li><p>
+Essayez de naviguer cette fois sur l&rsquo;URL
+<code>http://localhost:8000/hello</code>
+</p>
+
+<p>
+Examinez le code de retour et les informations de routage affichées. Est-ce cohérent ?
+</p></li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-org915cbd8" class="outline-3">
+<h3 id="org915cbd8">Étape 3.d : Examen de la table de routage de <code>ToDo</code></h3>
+<div class="outline-text-3" id="text-org915cbd8">
+<div class="objectif">
+<p>
+On va examiner le mécanisme de la table de routage qui permet de
+définir quel composant de l&rsquo;application Symfony écrit par le développeur doit être exécuté en
+réponse aux requêtes HTTP.
+</p>
+
+</div>
+
+<p>
+Dans la séance précedente, on avait vu que le code de l&rsquo;application
+&laquo;&nbsp;Mini-Allociné&nbsp;&raquo; pouvait être exécuté au moyen des classes de son interface en mode
+&laquo;&nbsp;ligne de commande&nbsp;&raquo;, gérant des sous-commandes <code>app:...</code> de <code>bin/console</code>, pour
+afficher des informations sur la sortie standard, par exemple.
+</p>
+
+<p>
+De la même manière, l&rsquo;application <code>ToDo</code> fournit une interface en
+ligne de commande.
+Par exemple, la commande <code>bin/console app:list-todos</code> invoquait
+l&rsquo;exécution de la méthode <code>App\Command\ListTodosCommand::execute</code>
+présente dans le fichier PHP <code>src/Command/ListTodosCommand.php</code>.
+</p>
+
+<p>
+Ici, en environnement Web, le code de l&rsquo;application est exécuté via
+l&rsquo;invocation par le moteur du noyau Symfony en fonction de sa <b>table de routage</b>.
+</p>
+
+<p>
+<b>Examinez la table de routage Web de l&rsquo;application <code>ToDo</code></b> :
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">bin/console debug:router
+</pre>
+</div>
+
+<p>
+Ainsi, l&rsquo;accès par le client HTTP à l&rsquo;URL
+<code>http://localhost:8000/todo/</code> entraine le traitement de la requête
+HTTP GET correspondante sur la ressource <code>/todo/</code> routée vers la <b>route</b> nommée <code>home</code>.
+</p>
+
+<p>
+On a vu tout à l&rsquo;heure que cette route, <code>home</code> est gérée par une
+méthode <code>App\Controller\TodoController::indexAction</code>.
+</p>
+
+<p>
+On va voir que cette méthode est celle d&rsquo;une classe Contrôleur Symfony
+(codée dans le fichier <code>src/Controller/TodoController.php</code>).
+</p>
+</div>
+</div>
+
+<div id="outline-container-org7c42d96" class="outline-3">
+<h3 id="org7c42d96">Étape 3.e : Examen du point d&rsquo;entrée PHP de l&rsquo;application Symfony</h3>
+<div class="outline-text-3" id="text-org7c42d96">
+<div class="objectif">
+<p>
+On observe rapidement le fonctionnement du point d&rsquo;entrée de l&rsquo;application Symfony fonctionnant en environnement serveur Web.
+</p>
+
+</div>
+
+<p>
+Le code du lancement d&rsquo;un programme PHP permettant de faire
+fonctionner une application Symfony en mode serveur Web est
+normalement toujours le même, et n&rsquo;a pas à être réécrit par le
+programmeur pour chaque nouveau projet Symfony.
+</p>
+
+<p>
+Il est initialisé à la création de l&rsquo;application (quand vous avez exécuté <code>composer create-project</code>).
+</p>
+
+<p>
+Consultez ce code, dans <code>public/index.php</code>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-php">...
+<span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">kernel</span> = <span style="color: #a020f0;">new</span> <span style="color: #228b22;">Kernel</span>(<span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">env</span>, <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">debug</span>);
+<span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">request</span> = <span style="color: #008b8b;">Request</span><span style="color: #000000; background-color: #ffffff;">::</span><span style="color: #000000; background-color: #ffffff;">createFromGlobals</span>();
+<span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">response</span> = <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">kernel</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">handle</span>(<span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">request</span>);
+<span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">response</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">send</span>();
+<span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">kernel</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">terminate</span>(<span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">request</span>, <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">response</span>);
+</pre>
+</div>
+
+<p>
+Le fonctionnement de ce programme est presque trivial :
+</p>
+<ol class="org-ol">
+<li>initialiser l&rsquo;environnement du <i>framework</i> Symfony</li>
+<li>construire un objet <code>Request</code> avec le contenu de la requête HTTP transmis par le serveur Web à l&rsquo;interpréteur PHP</li>
+<li>passer la main au code du développeur de cette application
+particulière, pour gérer la requête (c&rsquo;est là que la table de
+routage intervient), ce qui fabrique un objet <code>Response</code>
+correspondant aux propriétés de la réponse HTTP</li>
+<li>envoyer la réponse au client HTTP</li>
+<li>terminer le programme PHP</li>
+</ol>
+
+<p>
+<i>Simple à comprendre, non ?</i>
+</p>
+
+
+<p>
+Toutes les URL du site <code>http://localhost:8000/...</code> correspondront donc
+à l&rsquo;exécution du même script PHP <code>public/index.php</code>, le point d&rsquo;entrée
+de l&rsquo;application Symfony <code>TodoApp</code>. Ensuite, le noyau se chargera de dispatcher les
+traitements vers le reste de l&rsquo;application Symfony, via la table de
+routage jusqu&rsquo;aux contrôleurs.
+</p>
+
+
+<p>
+Pour bien comprendre ce qui se passe, nous avons lancé le serveur PHP
+avec <code>php -S</code> en lui passant explicitement en argument le chemin d&rsquo;accès, dans le
+projet, de la racine du site, le répertoire <code>public/</code> qui contient ce
+point d&rsquo;entrée <code>index.php</code>.
+</p>
+
+<p>
+Pour la suite, on pourra se dispenser d&rsquo;utiliser cette syntaxe un peu
+complexe, et utiliser un outil Symfony plus simple à mémoriser, mais
+qui fait la même chose : <code>php bin/console server:run</code>.
+</p>
+
+<p>
+Interrompez le serveur HTTP de PHP (<code>Ctrl-C</code>), et lancez désormais cette
+nouvelle commande, pour tester l&rsquo;application
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org6d15205" class="outline-2">
+<h2 id="org6d15205">Étape 4 : Examen du code du contrôleur HTTP de <code>ToDo</code></h2>
+<div class="outline-text-2" id="text-org6d15205">
+<div class="objectif">
+<p>
+On va maintenant examiner la façon dont le programmeur peut configurer
+les informations de routage et programmer le code PHP exécuté en
+réponse aux requêtes HTTP.
+</p>
+
+</div>
+
+<ol class="org-ol">
+<li><p>
+Ouvrez le code du contrôleur Web Symfony <code>src/Controller/TodoController.php</code> dans l&rsquo;IDE.
+</p>
+
+<p>
+Note : vous pouvez également consulter son code depuis le profileur Symfony en cliquant sur le lien &laquo;&nbsp;<code>TodoController::indexAction</code>&nbsp;&raquo; dans la page du menu &laquo;&nbsp;Request / Response&nbsp;&raquo;.
+</p></li>
+
+<li><p>
+Observez les annotations <code>@Route</code> présentes dans le code PHP :
+</p>
+
+<div class="org-src-container">
+<pre class="src src-php">...
+
+<span style="color: #8b2252;">/**</span>
+<span style="color: #8b2252;"> * </span><span style="color: #008b8b;">@Route</span><span style="color: #8b2252;">("/todo")</span>
+<span style="color: #8b2252;"> */</span>
+<span style="color: #a020f0;">class</span> <span style="color: #228b22;">TodoController</span> <span style="color: #a020f0;">extends</span> <span style="color: #228b22;">Controller</span>
+{    
+    ...
+</pre>
+</div>
+
+<p>
+ou bien :
+</p>
+
+<div class="org-src-container">
+<pre class="src src-php"><span style="color: #8b2252;">/**</span>
+<span style="color: #8b2252;"> * </span><span style="color: #008b8b;">@Route</span><span style="color: #8b2252;">("/", name = "home", methods="GET")</span>
+<span style="color: #8b2252;"> */</span>
+<span style="color: #a020f0;">public</span> <span style="color: #a020f0;">function</span> <span style="color: #0000ff;">indexAction</span>()
+{
+</pre>
+</div>
+
+<p>
+Vous retrouvez les informations présentes dans la table de routage.
+</p></li>
+
+<li><p>
+Examinez le code de la méthode <code>TodoController::indexAction()</code>
+</p>
+
+<p>
+Le code est relativement simple :
+</p>
+<div class="org-src-container">
+<pre class="src src-php"><span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">htmlpage</span> = <span style="color: #8b2252;">'&lt;!DOCTYPE html&gt;&lt;html&gt;....&lt;/html&gt;'</span>;
+
+ <span style="color: #a020f0;">return</span> <span style="color: #a020f0;">new</span> <span style="color: #228b22;">Response</span>(
+     <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">htmlpage</span>,
+     <span style="color: #008b8b;">Response</span><span style="color: #000000; background-color: #ffffff;">::</span><span style="color: #008b8b;">HTTP_OK</span>,
+     <span style="color: #a020f0;">array</span>(<span style="color: #8b2252;">'content-type'</span> =&gt; <span style="color: #8b2252;">'text/html'</span>)
+ );
+</pre>
+</div>
+<ol class="org-ol">
+<li>définition d&rsquo;un contenu HTML à renvoyer en réponse à la requête</li>
+
+<li>construction d&rsquo;une <b>réponse</b> HTTP avec les propriétés suivantes :
+<ul class="org-ul">
+<li>contenu de la réponse (HTML)</li>
+<li>code de réponse HTTP <code>OK</code> (en fait une constante <code>Response::HTTP_OK</code> qui vaut 200)</li>
+<li>une liste d&rsquo;en-têtes de réponse : ici la définition explicite du type HTML pour le contenu renvoyé (<code>Content-type</code>)</li>
+</ul></li>
+</ol></li>
+</ol>
+
+
+<p>
+Vous retrouvez les composants essentiels d&rsquo;une réponse HTTP : code de réponse, en-têtes et contenu.
+</p>
+
+
+<div class="remarque">
+<p>
+Ce code est très simple, et n&rsquo;est pas représentatif de ce qu&rsquo;on
+effectue d&rsquo;ordinaire dans un contrôleur d&rsquo;application Symfony, mais
+nous l&rsquo;avons construit pour les vertus de l&rsquo;exemple. Ce n&rsquo;est pas
+hyper élégant, mais assez explicite&#x2026; et ça marche.<br>
+<br>
+Nous n&rsquo;avons pas encore étudié le langage HTML, donc il se peut que
+le contenu de la réponse ne vous semble pas trivial à ce
+stage. Nous l&rsquo;étudierons plus en détail dans une prochaine séance
+(et verrons comment générer du code HTML plus proprement).
+</p>
+
+</div>
+</div>
+
+<div id="outline-container-orgb1e176b" class="outline-3">
+<h3 id="orgb1e176b">Test des routes existantes</h3>
+<div class="outline-text-3" id="text-orgb1e176b">
+<p>
+Vérifiez que les routes listées ci-dessus sont bien accessibles à partir d&rsquo;un 
+navigateur : 
+</p>
+
+<ul class="org-ul">
+<li>Liste des tâches : <code>http://localhost:8000/todo/list</code></li>
+
+<li>Affichage d&rsquo;une tâche : <code>http://localhost:8000/todo/1</code></li>
+
+<li>&#x2026;</li>
+</ul>
+
+<p>
+Comparez la sortie de la commande <code>debug:route</code>, testez les URL
+correspondantes et consultez le code du contrôleur Web.
+</p>
+
+<p>
+Vous comprenez maintenant comment est structuré le code de la couche
+<i>présentation</i> pour HTTP d&rsquo;une application Symfony.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org8a42992" class="outline-2">
+<h2 id="org8a42992">Étape 5 : Ajout d&rsquo;un Contrôleur Web dans MiniAlloCiné</h2>
+<div class="outline-text-2" id="text-org8a42992">
+<div class="objectif">
+<p>
+Vous allez maintenant réaliser l&rsquo;ajout d&rsquo;un contrôleur Web dans l&rsquo;application
+&laquo;&nbsp;Mini-Allo-Ciné&nbsp;&raquo; que vous avez initiée la semaine passée, en vous
+inspirant de ce que vous venez d&rsquo;étudier sur l&rsquo;application ToDo.
+</p>
+
+</div>
+
+<p>
+Vous vous souvenez peut-être que la fin du TP de 1ère année consistait
+à doter l&rsquo;application Java &laquo;&nbsp;mini-allociné&nbsp;&raquo; d&rsquo;une interface Web.
+</p>
+
+<p>
+Dans la séquence de cours de la semaine passée, nous nous sommes
+arrêtés à une interface en ligne de commande affichant des
+informations sur la console d&rsquo;un terminal.
+</p>
+
+<p>
+Il est temps pour vous de coder l&rsquo;interface Web correspondante.
+</p>
+</div>
+
+<div id="outline-container-orgdfdd070" class="outline-3">
+<h3 id="orgdfdd070">Étape 5.a : Génération d&rsquo;un Contrôleur Symfony</h3>
+<div class="outline-text-3" id="text-orgdfdd070">
+<div class="objectif">
+<p>
+Plutôt que d&rsquo;écrire le code &laquo;&nbsp;from scratch&nbsp;&raquo;, ici aussi on va faire
+appel à un assistant Symfony du &laquo;&nbsp;<i>maker bundle</i>&nbsp;&raquo;.
+</p>
+
+</div>
+
+<p>
+Le code généré ressemblera a celui que vous venez d&rsquo;étudier dans
+l&rsquo;application ToDo.
+</p>
+</div>
+
+<div id="outline-container-org85c2784" class="outline-4">
+<h4 id="org85c2784">Repositionnement dans le projet &laquo;&nbsp;mini-allociné&nbsp;&raquo;</h4>
+<div class="outline-text-4" id="text-org85c2784">
+<ol class="org-ol">
+<li>Dans le terminal où vous aviez lancé l&rsquo;exécution du serveur Web
+pour l&rsquo;application ToDo, interrompez le processus s&rsquo;il tourne encore, avec &laquo;&nbsp;Ctrl-C&nbsp;&raquo;</li>
+<li><p>
+Repositionnez-vous dans le répertoire du projet &laquo;&nbsp;Mini-allociné&nbsp;&raquo; :
+</p>
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #483d8b;">cd</span> $<span style="color: #a0522d;">HOME</span>/CSC4101/tp-01/miniallocine/
+</pre>
+</div></li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-org47f0dd2" class="outline-4">
+<h4 id="org47f0dd2">Génération de la classe Contrôleur</h4>
+<div class="outline-text-4" id="text-org47f0dd2">
+<ol class="org-ol">
+<li><p>
+Utilisez l&rsquo;assistant <code>make:controller</code> pour générer le code d&rsquo;une
+classe contrôleur, dont le nom lui est passé en argument :
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">bin/console make:controller MiniCineController
+</pre>
+</div></li>
+
+<li>Consultez, dans Eclipse, le code de la classe qui a été ajoutée dans le fichier
+généré : <code>src/Controller/MiniCineController.php</code>.</li>
+
+<li><p>
+Consultez la table de routage de l&rsquo;application :
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">bin/console debug:router
+</pre>
+</div></li>
+</ol>
+
+<p>
+L&rsquo;assistant <code>make:controller</code> se base sur le nom de la classe contrôleur
+qu&rsquo;on lui a donné en argument, pour en extraire un chemin d&rsquo;URLs. Pour
+cela il le découpe en mots, en analysant les séquences de lettres
+commençant par une capitale.
+</p>
+
+<p>
+On va maintenant tester si ce code généré fonctionne effectivement.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orge4ab3c4" class="outline-3">
+<h3 id="orge4ab3c4">Étape 5.b : Test du contrôleur généré</h3>
+<div class="outline-text-3" id="text-orge4ab3c4">
+<div class="objectif">
+<p>
+Vous allez lancer à nouveau le serveur Web de l&rsquo;environnement de développement de
+Symfony, pour tester cette-fois le contrôleur qui vient d&rsquo;être généré.
+</p>
+
+</div>
+
+<p>
+La syntaxe de lancement du serveur HTTP intégré à PHP qu&rsquo;on a utilisé
+plus haut (avec <code>php -S</code>) est un peu pénible à mémoriser, au niveau du
+détail des différents arguments. Nous l&rsquo;avons utilisée pour comprendre
+ce qui se passe en détails, mais nous utiliserons désormais un moyen
+plus simple.
+</p>
+
+<ol class="org-ol">
+<li><p>
+Installez le &laquo;&nbsp;<i>bundle</i>&nbsp;&raquo; Symfony correspondant au serveur Web de
+test pour le développement :
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">composer require symfony/web-server-bundle --dev
+</pre>
+</div></li>
+</ol>
+
+
+<ol class="org-ol">
+<li><p>
+Utilisez cette-fois la commande de l&rsquo;environnement Symfony qui permet
+de lancer le serveur Web :
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">bin/console server:run
+</pre>
+</div></li>
+
+<li><p>
+Testez l&rsquo;URL <code>http://127.0.0.1:8000</code> sur laquelle le serveur s&rsquo;est lancé.
+</p>
+
+<p>
+Vous devez voir apparaître un message de Symfony, qui affiche &laquo;&nbsp;<i>Your
+application is now ready</i>&nbsp;&raquo;.
+</p></li>
+</ol>
+
+<p>
+Succès ! (on va voir un dans quelques instants si c&rsquo;est si bien que ça&#x2026;)
+</p>
+</div>
+</div>
+
+<div id="outline-container-org6461a1a" class="outline-3">
+<h3 id="org6461a1a">Étape 5.c : Découverte de la barre d&rsquo;outil Symfony</h3>
+<div class="outline-text-3" id="text-org6461a1a">
+<p>
+Ajoutez le module correspondant à la gestion de la barre d&rsquo;outils
+Symfony.
+</p>
+
+<ol class="org-ol">
+<li><p>
+Interrompez le serveur Web (Ctrl-C), puis lancez :
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">composer require profiler --dev
+</pre>
+</div></li>
+
+<li><p>
+Nettoyez le projet :
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">bin/console cache:clear
+</pre>
+</div></li>
+<li><p>
+Relancez le serveur :
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">bin/console server:run
+</pre>
+</div></li>
+<li><p>
+Rafraîchissez la page <code>http://127.0.0.1:8000/</code> dans le navigateur. 
+</p>
+
+<p>
+Vous devez voir apparaître la barre d&rsquo;outils Symfony, dans la
+partie basse de la page.
+</p></li>
+
+<li><p>
+Consultez le code de réponse HTTP. Est-ce le code attendu ?
+</p>
+
+<p>
+Tout semble marcher, mais pourtant, comme pour l&rsquo;application ToDo,
+précédamment, on est en fait sur une page inexistante de
+l&rsquo;application. Comme on est en environnement de développement,
+Symfony affiche cependant une page consultable par le développeur.
+</p></li>
+
+<li>Vérifiez le chemin parcouru. Y-a-t-il une route correspondant à la
+page en cours (<code>/</code>) dans les routes (vérifiez avec <code>bin/console
+   debug:router</code>) ?</li>
+</ol>
+
+<p>
+Essayez d&rsquo;invoquer l&rsquo;affichage de la page du nouveau contrôleur,
+correspondant à la route &laquo;&nbsp;<code>mini_cine</code>&nbsp;&raquo;. 
+</p>
+
+<p>
+Si ça fonctionne, vous devriez obtenir une réponse contenant un
+message de bienvenue, avec le code de réponse 200 (vérifiez dans
+l&rsquo;inspecteur réseau du navigateur).
+</p>
+
+<div class="remarque">
+<p>
+Ce qu&rsquo;affiche votre navigateur correspond à une mise en forme
+&laquo;&nbsp;lisible&nbsp;&raquo; des données transmises au format JSON. Ouvrez l&rsquo;inspecteur
+du navigateur pour consulter le détail de la requête et de la réponse
+obtenue (en-tête de format du contenu, contenu du corps de la réponse,
+&#x2026;).
+</p>
+
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-orgbead38f" class="outline-3">
+<h3 id="orgbead38f">Étape 5.d : Ajout de la consultation de la liste des films</h3>
+<div class="outline-text-3" id="text-orgbead38f">
+<div class="objectif">
+<p>
+On aborde des choses un peu plus difficiles, dans cette étape, qui
+consiste à ajouter le code de chargement et d&rsquo;affichage de la liste des films
+dans la méthode <code>index()</code>. Vous allez réaliser la phase clé du portage Web de Mini-Allociné<br>
+<br>
+On va s&rsquo;inspirer à la fois du code étudié précédemment dans la
+variante ligne de commande de &laquo;&nbsp;Mini-Allociné&nbsp;&raquo; (pour l&rsquo;affichage sur la
+sortie standard), et de l&rsquo;interface Web présente dans &laquo;&nbsp;ToDo&nbsp;&raquo;.
+</p>
+
+</div>
+
+<p>
+On va adapter le code généré par l&rsquo;assistant, pour mettre en œuvre
+l&rsquo;affichage de la liste des films, lorsqu&rsquo;on consulte la route <code>/</code>
+de notre serveur Web.
+</p>
+
+<div class="attention">
+<p>
+La réalisation de cette étape augmente en complexité. Contrairement
+aux étapes précédentes, qui s&rsquo;enchainent de façon assez triviale, il
+va falloir réfléchir au fonctionnement recherché, et programmer de
+façon un peu plus avancée que précédemment, dans l&rsquo;IDE.
+</p>
+
+</div>
+
+
+<p>
+Vous allez donc modifier la méthode correspondante. Examinez à quelle
+méthode correspond cette route (par exemple dans un autre onglet du terminal
+lancé depuis le même répertoire, pour ne pas interrompre le serveur HTTP) :
+</p>
+
+<pre class="example">
+bin/console debug:router --show-controllers
+</pre>
+
+<p>
+Commencez par ajuster la configuration de la &laquo;&nbsp;Route&nbsp;&raquo; pour invoquer le
+code, que vous renommerez <code>films_index</code> au lieu de <code>mini_cine</code>. 
+</p>
+
+<p>
+Ensuite, vous allez générerer du HTML, au lieu du JSON qui est produit
+par la méthode telle qu&rsquo;elle a été générée par l&rsquo;assistant.
+</p>
+
+<p>
+Le chargement depuis la base de données ne devrait pas vous sembler
+très complexe à ajouter : on procède de la même façon que pour
+l&rsquo;interface &laquo;&nbsp;console&nbsp;&raquo; des commandes étudiées précédamment, en faisant
+appel à Doctrine pour le chargement des données. Inspirez-vous du code
+de <code>src/Command/ListFilmsCommand.php</code> :
+</p>
+
+<div class="org-src-container">
+<pre class="src src-php"><span style="color: #b22222;">//</span><span style="color: #b22222;">...</span>
+<span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">films</span> = <span style="color: #008b8b;">$</span><span style="color: #008b8b;">this</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">getDoctrine</span>()<span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">getRepository</span>(<span style="color: #8b2252;">'App:Film'</span>)<span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">findAll</span>();
+<span style="color: #b22222;">//</span><span style="color: #b22222;">...</span>
+</pre>
+</div>
+
+<p>
+Par contre, nous allons réaliser un affichage pour le navigateur
+Web. Nous devons donc générer le contenu une page HTML à transmettre
+dans la réponse HTTP.
+</p>
+
+<p>
+Nous n&rsquo;avons pas encore étudié le langage HTML, donc voici quelques
+éléments pour fabriquer quelque chose qui y ressemble. Inspirez-vous de ce
+qui est fait dans le code de ToDo (dans <code>listAction()</code> dans
+<code>src/Controller/TodoController.php</code>), pour obtenir quelque chose du
+genre :
+</p>
+
+<div class="org-src-container">
+<pre class="src src-html">&lt;<span style="color: #0000ff;">html</span>&gt;
+  &lt;<span style="color: #0000ff;">body</span>&gt;Liste des films :
+    &lt;<span style="color: #0000ff;">ul</span>&gt;
+      &lt;<span style="color: #0000ff;">li</span>&gt;Evil Dead (1981)&lt;/<span style="color: #0000ff;">li</span>&gt;
+      ....
+    &lt;/<span style="color: #0000ff;">ul</span>&gt;
+  &lt;/<span style="color: #0000ff;">body</span>&gt;
+&lt;/<span style="color: #0000ff;">html</span>&gt;
+</pre>
+</div>
+
+<p>
+Ce code HTML n&rsquo;est pas idéal, mais il fonctionne à peu près, suffisamment
+pour que votre navigateur affiche la liste des films.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org52a6802" class="outline-3">
+<h3 id="org52a6802">Étape 5.e : Ajout de la consultation d&rsquo;un film</h3>
+<div class="outline-text-3" id="text-org52a6802">
+<div class="objectif">
+<p>
+Ajoutez le code de la consultation d&rsquo;un film, accédé via une URL du
+type <code>/{title}/{year}</code>.<br>
+<br>
+On souhaite afficher à peu près les mêmes informations que ce qu&rsquo;on
+avait sur la ligne de commande avec <code>app:show-film</code>.
+</p>
+
+</div>
+
+<p>
+Vous allez ajouter une nouvelle méthode au contrôleur qui permettra la
+consultation via une route <code>/{title}/{year}</code> :
+</p>
+
+<div class="org-src-container">
+<pre class="src src-php"><span style="color: #8b2252;">/**</span>
+<span style="color: #8b2252;"> * Show a film</span>
+<span style="color: #8b2252;"> * </span>
+<span style="color: #8b2252;"> * </span><span style="color: #008b8b;">@Route</span><span style="color: #8b2252;">("/{title}/{year}", name="film_show", requirements={"year"="\d+"})</span>
+<span style="color: #8b2252;"> *    note that the year must be an </span><span style="color: #228b22;">integer</span><span style="color: #8b2252;">, above</span>
+<span style="color: #8b2252;"> *    </span>
+<span style="color: #8b2252;"> * </span><span style="color: #008b8b;">@param</span><span style="color: #8b2252;"> </span><span style="color: #8b2252;">String</span><span style="color: #8b2252;"> </span><span style="color: #a0522d;">$</span><span style="color: #a0522d;">title</span>
+<span style="color: #8b2252;"> * </span><span style="color: #008b8b;">@param</span><span style="color: #8b2252;"> </span><span style="color: #8b2252;">Integer</span><span style="color: #8b2252;"> </span><span style="color: #a0522d;">$</span><span style="color: #a0522d;">year</span>
+<span style="color: #8b2252;"> */</span>
+<span style="color: #a020f0;">public</span> <span style="color: #a020f0;">function</span> <span style="color: #0000ff;">show</span>(<span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">title</span>, <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">year</span>)
+{
+    <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">filmRepo</span> = <span style="color: #008b8b;">$</span><span style="color: #008b8b;">this</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">getDoctrine</span>()<span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">getRepository</span>(<span style="color: #8b2252;">'App:Film'</span>);
+    <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">film</span> = <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">filmRepo</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">findOneBy</span>([<span style="color: #8b2252;">'title'</span> =&gt; <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">title</span>, <span style="color: #8b2252;">'year'</span> =&gt; <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">year</span>]);
+
+    <span style="color: #a020f0;">if</span> (!<span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">film</span>) {
+    <span style="color: #a020f0;">throw</span> <span style="color: #008b8b;">$</span><span style="color: #008b8b;">this</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">createNotFoundException</span>(<span style="color: #8b2252;">'The film does not exist'</span>);
+    }
+
+    <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">res</span> = <span style="color: #8b2252;">'...'</span>;
+    <span style="color: #b22222;">//</span><span style="color: #b22222;">...</span>
+
+    <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">res</span> .= <span style="color: #8b2252;">'&lt;p/&gt;&lt;a href="'</span> . <span style="color: #008b8b;">$</span><span style="color: #008b8b;">this</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">generateUrl</span>(<span style="color: #8b2252;">'films_index'</span>) . <span style="color: #8b2252;">'"&gt;Back&lt;/a&gt;'</span>;
+
+    <span style="color: #a020f0;">return</span> <span style="color: #a020f0;">new</span> <span style="color: #228b22;">Response</span>(<span style="color: #8b2252;">'&lt;html&gt;&lt;body&gt;'</span>. <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">res</span> . <span style="color: #8b2252;">'&lt;/body&gt;&lt;/html&gt;'</span>);
+}
+</pre>
+</div>
+
+<p>
+Modifiez ce code, notamment la valeur prise par <code>$res</code>, afin d&rsquo;essayer
+de produire le contenu à afficher, par exemple par une succession de
+concaténation de chaînes de caractères, encadrées par les balises
+ouvrante et fermante d&rsquo;un paragraphe <code>&lt;p&gt;</code> et <code>&lt;/p&gt;</code>.
+</p>
+
+<p>
+Testez l&rsquo;accès à l&rsquo;URL <code>http://localhost:8000/Black%20Sheep/2008</code>. Notez
+que les URLS correspondant aux titres fonctionnent à condition que les
+espaces soient encodés proprement via <code>%20</code> (cf. spécifications).
+</p>
+
+<p>
+Les arguments <code>$title</code> et <code>$year</code> de la méthode <code>show()</code> sont extraits
+automatiquement de la route, conformément à la spécification
+l&rsquo;annotation <code>@Route</code> qui a été placée immédiatement au-dessus de la
+définition de la méthode.
+</p>
+
+<p>
+Essayez d&rsquo;accéder aux URL suivantes :
+</p>
+<ul class="org-ul">
+<li><code>http://localhost:8000/Black%20Sheep/toto</code> : où se situe l&rsquo;erreur ?
+Vérifiez le paramètre <code>requirements</code> de la <code>@Route</code></li>
+<li><code>http://localhost:8000/Coucou/1984</code> : cette fois, l&rsquo;argument <code>year</code> de
+l&rsquo;URL est bien un nombre&#x2026; mais qu&rsquo;est-ce qui coince ?</li>
+</ul>
+
+<p>
+Notez que lorsque tout se passe bien, on renvoit un objet
+<code>Response</code>. Quand une erreur survient, on peut interrompre les
+traitements en déclenchant l&rsquo;apparition d&rsquo;une exception avec <code>throw</code>, ce
+qui aboutit au renvoi au client du code de réponse HTTP correspondant.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgfba6658" class="outline-3">
+<h3 id="orgfba6658">Étape 5.f : Ajout du lien de consultation d&rsquo;un film</h3>
+<div class="outline-text-3" id="text-orgfba6658">
+<p>
+Ajoutez, dans la production de la liste des films, la génération des liens permettant d&rsquo;accéder à la
+fiche de chaque film.
+</p>
+
+<p>
+On peut ajouter une balise HTML <code>&lt;a href="..."&gt;...&lt;/a&gt;</code> pour créer un
+tel lien, du style :
+</p>
+
+<div class="org-src-container">
+<pre class="src src-html">Liste des films :
+...
+   &lt;<span style="color: #0000ff;">li</span>&gt;&lt;<span style="color: #0000ff;">a</span> <span style="color: #a0522d;">href</span>=<span style="color: #8b2252;">"/Au%20temps%20pour%20moi/42"</span>&gt;Au temps pour moi (42)&lt;/<span style="color: #0000ff;">a</span>&gt;&lt;/<span style="color: #0000ff;">li</span>&gt;
+</pre>
+</div>
+
+<p>
+Vous utiliserez la méthode <code>generateUrl()</code> du contrôleur, qui sait
+générer une URL conforme à une définition de <code>@Route(...)</code>.
+</p>
+
+<p>
+Ainsi, pour la route <code>film_show</code> définie par <code>@Route("/{title}/{year}",
+name="film_show")</code>, qui utilise deux attributs pour générer l&rsquo;URL, on
+passera les deux valeurs correspondantes via :
+</p>
+<div class="org-src-container">
+<pre class="src src-php"><span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">url</span> = <span style="color: #008b8b;">$</span><span style="color: #008b8b;">this</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">generateUrl</span>(
+    <span style="color: #8b2252;">'film_show'</span>,
+    [<span style="color: #8b2252;">'title'</span> =&gt; <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">film</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">getTitle</span>(),
+     <span style="color: #8b2252;">'year'</span> =&gt; <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">film</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">getYear</span>()]);
+
+</pre>
+</div>
+
+<p>
+Testez que cela fonctionne.
+</p>
+
+<div class="remarque">
+<p>
+Notez que les URL générées, cible des liens, qui sont présentes dans
+les attributs <code>href</code> des balises <code>&lt;a&gt;</code> sont des URL relatives au site, qui
+ne contiennent donc pas l&rsquo;ensembles des composantes d&rsquo;une URL
+complète. Ici, seul le chemin au sein du site est nécessaire.
+</p>
+
+</div>
+</div>
+</div>
+
+<div id="outline-container-org3040343" class="outline-3">
+<h3 id="org3040343">Étape 5.g : Ajoutez la consultation des recommendations des films</h3>
+<div class="outline-text-3" id="text-org3040343">
+<p>
+De façon similaire a ce qui a été fait dans le code de la commande
+<code>app:show-film</code>, ajoutez la génération d&rsquo;un code HTML affichant les
+recommendations de chaque film dans sa page.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orge300d94" class="outline-2">
+<h2 id="orge300d94">Évaluation</h2>
+<div class="outline-text-2" id="text-orge300d94">
+<p>
+À la fin de cette séquence, vous savez :
+</p>
+
+<ul class="org-ul">
+<li>lancer un serveur Web local (avec <code>php -S</code>) pour tester un site ou intéragir avec une application Web installée en local</li>
+<li>utiliser des outils de la barre d&rsquo;outils Symfony pour examiner le
+fonctionnement de l&rsquo;application côté serveur</li>
+<li>identifier comment le code PHP est appelé en réponse aux requêtes
+HTTP dans une application Web Symfony, via les contrôleurs</li>
+<li>examiner la table de routage d&rsquo;une application Symfony</li>
+<li>générer le contenu de pages Web</li>
+<li>déclarer les routes et générer les liens correspondants</li>
+<li>récupérer des composants d&rsquo;un chemin d&rsquo;URL dans les méthodes des contrôleurs</li>
+</ul>
+</div>
+</div>
+<div id="footnotes">
+<h2 class="footnotes">Notes de bas de page: </h2>
+<div id="text-footnotes">
+
+<div class="footdef"><sup><a id="fn.1" class="footnum" href="#fnr.1">1</a></sup> <div class="footpara"><p class="footpara">
+D&rsquo;habitude on lance <code>composer</code> directement à l&rsquo;invite de
+commande, car il est dans le PATH, mais dans cette variante de la
+façon de l&rsquo;invoquer, avec le passage de l&rsquo;option <code>memory_limit</code>, on
+l&rsquo;appelle via <code>php /usr/bin/composer</code>, sur un système Linux. Notez que
+le chemin d&rsquo;accès à composer peut être trouvé en lançant <code>composer
+help</code>. Sur Windows, ça indiquerait un chemin comme par exemple : <code>php
+C:\ProgramData\ComposerSetup\bin\composer.phar</code>. Donc une ligne de
+commande à entrer, du type : <code>php -d memory_limit=-1 C:\ProgramData\ComposerSetup\bin\composer.phar create-project ...</code> .
+</p></div></div>
+
+<div class="footdef"><sup><a id="fn.2" class="footnum" href="#fnr.2">2</a></sup> <div class="footpara"><p class="footpara">
+Cette spécification d&rsquo;adresse est à préférer à <code>localhost</code> pour
+permettre de tester le serveur via des adresses IP de réseau local, si
+nécessaire (tests entre machines du même du binôme). Vous pouvez
+également tester avec &laquo;&nbsp;0.0.0.0&nbsp;&raquo; en cas de besoin.
+</p></div></div>
+
+
+</div>
+</div></div>
+<div id="postamble" class="status">
+<p class="author">Auteur: Olivier Berger (TSP)</p>
+<p class="date">Created: 2020-09-22 Tue 11:44</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

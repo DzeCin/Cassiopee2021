@@ -1,0 +1,1550 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<!-- 2020-10-21 Wed 14:59 -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TP n°6 - Sessions, gestion des utilisateurs et autorisations</title>
+<meta name="generator" content="Org mode">
+<meta name="author" content="Olivier Berger (TSP)">
+<meta name="description" content="CSC4101 Telecom SudParis - 2020-2021 - TP n°6"
+>
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+<meta name="copyright" content="&copy; 2017 Telecom SudParis + Olivier Berger" />
+<link rel="stylesheet" type="text/css" href="../media/tsp.css" />
+<style type="text/css">
+.floatrightclass {
+float: right;
+margin: 0 0 10px 10px;
+}
+.floatleftclass {
+float: left;
+margin: 0 0 10px 10px;
+}
+.clearrightclass {
+clear: right;
+}
+.clearleftclass {
+clear: left;
+}
+</style>
+<script type="text/javascript" src='../media/tsp.js'></script>
+<script type="text/javascript" src="../media/org-info-src.js"></script>
+<script type="text/javascript">
+/* <![CDATA[ */
+org_html_manager.set("TOC_DEPTH", "2");
+org_html_manager.set("LINK_HOME", "");
+org_html_manager.set("LINK_UP", "");
+org_html_manager.set("LOCAL_TOC", "0");
+org_html_manager.set("VIEW_BUTTONS", "0");
+org_html_manager.set("MOUSE_HINT", "#cccccc");
+org_html_manager.set("FIXED_TOC", "0");
+org_html_manager.set("TOC", "1");
+org_html_manager.set("VIEW", "showall");
+org_html_manager.set("HELP", "1");
+org_html_manager.setup ();
+/* ]]> */
+</script>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2019 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">TP n°6 - Sessions, gestion des utilisateurs et autorisations</h1>
+<div id="table-of-contents">
+<h2>Table des matières</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org0db117d">Introduction</a></li>
+<li><a href="#org893d20b">Étape 1 : Observation du fonctionnement &laquo;&nbsp;intermitent&nbsp;&raquo; de l&rsquo;application</a></li>
+<li><a href="#org8c78f26">Étape 2 : Mise en œuvre des &laquo;&nbsp;marque-pages&nbsp;&raquo; de tâches prioritaires, grâce à la session</a>
+<ul>
+<li><a href="#org332a112">Principe de sauvegarde dans la session</a></li>
+<li><a href="#org3de5129">Ajout des méthodes au contrôleur pour la gestion des tâches urgentes</a></li>
+<li><a href="#org18b853e">Consultation des fichiers de stockage de la session côté serveur HTTP/PHP</a></li>
+<li><a href="#orgdd1e45c">Amélioration de l&rsquo;interface pour gérer les tâches prioritaires</a></li>
+</ul>
+</li>
+<li><a href="#org848cb64">Étape 3 : Ajout du contrôle d&rsquo;accès dans l&rsquo;application</a>
+<ul>
+<li><a href="#org4f333f8">Étape 3-a : Ajout d&rsquo;une entité User</a></li>
+<li><a href="#orgf6a2d3c">Étape 3-b : Ajout d&rsquo;un utilisateur de test</a></li>
+<li><a href="#orgc436e0a">Étape 3-c : Mise en œuvre de l&rsquo;authentification</a></li>
+<li><a href="#orgd8a9c14">Étape 3-d : Mise en œuvre d&rsquo;une hiérarchie de rôles</a></li>
+<li><a href="#org9bce977">Étape 3-e : Adaptation des menus</a></li>
+<li><a href="#org5d5d3aa">Étape 3-f : Adaptations de l&rsquo;interface en fonction de l&rsquo;utilisateur</a></li>
+<li><a href="#org6f0a2b1">Étape 3-g : Vérification du contrôle d&rsquo;accès effectif</a></li>
+<li><a href="#orgceff0f5">Étape 3-h : Gestion des droits d&rsquo;accès plus contextuelle</a></li>
+</ul>
+</li>
+<li><a href="#org300d90f">Évaluation</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org0db117d" class="outline-2">
+<h2 id="org0db117d">Introduction</h2>
+<div class="outline-text-2" id="text-org0db117d">
+<div class="objectif">
+<p>
+Cette séquence est consacrée à deux ensembles de fonctionnalités
+nécessaires dans les applications Web:<br>
+<br>
+une gestion de sessions permettant à chaque utilisateur d&rsquo;interagir
+avec l&rsquo;appliation, dans un contexte qui lui est propre;<br>
+<br>
+la mise en œuvre d&rsquo;une gestion de comptes utilisateurs,
+avec des profils utilisateur, et des permissions pour contrôler l&rsquo;accès aux différentes
+fonctions de l&rsquo;application.
+</p>
+
+</div>
+</div>
+</div>
+
+<div id="outline-container-org893d20b" class="outline-2">
+<h2 id="org893d20b">Étape 1 : Observation du fonctionnement &laquo;&nbsp;intermitent&nbsp;&raquo; de l&rsquo;application</h2>
+<div class="outline-text-2" id="text-org893d20b">
+<div class="objectif">
+<p>
+L&rsquo;objectif de cette séquence est de comprendre le fonctionnement
+&laquo;&nbsp;intermitent&nbsp;&raquo; d&rsquo;une application Web.
+</p>
+
+</div>
+
+<ol class="org-ol">
+<li><p>
+Lancez l&rsquo;application avec le serveur HTTP intégré à PHP (<code>php -S</code>):
+</p>
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #483d8b;">cd</span> CSC4101/tp-06/todo-app/ (ou un chemin &#233;quivalent)
+php -S localhost:8000 -t public public/index.php
+</pre>
+</div>
+
+<p>
+Examinez dans Eclipse le point d&rsquo;entrée PHP de l&rsquo;application
+Symfony qui s&rsquo;exécute : <code>public/index.php</code>
+</p>
+
+<p>
+Note : vous pouvez aussi exécuter comme d&rsquo;habitude avec
+<code>bin/console server:run</code>, ce qui revient au même, c&rsquo;est le même
+script PHP <code>public/index.php</code> qui s&rsquo;exécute
+</p></li>
+
+<li><p>
+Modifiez le code de <code>public/index.php</code> pour ajouter les appels à
+<code>error_log()</code> suivants :
+</p>
+
+<div class="org-src-container">
+<pre class="src src-php">...
+<span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">request</span> = <span style="color: #008b8b;">Request</span><span style="color: #000000; background-color: #ffffff;">::</span><span style="color: #000000; background-color: #ffffff;">createFromGlobals</span>();
+
+error_log(<span style="color: #8b2252;">'debut '</span>. <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">request</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">getRequestUri</span>());
+
+<span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">response</span> = <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">kernel</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">handle</span>(<span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">request</span>);
+<span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">response</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">send</span>();
+<span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">kernel</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">terminate</span>(<span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">request</span>, <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">response</span>);
+
+error_log(<span style="color: #8b2252;">'fin '</span>. <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">request</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">getRequestUri</span>());
+...
+</pre>
+</div></li>
+
+<li><p>
+Testez le fonctionnement de l&rsquo;application, par exemple en
+consultant la page <code>http://localhost:8000/paste/new</code> et observez les
+messages affichés dans les logs du serveur HTTP.
+</p>
+
+<p>
+Vous voyez des messages similaires à ceux reproduits ci-dessous,
+avec l&rsquo;affichage de l&rsquo;URI de la requête HTTP invoquée : <code>/paste/new</code>.
+</p>
+
+<pre class="example">
+[Fri Oct  9 13:30:31 2020] [::1]:51594 Accepted
+[Fri Oct  9 13:30:31 2020] debut /paste/new
+[Fri Oct  9 13:30:31 2020] fin /paste/new
+[Fri Oct  9 13:30:31 2020] [::1]:51594 Closing
+[Fri Oct  9 13:30:31 2020] [::1]:51598 Accepted
+[Fri Oct  9 13:30:31 2020] [::1]:51600 Accepted
+[Fri Oct  9 13:30:31 2020] debut /startbootstrap-bare-gh-pages/vendor/bootstrap/css/bootstrap.min.css
+[Fri Oct  9 13:30:31 2020] fin /startbootstrap-bare-gh-pages/vendor/bootstrap/css/bootstrap.min.css
+[Fri Oct  9 13:30:31 2020] [::1]:51598 Closing
+[Fri Oct  9 13:30:31 2020] [::1]:51602 Accepted
+[Fri Oct  9 13:30:31 2020] debut /startbootstrap-bare-gh-pages/vendor/jquery/jquery.slim.min.js
+[Fri Oct  9 13:30:31 2020] fin /startbootstrap-bare-gh-pages/vendor/jquery/jquery.slim.min.js
+[Fri Oct  9 13:30:31 2020] [::1]:51600 Closing
+[Fri Oct  9 13:30:31 2020] debut /startbootstrap-bare-gh-pages/vendor/bootstrap/js/bootstrap.bundle.min.js
+[Fri Oct  9 13:30:31 2020] fin /startbootstrap-bare-gh-pages/vendor/bootstrap/js/bootstrap.bundle.min.js
+[Fri Oct  9 13:30:31 2020] [::1]:51602 Closing
+[Fri Oct  9 13:30:31 2020] [::1]:51604 Accepted
+[Fri Oct  9 13:30:31 2020] debut /_wdt/7a3b27
+[Fri Oct  9 13:30:31 2020] fin /_wdt/7a3b27
+[Fri Oct  9 13:30:31 2020] [::1]:51604 Closing
+</pre>
+
+<p>
+En plus de l&rsquo;affichage du debut + fin pour <code>/paste/new</code>, on en voit
+d&rsquo;autres pour les ressources statiques chargées depuis la page (CSS
+et JS), ainsi qu&rsquo;un autre pour <code>/_wdt/7a3b27</code> qui correspond au chargement de la barre
+d&rsquo;outils de Symfony.
+On voit aussi les messages affichés par le server : &laquo;&nbsp;Accepted&nbsp;&raquo;,
+&laquo;&nbsp;Closing&nbsp;&raquo;, qui correspondent aux séquences des réponses HTTP
+empilées dans le composant d&rsquo;affichage de logs.
+Mettons de côté ces derniers éléments.
+</p>
+
+<p>
+Ce qu&rsquo;illustrent nos messages début et fin, c&rsquo;est la séquence
+d&rsquo;exécution du coeur de l&rsquo;application Symfony appelé depuis
+public/index.php, c&rsquo;est à dire tout ce qui est effectué dans
+<code>$response = $kernel-&gt;handle($request);</code> qui invoque le routeur, les
+contrôleurs, etc.
+</p></li>
+
+<li><p>
+Effectuez une soumission de données dans le formulaire de création
+des <i>Pastes</i> :
+</p>
+
+<p>
+vous constatez dans les logs une séquence du type :
+</p>
+
+<pre class="example">
+[Fri Oct  9 13:38:59 2020] [::1]:51736 Accepted
+[Fri Oct  9 13:38:59 2020] debut /paste/new
+[Fri Oct  9 13:38:59 2020] fin /paste/new
+[Fri Oct  9 13:38:59 2020] [::1]:51736 Closing
+[Fri Oct  9 13:38:59 2020] [::1]:51740 Accepted
+[Fri Oct  9 13:38:59 2020] debut /paste/
+[Fri Oct  9 13:38:59 2020] fin /paste/
+[Fri Oct  9 13:38:59 2020] [::1]:51740 Closing
+
+</pre>
+
+<p>
+qui correspond au traitement :
+</p>
+<ol class="org-ol">
+<li>de la requête POST sur <code>/paste/new</code> pour la soumission des données</li>
+<li>de l&rsquo;affichage de la liste des tâches, le GET sur <code>/paste/</code> après
+la redirection qui termine la soumission des données</li>
+</ol>
+
+<p>
+Dans la seconde invocation, du GET de <code>/paste/</code> on est donc dans une
+exécution complètement nouvelle de <code>public/index.php</code>. On
+n&rsquo;a gardé aucune mémoire de la précédente. L&rsquo;objet <code>$request</code> est
+nouveau, ainsi que toutes les variables présentes en mémoire dans
+tous les traitements de routeur, contrôleurs, etc.
+</p></li>
+</ol>
+
+<p>
+Vous constatez ainsi que, même si le serveur Web qui exécute
+l&rsquo;application PHP est lancé une seule fois (une seule exécution de
+<code>php -S</code> ou son équivalent <code>bin/console server:run</code>), l&rsquo;application
+Symfony, elle, est exécutée de façon nouvelle, à chaque requête HTTP à
+traiter, en recommençant l&rsquo;exécution de <code>index.php</code> à chaque fois.
+</p>
+
+<p>
+C&rsquo;est ce comportement &laquo;&nbsp;intermitent&nbsp;&raquo; de l&rsquo;application, qui est relancée
+de zéro (ou presque) à chaque requête à traiter, qui fait dire que le
+serveur Web est &laquo;&nbsp;sans état&nbsp;&raquo;, c&rsquo;est à dire qu&rsquo;il ne se souvient pas des
+requêtes précédentes d&rsquo;un même client (ni des réponses apportées à ces
+requêtes). Le traitement de la requête GET qui suit la redirection
+ignore tout de la réponse à la requête POST précédente. Idem pour le
+traitement de la requête POST de soumission des données du formulaire
+issu de la requête GET précédente.
+</p>
+
+<p>
+Si on veut garder une trace de cette continuité, dans notre code, côté
+serveur, on va cependant
+pouvoir s&rsquo;en tirer, en utilisant la session. C&rsquo;est ce qu&rsquo;on va voir maintenant.
+</p>
+
+<div class="remarque">
+<p>
+Dans notre exemple, la base de données contient bien-entendu des
+éléments résultant des requêtes précédentes qui ont donné lieu à une
+mise à jour du contenu des tables. Mais si vous observez le contenu de
+la base générée par Symfony, on n&rsquo;y trouve que des données relatives
+au modèle des données de l&rsquo;application : Todos, Pastes, etc. Mais rien
+qui soit relatif au fait qu&rsquo;un client HTTP vienne de se connecter
+précédemment.<br>
+<br>
+Ici, nous avons décrit la façon dont l&rsquo;application Web s&rsquo;exécutera,
+une fois déployée en environnement de production. En environnement de
+développement, avec ce que vous utilisez atuellement, la session est
+déjà utilisée par Symfony, pour gérer l&rsquo;affichage du <i>Sympfony Profiler</i>
+et des outils qu&rsquo;on y a déjà utilisés, comme par exemple le
+gestionnaire d&rsquo;historique des requêtes et réponses.
+</p>
+
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org8c78f26" class="outline-2">
+<h2 id="org8c78f26">Étape 2 : Mise en œuvre des &laquo;&nbsp;marque-pages&nbsp;&raquo; de tâches prioritaires, grâce à la session</h2>
+<div class="outline-text-2" id="text-org8c78f26">
+<div class="objectif">
+<p>
+L&rsquo;objectif de cette séquence est de mettre en œuvre dans
+l&rsquo;application une gestion de &laquo;&nbsp;marque-pages&nbsp;&raquo;, en s&rsquo;appuyant sur le mécanismes des sessions.
+</p>
+
+</div>
+
+<p>
+Imaginons qu&rsquo;on souhaite pourvoir utiliser de &laquo;&nbsp;marque-pages&nbsp;&raquo; qui permettent de naviguer dans la liste de
+tâches et de marquer des tâches comme étant prioritaires, au fur et à mesure
+de la navigation.
+</p>
+
+<p>
+Cette fonction ressemble aux &laquo;&nbsp;paniers&nbsp;&raquo; des sites d&rsquo;<i>e-commerce</i> qui
+permettent de préparer des achats, en mémorisant des articles dans un panier, même sans s&rsquo;être encore connecté au
+site.
+</p>
+</div>
+
+<div id="outline-container-org332a112" class="outline-3">
+<h3 id="org332a112">Principe de sauvegarde dans la session</h3>
+<div class="outline-text-3" id="text-org332a112">
+<p>
+Si on déploie notre application de gestion de tâches sur un serveur,
+afin que les membres d&rsquo;une équipe puissent partager une liste de
+tâches, la base de données sert à enregistrer la liste de toutes les
+tâches.
+</p>
+
+<p>
+Pour l&rsquo;instant, on ne gère pas de comptes, d&rsquo;authentification, donc
+tout le monde a accès à l&rsquo;ensemble des tâches communes de la base de
+données.
+</p>
+
+<p>
+Pourtant, on va tirer parti du mécanisme de <b>sessions</b> Symfony pour
+reconnaître le visiteur (ou plutôt son client HTTP, son navigateur) et
+afficher ainsi des données propres à ce visiteur, qui seront connues de notre application, qui dépendront
+des requêtes précédentes quand ce même utilisateur a visité des pages sur le site.
+</p>
+
+<div class="remarque">
+<p>
+On s&rsquo;appuiera sur les concepts de <i>cookies</i> et de <i>sessions</i> Symfony
+qui ont été abordés en CM.
+</p>
+
+</div>
+
+<p>
+Les visiteurs devront donc pouvoir
+&laquo;&nbsp;marquer&nbsp;&raquo; les tâches qu&rsquo;ils jugent prioritaires, dans leur session, au fur et à mesure de leur
+visite sur le site, pour les retrouver ultérieurement. Mais cette
+information sera inconnue des autres visiteurs, car chaque session est
+propre à un client HTTP qui a interagi avec le serveur.
+</p>
+
+<p>
+On peut stocker dans la session Symfony (qui est déjà utilisée pour les
+&laquo;&nbsp;messages flash&nbsp;&raquo;) les références de ces tâches, avec le stockage dans la
+session d&rsquo;une liste d&rsquo;identifiants des tâches urgentes pour un
+utilisateur donné.
+</p>
+
+<p>
+Exemple de récupération, en mémoire, d&rsquo;une liste d&rsquo;identifiants de
+tâches urgentes précédemment stockée dans la session :
+</p>
+<div class="org-src-container">
+<pre class="src src-php"><span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">urgents</span> = <span style="color: #008b8b;">$</span><span style="color: #008b8b;">this</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">get</span>(<span style="color: #8b2252;">'session'</span>)<span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">get</span>(<span style="color: #8b2252;">'urgents'</span>);
+<span style="color: #a020f0;">if</span>( ! is_array(<span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">urgents</span>) ) {
+   ...
+}
+</pre>
+</div>
+
+<p>
+Exemple de sauvegarde de la même liste (vide) dans la session :
+</p>
+<div class="org-src-container">
+<pre class="src src-php"><span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">urgents</span> = <span style="color: #a020f0;">array</span>();
+<span style="color: #008b8b;">$</span><span style="color: #008b8b;">this</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">get</span>(<span style="color: #8b2252;">'session'</span>)<span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">set</span>(<span style="color: #8b2252;">'urgents'</span>, <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">urgents</span>);
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org3de5129" class="outline-3">
+<h3 id="org3de5129">Ajout des méthodes au contrôleur pour la gestion des tâches urgentes</h3>
+<div class="outline-text-3" id="text-org3de5129">
+<p>
+Vous allez ajouter des nouvelles routes permettant de mettre en œuvre
+une gestion des marque-pages / <i>tâches urgentes</i> dans un contrôleur de l&rsquo;application.
+</p>
+
+<p>
+Procédez aux opérations suivantes :
+</p>
+<ol class="org-ol">
+<li><p>
+Ajoutez dans le code PHP, une nouvelle méthode au contrôleur des tâches, gérant l&rsquo;invocation d&rsquo;une
+nouvelle route. 
+Vous pouvez partir du modèle suivant, qui ressemble pour l&rsquo;instant à la consultation d&rsquo;une tâche:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-php"><span style="color: #8b2252;">/**</span>
+<span style="color: #8b2252;"> * Mark a task as current priority in the user's session</span>
+<span style="color: #8b2252;"> * </span>
+<span style="color: #8b2252;"> * </span><span style="color: #008b8b;">@Route</span><span style="color: #8b2252;">("/mark/{id}", name="todo_mark", requirements={ "id": "\d+"}, methods="GET")</span>
+<span style="color: #8b2252;"> */</span>
+<span style="color: #a020f0;">public</span> <span style="color: #a020f0;">function</span> <span style="color: #0000ff;">markAction</span>(<span style="color: #228b22;">Todo</span> <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">todo</span>): <span style="color: #228b22;">Response</span>
+{
+    dump(<span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">todo</span>);
+    <span style="color: #a020f0;">return</span> <span style="color: #008b8b;">$</span><span style="color: #008b8b;">this</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">redirectToRoute</span>(<span style="color: #8b2252;">'todo_show'</span>, 
+    [<span style="color: #8b2252;">'id'</span> =&gt; <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">todo</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">getId</span>()]);
+}
+</pre>
+</div></li>
+<li><p>
+Modifiez ce code. Au lieu d&rsquo;afficher les détails, le but est de mémoriser cette
+tâche dans les tâches urgentes de la session, et rediriger ensuite
+vers l&rsquo;affichage de la tâche.
+</p>
+
+<p>
+Dans le corps de la méthode, gérez la mémorisation de l&rsquo;identifiant
+de la tâche dans un tableau qui sera stocké dans la session;
+</p></li>
+<li>Terminez le traitement en générant une redirection;</li>
+<li>Testez le fonctionnement, et consultez le contenu du tableau
+présent dans la session, avec les outils du profiler Symfony
+(requêtes/réponses) ;</li>
+<li><p>
+Modifiez le code pour que le ce marque-page fonctionne comme un interrupteur
+booléen : si on accède une deuxième fois à la même route, on annule
+le marque-page : on supprime l&rsquo;identifiant du tableau des tâches urgentes.
+</p>
+
+<p>
+Exemple de code de changement de l&rsquo;urgence associée à une tâche d&rsquo;identifiant
+donné :
+</p>
+<div class="org-src-container">
+<pre class="src src-php"><span style="color: #b22222;">// </span><span style="color: #b22222;">si l'identifiant n'est pas pr&#233;sent dans le tableau des urgents, l'ajouter</span>
+<span style="color: #a020f0;">if</span> (! in_array(<span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">id</span>, <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">urgents</span>) ) 
+{
+    <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">urgents</span>[] = <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">id</span>;
+}
+<span style="color: #a020f0;">else</span>
+<span style="color: #b22222;">// </span><span style="color: #b22222;">sinon, le retirer du tableau</span>
+{
+    <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">urgents</span> = array_diff(<span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">urgents</span>, <span style="color: #a020f0;">array</span>(<span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">id</span>));
+}
+</pre>
+</div></li>
+</ol>
+
+<p>
+Vous vous aiderez des outils intégrés à la barre d&rsquo;outils de
+Symfony, de <code>dump( )</code>, pour examiner l&rsquo;impact sur la session, et les requêtes.
+</p>
+
+
+<p>
+Comprenez-vous le fonctionnement des sessions PHP et des sessions
+Symfony qui sont mises en œuvre aussi bien pour les messages Flash que
+pour ces marque-pages/ ?
+</p>
+
+<div class="remarque">
+<p>
+Notez que la base de données n&rsquo;est pas impactée par
+ce mécanisme de marque-pages. Impossible pour le serveur de compter si
+une tâche n&rsquo;est jugée prioritaire par personne, avec cette implémentation. Cela ne concerne que le navigateur qui stocke
+les <i>cookies</i> et les mécanismes internes au serveur d&rsquo;exécution de PHP,
+qui gère les sessions, mais cela se fait indépendamment de Doctrine,
+donc de la base de données. 
+</p>
+
+</div>
+</div>
+</div>
+
+<div id="outline-container-org18b853e" class="outline-3">
+<h3 id="org18b853e">Consultation des fichiers de stockage de la session côté serveur HTTP/PHP</h3>
+<div class="outline-text-3" id="text-org18b853e">
+<ol class="org-ol">
+<li>Lancez l&rsquo;application, et utilisez le marque-page pour marquer une
+tâche urgente</li>
+<li>Allez dans les outils du Profiler
+Symfony. Dans l&rsquo;écran &laquo;&nbsp;Configuration&nbsp;&raquo;, puis dans la section &laquo;&nbsp;PHP
+Configuration&nbsp;&raquo;, cliquez sur &laquo;&nbsp;View full PHP configuration&nbsp;&raquo;.</li>
+<li>Cherchez la valeur de <code>session.save_path</code>. Cela vous donne
+l&rsquo;emplacement des fichiers de sauvegarde des sessions du serveur
+PHP, par exemple <code>/var/lib/php/sessions</code>.</li>
+<li><p>
+Lancez un autre terminal en parallèle de l&rsquo;exécution du serveur
+Web, et listez le contenu du répertoire de stockage des sessions :
+</p>
+
+<pre class="example">
+$ ls -alrt /var/lib/php/sessions
+ls: impossible d'ouvrir le répertoire '/var/lib/php/sessions': Permission non accordée
+
+</pre>
+
+<p>
+le répertoire n&rsquo;est pas accessible, par défaut, à n&rsquo;importe qui,
+pour éviter du vol de données sensibles des applications Web
+s&rsquo;exécutant sur le serveur.
+</p>
+
+<p>
+Si vous le pouvez, utilisez <code>sudo</code> pour forcer la lecture (sur
+machines personnelles) :
+</p>
+
+<pre class="example">
+$ sudo ls -alrt /var/lib/php/sessions
+[sudo] Mot de passe de olivier : 
+total 12
+drwxr-xr-x 4 root    root    4096 30 avril  2018 ..
+drwx-wx-wt 2 root    root    4096  9 oct.  13:07 .
+-rw------- 1 olivier olivier  266  9 oct.  14:00 sess_dosclgq3dt6v7uaetnjq1n6g60
+</pre></li>
+<li><p>
+Consultez (si vous avez les droits) le fichier de session. Vous
+verrez qu&rsquo;il contient des sérialisations (dans un format proche du
+JSON) des données de la session courante, dont le tableau
+d&rsquo;identifiants stocké dans <code>urgents</code> :
+</p>
+
+<pre class="example">
+_sf2_attributes|a:2:{s:13:"_csrf/delete4";s:43:"6U_2ctZWxuSkaIWPnWUxjb00G6V5HlJEd1eBcHbndjs";s:7:"urgents";a:1:{i:0;i:4;}}_sf2_meta|a:3:{s:1:"u";i:1602763751;s:1:"c";i:1602763749;s:1:"l";s:1:"0";}
+</pre></li>
+</ol>
+
+<p>
+Vous constatez que la session peut donc être gérée dans un fichier stocké
+sur le serveur, sous le contrôle du serveur d&rsquo;exécution des programmes
+PHP (en production).
+</p>
+
+<p>
+Ce stockage est indépendant de la base de données, et n&rsquo;est pas
+partagé avec d&rsquo;autres applications système, contrairement à un SGBD
+qui peut être accédé par différentes applications en parallèle.
+</p>
+
+<div class="remarque">
+<p>
+En production, le stockage de la session peut aussi se faire de bien
+d&rsquo;autres façons, par exemple dans un système de mémoire partagée,
+quand l&rsquo;exécution des applications PHP s&rsquo;effectue sur un cluster, avec
+chaque requête gérée sur une machine différente. Le stokage en système
+de fichier n&rsquo;est qu&rsquo;une option parmi d&rsquo;autres.
+</p>
+
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgdd1e45c" class="outline-3">
+<h3 id="orgdd1e45c">Amélioration de l&rsquo;interface pour gérer les tâches prioritaires</h3>
+<div class="outline-text-3" id="text-orgdd1e45c">
+<p>
+Une fois que vous aurez ajouté ce mécanisme, vous pouvez ajouter :
+</p>
+
+<ul class="org-ul">
+<li>une page de consultation des tâches prioritaires, s&rsquo;il y en a une
+dans la session</li>
+<li><p>
+un indicateur, dans la page de consultation d&rsquo;une tâche, qui permet
+d&rsquo;afficher si elle est prioritaire, et de changer le statut en
+redirigeant vers la route associée
+</p>
+
+<div class="org-src-container">
+<pre class="src src-html">{% set urgents = app.session.get('urgents') %}
+{% dump(urgents) %}
+{% if todo.id in urgents %}
+URGENT
+{% else %}
+NOT URGENT
+{% endif %}
+</pre>
+</div></li>
+</ul>
+
+<p>
+Vous pourrez utiliser la navigation privée du navigateur, pour
+constater que cette liste est propre à chaque &laquo;&nbsp;session&nbsp;&raquo; de navigation,
+qui garde une trace du cookie de session PHP. Comme il est
+réinitialisé en navigation priée, on perd l&rsquo;accès à la session précédente.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org848cb64" class="outline-2">
+<h2 id="org848cb64">Étape 3 : Ajout du contrôle d&rsquo;accès dans l&rsquo;application</h2>
+<div class="outline-text-2" id="text-org848cb64">
+<div class="objectif">
+<p>
+Ajouter une fonction de
+gestion de comptes d&rsquo;utilisateurs stockés dans la base de données, sur
+l&rsquo;application &laquo;&nbsp;fil-rouge&nbsp;&raquo; ToDo.<br>
+Puis intégrer 
+les fonctions nécessaires à l&rsquo;authentification et au contrôle d&rsquo;accès.
+</p>
+
+</div>
+
+
+<p>
+Vous allez procéder aux étapes suivantes, pour ajouter la gestion des
+utilisateurs dans l&rsquo;application de gestion des tâches.
+</p>
+
+<p>
+Cela permettra que l&rsquo;application soit utilisée par différents
+utilisateurs simultanément, mais que chaque utilisateur ne puisse pas
+nécessairement polluer les tâches qui correspondent à un autre
+utilisateur, s&rsquo;il fait des modifications.
+</p>
+</div>
+
+<div id="outline-container-org4f333f8" class="outline-3">
+<h3 id="org4f333f8">Étape 3-a : Ajout d&rsquo;une entité User</h3>
+<div class="outline-text-3" id="text-org4f333f8">
+<div class="objectif">
+<p>
+Ajouter l&rsquo;entité gérant les comptes utilisateurs dans le modèle de
+données du projet.
+</p>
+
+</div>
+
+<p>
+Utilisez l&rsquo;assistant, qui va procéder à l&rsquo;ajout d&rsquo;une entité au
+modèle, dans le répertoire de l&rsquo;application Symfony :
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">bin/console make:user
+</pre>
+</div>
+
+<pre class="example">
+The name of the security user class (e.g. User) [User]:
+&gt; User
+
+Do you want to store user data in the database (via Doctrine)? (yes/no) [yes]:
+&gt; yes
+
+Enter a property name that will be the unique "display" name for the user (e.g.
+email, username, uuid [email]
+&gt; email
+
+Does this app need to hash/check user passwords? (yes/no) [yes]:
+&gt; yes
+
+created: src/Entity/User.php
+created: src/Repository/UserRepository.php
+updated: src/Entity/User.php
+updated: config/packages/security.yaml
+
+  Success! 
+
+
+ Next Steps:
+   - Review your new App\Entity\User class.
+   - Use make:entity to add more fields to your User entity and then run make:migration.
+   - Create a way to authenticate! See https://symfony.com/doc/current/security.html
+
+</pre>
+
+<p>
+Puis mettez le schéma de la base à jour :
+</p>
+<ol class="org-ol">
+<li><p>
+génération du script de migration :
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">bin/console  make:migration
+
+  Success! 
+
+ Next: Review the new migration <span style="color: #8b2252;">"migrations/Version20201015122201.php"</span>
+ Then: Run the migration with php bin/console doctrine:migrations:migrate
+ See https://symfony.com/doc/current/bundles/DoctrineMigrationsBundle/index.html
+
+</pre>
+</div></li>
+
+<li><p>
+application de la migration, pour créer la table <code>user</code> dans la base :
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">php bin/console doctrine:migrations:migrate
+
+ WARNING! You are about to execute a database migration that could result<span style="color: #a020f0;"> in</span> schema changes and data loss. Are you sure you wish to continue? (yes/no) [yes]:
+ &gt; 
+
+[notice] Migrating up to DoctrineMigrations\Version20201015122201
+[notice] finished<span style="color: #a020f0;"> in</span> 26.9ms, used 18M memory, 1 migrations executed, 2 sql queries
+</pre>
+</div></li>
+</ol>
+</div>
+</div>
+
+
+<div id="outline-container-orgf6a2d3c" class="outline-3">
+<h3 id="orgf6a2d3c">Étape 3-b : Ajout d&rsquo;un utilisateur de test</h3>
+<div class="outline-text-3" id="text-orgf6a2d3c">
+<p>
+La documentation de Symfony explique comment intégrer dans la
+génération des données de test de l&rsquo;application l&rsquo;insertion
+d&rsquo;utilisateurs dans la base de données, au sein de la section
+<a href="https://symfony.com/doc/4.4/security.html#c-encoding-passwords">2c) Encoding Passwords</a>.
+</p>
+
+<p>
+Pour que cela soit plus simple à faire, ajoutez un nouveau fichier aux
+<i>Data Fixtures</i> de votre projet, en recopiant directement dans le fichier
+<code>src/DataFixtures/UserFixtures.php</code> l&rsquo;exemple suivant :
+</p>
+
+<div class="org-src-container">
+<pre class="src src-php"><span style="color: #483d8b;">&lt;?php</span>
+
+<span style="color: #a020f0;">namespace</span> <span style="color: #228b22;">App\DataFixtures</span>;
+
+<span style="color: #a020f0;">use</span> <span style="color: #228b22;">Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface</span>;
+<span style="color: #a020f0;">use</span> <span style="color: #228b22;">Doctrine\Bundle\FixturesBundle\Fixture</span>;
+<span style="color: #a020f0;">use</span> <span style="color: #228b22;">Doctrine\Persistence\ObjectManager</span>;
+
+<span style="color: #a020f0;">use</span> <span style="color: #228b22;">App\Entity\User</span>;
+
+<span style="color: #a020f0;">class</span> <span style="color: #228b22;">UserFixtures</span> <span style="color: #a020f0;">extends</span> <span style="color: #228b22;">Fixture</span>
+{
+    <span style="color: #a020f0;">private</span> <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">passwordEncoder</span>;
+
+    <span style="color: #a020f0;">public</span> <span style="color: #a020f0;">function</span> <span style="color: #0000ff;">__construct</span>(<span style="color: #228b22;">UserPasswordEncoderInterface</span> <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">passwordEncoder</span>)
+    {
+    <span style="color: #008b8b;">$</span><span style="color: #008b8b;">this</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #a0522d;">passwordEncoder</span> = <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">passwordEncoder</span>;
+    }
+
+    <span style="color: #a020f0;">public</span> <span style="color: #a020f0;">function</span> <span style="color: #0000ff;">load</span>(<span style="color: #228b22;">ObjectManager</span> <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">manager</span>)
+    {
+    <span style="color: #008b8b;">$</span><span style="color: #008b8b;">this</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">LoadUsers</span>(<span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">manager</span>);
+    }
+
+    <span style="color: #a020f0;">private</span> <span style="color: #a020f0;">function</span> <span style="color: #0000ff;">loadUsers</span>(<span style="color: #228b22;">ObjectManager</span> <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">manager</span>)
+    {
+    <span style="color: #a020f0;">foreach</span> (<span style="color: #008b8b;">$</span><span style="color: #008b8b;">this</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">getUserData</span>() <span style="color: #a020f0;">as</span> [<span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">email</span>,<span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">plainPassword</span>,<span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">role</span>]) {
+        <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">user</span> = <span style="color: #a020f0;">new</span> <span style="color: #228b22;">User</span>();
+        <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">encodedPassword</span> = <span style="color: #008b8b;">$</span><span style="color: #008b8b;">this</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #a0522d;">passwordEncoder</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">encodePassword</span>(<span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">user</span>, <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">plainPassword</span>);
+        <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">user</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">setEmail</span>(<span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">email</span>);
+        <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">user</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">setPassword</span>(<span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">encodedPassword</span>);
+
+        <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">roles</span> = <span style="color: #a020f0;">array</span>();
+        <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">roles</span>[] = <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">role</span>;
+        <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">user</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">setRoles</span>(<span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">roles</span>);
+
+        <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">manager</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">persist</span>(<span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">user</span>);
+    }
+    <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">manager</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">flush</span>();
+    }
+
+    <span style="color: #a020f0;">private</span> <span style="color: #a020f0;">function</span> <span style="color: #0000ff;">getUserData</span>()
+    {
+    <span style="color: #a020f0;">yield</span> [<span style="color: #8b2252;">'chris@localhost'</span>,<span style="color: #8b2252;">'chris'</span>,<span style="color: #8b2252;">'ROLE_USER'</span>];
+    <span style="color: #a020f0;">yield</span> [<span style="color: #8b2252;">'anna@localhost'</span>,<span style="color: #8b2252;">'anna'</span>,<span style="color: #8b2252;">'ROLE_ADMIN'</span>];
+
+    }
+}
+</pre>
+</div>
+
+<p>
+Lorsque l&rsquo;application sera déployée en production, les comptes des utilisateurs
+seront créés depuis l&rsquo;interface de l&rsquo;application, mais pour les
+besoins des tests, nous avons chargé des utilisateurs dans la base de
+données.
+</p>
+
+<p>
+Consultez :
+</p>
+<ul class="org-ul">
+<li>la nouvelle entité <code>User</code> ajoutée au modèle de données</li>
+<li>le code de chargement des <i>Data Fixtures</i> qui a servi à initialiser
+les données de tests présentes dans la base, qui donne les
+identifiants et les mots-de-passe des utilisateurs de tests</li>
+</ul>
+
+<p>
+Rechargez les données de test pour ré-encoder les mots-de-passe par
+rapport à l&rsquo;environnement local :
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">bin/console doctrine:fixtures:load
+</pre>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-orgc436e0a" class="outline-3">
+<h3 id="orgc436e0a">Étape 3-c : Mise en œuvre de l&rsquo;authentification</h3>
+<div class="outline-text-3" id="text-orgc436e0a">
+<p>
+Encore une fois, on va s&rsquo;appuyer sur un assistant générateur de code,
+pour ajouter au projet le contrôleur qui contiendra le code
+d&rsquo;authentification, via un formulaire d&rsquo;authentification applicative.
+</p>
+
+<ol class="org-ol">
+<li><p>
+Suivez la documentation
+<a href="https://symfony.com/doc/4.4/security/form_login_setup.html">How to Build a Login Form</a>, qui repose sur l&rsquo;utilisation de l&rsquo;assistant :
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">bin/console make:auth
+</pre>
+</div>
+
+<pre class="example">
+What style of authentication do you want? [Empty authenticator]:
+ [0] Empty authenticator
+ [1] Login form authenticator
+&gt; 1
+
+The class name of the authenticator to create (e.g. AppCustomAuthenticator):
+&gt; LoginFormAuthenticator
+
+Choose a name for the controller class (e.g. SecurityController) [SecurityController]:
+&gt; SecurityController
+
+Do you want to generate a '/logout' URL? (yes/no) [yes]:
+&gt; yes
+
+ created: src/Security/LoginFormAuthenticator.php
+ updated: config/packages/security.yaml
+ created: src/Controller/SecurityController.php
+ created: templates/security/login.html.twig
+
+  Success! 
+
+
+ Next:
+ - Customize your new authenticator.
+ - Finish the redirect "TODO" in the App\Security\LoginFormAuthenticator::onAuthenticationSuccess() method.
+ - Review &amp; adapt the login template: templates/security/login.html.twig.
+</pre></li>
+
+<li>Rafraîchissez le cache : <code>bin/console cache:clear</code></li>
+
+<li>Vérifiez la table des routes de l&rsquo;application</li>
+
+<li>Consultez le code généré (rafraîchissez le projet dans Eclipse)</li>
+
+<li>Testez que l&rsquo;authentification fonctionne bien, et si nécessaire, procédez aux étapes restantes telles qu&rsquo;indiquées dans la
+documentation :
+<a href="https://symfony.com/doc/4.4/security/form_login_setup.html#finishing-the-login-form">Finishing
+the login form</a> :
+<ul class="org-ul">
+<li>finalisation du comportement en cas de login réussi dans <code>src/Security/LoginFormAuthenticator.php</code></li>
+
+<li><p>
+ajout de la cible de redirection en cas de lougout : 
+</p>
+<pre class="example">
+security:
+   ...
+   firewalls:
+        ...
+        main:
+            logout:
+                path: app_logout
+                # where to redirect after logout
+                target: app_any_route
+
+</pre></li>
+</ul></li>
+</ol>
+
+<p>
+Vous pourriez ensuite générer un formulaire d&rsquo;inscription avec
+l&rsquo;assistant <code>bin/console make:registration-form</code>, mais ce n&rsquo;est pas
+forcément utile pour notre TP.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgd8a9c14" class="outline-3">
+<h3 id="orgd8a9c14">Étape 3-d : Mise en œuvre d&rsquo;une hiérarchie de rôles</h3>
+<div class="outline-text-3" id="text-orgd8a9c14">
+<p>
+On souhaite que les rôles suivants soient définis dans l&rsquo;entrée <code>role_hierarchy</code> de la
+configuraton du bundle <code>security</code> de Symfony
+(cf. <code>config/packages/security.yaml</code>) :
+</p>
+<ul class="org-ul">
+<li><code>ROLE_ADMIN</code> : le <b>propriétaire</b> principal de l&rsquo;application</li>
+<li><code>ROLE_USER</code> : un utilisateur enregistré</li>
+</ul>
+<p>
+chacun de ces rôles &laquo;&nbsp;hérite&nbsp;&raquo; des rôles de plus bas niveau.
+</p>
+
+<p>
+Les utilisateurs authentifiés disposent automatiquement du rôle
+<code>ROLE_USER</code>.
+</p>
+
+<p>
+Les autres rôles sont à attribuer explicitement aux utilisateurs, via des
+fonctions ajoutées à l&rsquo;application, qui correspondent à la façon dont
+les rôles sont attribués dans les <i>Data Fixtures</i>.
+</p>
+
+
+<ol class="org-ol">
+<li><p>
+Modifiez le contenu du fichier de configuration <code>config/packages/security.yaml</code>
+pour qu&rsquo;il contienne la hiérarchie de rôles suivante  :
+</p>
+
+<div class="org-src-container">
+<pre class="src src-yaml">security:
+    ...
+    role_hierarchy:
+	ROLE_ADMIN:       ROLE_USER
+	ROLE_SUPER_ADMIN: ROLE_ADMIN
+</pre>
+</div></li>
+
+<li>Connectez-vous avec les deux utilisateurs, et vérifiez que le rôle
+change en conséquence.</li>
+</ol>
+
+<div class="remarque">
+<p>
+La barre d&rsquo;outils Symfony fournit des informations sur
+l&rsquo;utilisateur connecté actuellement, dont les rôles sont visibles dans
+le panel <i>Security</i> des outils Symfony.
+</p>
+
+</div>
+</div>
+</div>
+
+
+
+<div id="outline-container-org9bce977" class="outline-3">
+<h3 id="org9bce977">Étape 3-e : Adaptation des menus</h3>
+<div class="outline-text-3" id="text-org9bce977">
+<p>
+Cette étape suppose que votre application utilise déjà les menus
+Bootstrap pour afficher les menus de haut de page, si vous avez
+effectué cette étape de la mise en œuvre.
+</p>
+
+<p>
+Vous allez alors ajouter un menu offrant des fonctions de connexion / déconnexion.
+</p>
+
+<p>
+Le principe consiste à prévoir, dans le gabarit de base des pages, une
+section optionnelle dépendant de si l&rsquo;utilisateur est affiché (ou de
+son rôle), du type :
+</p>
+
+<pre class="example">
+{% if app.user %}
+...
+    {{ render_bootstrap_menu('account') }}
+...
+{% else %}
+...
+    {{ render_bootstrap_menu('anonymousaccount') }}
+...
+&lt;/div&gt;
+{% endif %}
+</pre>
+
+<p>
+La détection de l&rsquo;utilisateur connecté est faite en vérifiant s&rsquo;il y a
+un utilisateur courant, via <code>app.user</code> définie.
+</p>
+
+<p>
+On prépare ainsi deux menus différents : celui pour les utilisateurs
+déjà connectés, et l&rsquo;autre qui permettra justement, de se connecter.
+</p>
+
+<ol class="org-ol">
+<li><p>
+ajoutez dans le gabarit, dans la définition des menus le code
+suivant :
+</p>
+
+<div class="org-src-container">
+<pre class="src src-html">&lt;<span style="color: #0000ff;">div</span> <span style="color: #a0522d;">class</span>=<span style="color: #8b2252;">"collapse navbar-collapse"</span> <span style="color: #a0522d;">id</span>=<span style="color: #8b2252;">"navbarResponsive"</span>&gt;
+     &lt;<span style="color: #0000ff;">ul</span> <span style="color: #a0522d;">class</span>=<span style="color: #8b2252;">"navbar-nav ml-auto"</span>&gt;
+             {{ render_bootstrap_menu('main') }}
+     &lt;/<span style="color: #0000ff;">ul</span>&gt;
+&lt;/<span style="color: #0000ff;">div</span>&gt;
+{% if app.user %}
+&lt;<span style="color: #0000ff;">div</span> <span style="color: #a0522d;">class</span>=<span style="color: #8b2252;">"collapse navbar-collapse"</span> <span style="color: #a0522d;">id</span>=<span style="color: #8b2252;">"navbarsAccountDefault"</span>&gt;
+     &lt;<span style="color: #0000ff;">ul</span> <span style="color: #a0522d;">class</span>=<span style="color: #8b2252;">"navbar-nav ml-auto"</span>&gt;
+             {{ render_bootstrap_menu('account') }}
+     &lt;/<span style="color: #0000ff;">ul</span>&gt;
+&lt;/<span style="color: #0000ff;">div</span>&gt;
+{% else %}
+&lt;<span style="color: #0000ff;">div</span> <span style="color: #a0522d;">class</span>=<span style="color: #8b2252;">"collapse navbar-collapse"</span> <span style="color: #a0522d;">id</span>=<span style="color: #8b2252;">"navbarsAnonAccountDefault"</span>&gt;
+     &lt;<span style="color: #0000ff;">ul</span> <span style="color: #a0522d;">class</span>=<span style="color: #8b2252;">"navbar-nav ml-auto"</span>&gt;
+             {{ render_bootstrap_menu('anonymousaccount') }}
+     &lt;/<span style="color: #0000ff;">ul</span>&gt;
+&lt;/<span style="color: #0000ff;">div</span>&gt;
+{% endif %}
+</pre>
+</div></li>
+
+<li><p>
+dans la configuration des menus, dans <code>config/packages/bootstrap_menu.yaml</code> ajoutez les définitions
+des deux menus :
+</p>
+
+<pre class="example">
+bootstrap_menu:
+  menus:
+    main:
+...
+    anonymousaccount:
+      items:
+        account:
+          label: 'Account'
+          items:
+            login:
+              label: 'Login'
+              route: 'app_login'
+#            register:
+#              label: 'Register'
+#              route: 'app_register'
+    account:
+      items:
+        account:
+          label: 'Account'
+          items:
+            logout:
+              label: 'Logout'
+              route: 'app_logout'
+              roles: [ 'ROLE_USER' ]
+
+</pre></li>
+</ol>
+
+<p>
+Testez le fonctionnement. Le menu doit afficher des informations
+différentes si l&rsquo;utilisateur est authentifié ou non.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org5d5d3aa" class="outline-3">
+<h3 id="org5d5d3aa">Étape 3-f : Adaptations de l&rsquo;interface en fonction de l&rsquo;utilisateur</h3>
+<div class="outline-text-3" id="text-org5d5d3aa">
+<p>
+On souhaite que l&rsquo;accès en consultation aux tâches présentes dans la
+base de donnée de l&rsquo;application soit accessible à tout le monde (on
+a par exemple déployé l&rsquo;application en intranet : pas besoin de se connecter pour celà).
+</p>
+
+<p>
+Mais on souhaite que les fonctions de modifications soient réservées à
+des utilisateurs authentifiés :
+</p>
+<ul class="org-ul">
+<li>modification possible par tout utilisateur</li>
+<li>suppression possible uniquement par l&rsquo;adminstrateur.</li>
+</ul>
+
+<p>
+On va commencer par modifier les gabarits de l&rsquo;application pour
+masquer les liens vers les fonctions qui ne doivent pas être
+accessibles :
+</p>
+
+<ol class="org-ol">
+<li><p>
+Modifiez le template d&rsquo;affichage de la liste des tâches
+(<code>templates/todo/index.html.twig</code>), pour ajouter une instruction pour
+n&rsquo;afficher le lien vers les fonctions d&rsquo;éditions que si
+l&rsquo;utilisateur connecté possède le rôle <code>ROLE_USER</code> :
+</p>
+
+<div class="org-src-container">
+<pre class="src src-html">{% if is_granted('ROLE_USER') %}
+    &lt;<span style="color: #0000ff;">a</span> <span style="color: #a0522d;">href</span>=<span style="color: #8b2252;">"{{ path('todo_edit', {'id': todo.id}) }}"</span>&gt;edit&lt;/<span style="color: #0000ff;">a</span>&gt;
+{% endif %}
+</pre>
+</div></li>
+
+<li>Procédez de même pour la suppression, dans le gabarit d&rsquo;affichage
+<code>templates/todo/show.html.twig</code>, pour que l&rsquo;affichage du bouton
+Delete ne se fasse que pour le
+rôle <code>ROLE_ADMIN</code></li>
+</ol>
+
+<p>
+Lancez l&rsquo;application et vérifiez que l&rsquo;application a donc un fonctionnement qui dépend du profil de
+l&rsquo;utilisateur connecté.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org6f0a2b1" class="outline-3">
+<h3 id="org6f0a2b1">Étape 3-g : Vérification du contrôle d&rsquo;accès effectif</h3>
+<div class="outline-text-3" id="text-org6f0a2b1">
+<div class="objectif">
+<p>
+Cette étape vise à vérifier que le contrôle d&rsquo;accès fonctionne
+effectivement, pour protéger l&rsquo;accès aux fonctions de l&rsquo;application,
+en fonction de l&rsquo;authentification ou non de l&rsquo;utilisateur.
+</p>
+
+</div>
+
+<div class="remarque">
+<p>
+Qu&rsquo;advient-il si un utilisateur devine que le lien <code>/todo/{id}/edit</code>
+permet d&rsquo;accéder aux fonctions de modification d&rsquo;une tâche ?<br>
+<br>
+Le lien masqué vers &laquo;&nbsp;edit&nbsp;&raquo; suffit-il à protéger l&rsquo;accès aux fonctions de
+l&rsquo;application ?<br>
+<br>
+De même, le bouton de suppression existe encore dans le formulaire de
+modification&#x2026; risqué&#x2026;
+</p>
+
+</div>
+
+<p>
+Modifiez le code du contrôleur pour sécuriser l&rsquo;accès aux routes,
+comme indiqué dans la documentation <a href="https://symfony.com/doc/4.4/security.html#securing-controllers-and-other-code">Securing Controllers and other Code</a> :
+</p>
+
+<ol class="org-ol">
+<li><p>
+Modifiez les annotations au-dessus de la méthode <code>TodoController::edit</code> qui gère
+les modifications, pour ajouter l&rsquo;annotation
+<code>@IsGranted("ROLE_USER")</code>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-php"><span style="color: #a020f0;">use</span> <span style="color: #228b22;">Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted</span>;
+...
+    <span style="color: #8b2252;">/**</span>
+<span style="color: #8b2252;">     * </span><span style="color: #008b8b;">@Route</span><span style="color: #8b2252;">("/{id}/edit", name="todo_edit", methods={"GET","POST"})</span>
+<span style="color: #8b2252;">     * </span><span style="color: #008b8b;">@IsGranted</span><span style="color: #8b2252;">("ROLE_USER")</span>
+<span style="color: #8b2252;">     */</span>
+    <span style="color: #a020f0;">public</span> <span style="color: #a020f0;">function</span> <span style="color: #0000ff;">edit</span>(<span style="color: #228b22;">Request</span> <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">request</span>, <span style="color: #228b22;">Todo</span> <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">todo</span>): <span style="color: #228b22;">Response</span>
+</pre>
+</div></li>
+
+<li>Modifiez de façon identique la route d&rsquo;accès aux suppressions pour
+réserver l&rsquo;accès aux utilisateurs possédant le rôle <code>ROLE_ADMIN</code></li>
+
+<li><p>
+Vérifiez que vous aboutissez bien à une page &laquo;&nbsp;403&nbsp;&raquo; Access denied,
+lorsque vous essayez de supprimer sans être administrateur :
+normalement, il reste un bouton &laquo;&nbsp;Delete&nbsp;&raquo; actionnable depuis la page
+de consultation (on a en principe oublié de le masquer, à dessein,
+pour pouvoir faire le présent test).
+</p>
+
+<p>
+La barre d&rsquo;outils Symfony indique pourquoi :
+</p>
+<ul class="org-ul">
+<li>HTTP status 403 Forbidden</li>
+<li>Controller TodoController:: edit</li>
+<li>Route name todo_edit</li>
+</ul></li>
+</ol>
+
+
+<p>
+On sait donc bien masquer les lien <b>ET</b> contrôler effectivement l&rsquo;accès aux
+fonctions CRUD, pour prévenir des tentatives d&rsquo;utilisation malveillantes.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgceff0f5" class="outline-3">
+<h3 id="orgceff0f5">Étape 3-h : Gestion des droits d&rsquo;accès plus contextuelle</h3>
+<div class="outline-text-3" id="text-orgceff0f5">
+<p>
+On souhaite affiner un peu plus le fonctionnement de l&rsquo;application de
+façon à ce que les contrôles sur les droits d&rsquo;accès à la fonction de suppression soient moins
+restrictifs, de façon à ce que :
+</p>
+<ul class="org-ul">
+<li>les utilisateurs authentifiés et administrateurs peuvent supprimer
+toutes les tâches</li>
+<li>les utilisateurs authentifiés non-administrateurs peuvent supprimer uniquement
+les tâches déjà terminées.</li>
+</ul>
+
+<p>
+Modifiez la gestion de la suppression comme suit :
+</p>
+
+<ol class="org-ol">
+<li>modifiez le code du gabarit d&rsquo;édition des tâches de façon à
+afficher le bouton delete, soit :
+<ul class="org-ul">
+<li>pour les utilisateurs administrateurs</li>
+<li>soit pour les utilisateurs authentifiés &laquo;&nbsp;ordinaires&nbsp;&raquo;, mais dans ce
+cas, uniquement quand la tâche est terminée</li>
+</ul></li>
+<li>vérifiez que le bouton s&rsquo;affiche bien dans ces conditions</li>
+<li><p>
+testez la suppression avec un utilisateur de rôle <code>ROLE_USER</code>
+</p>
+
+<p>
+Normalement, la suppression est toujours refusée, car même si le
+bouton est affiché, on garde la vérification &laquo;&nbsp;inconditionnelle&nbsp;&raquo; sur
+le rôle <code>ROLE_ADMIN</code> dans l&rsquo;annotation de la route <code>todo_delete</code>.
+</p></li>
+<li>modifiez donc le code de la méthode delete pour effectuer un traitement
+conditionnel :
+<ol class="org-ol">
+<li><p>
+remplacez l&rsquo;annotation <code>@IsGranted("ROLE_ADMIN")</code> par
+<code>@IsGranted("ROLE_USER")</code>
+</p>
+
+<p>
+Cette fois-ci, tout utilisateur peut tenter sa chance même s&rsquo;il
+n&rsquo;est pas administrateur&#x2026;
+</p></li>
+
+<li><p>
+dans le corps du code, vérifiez la règle de privilège
+administrateur, ou de tâche terminée :
+</p>
+<div class="org-src-container">
+<pre class="src src-php"><span style="color: #a020f0;">if</span> (<span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">todo</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">getCompleted</span>() == <span style="color: #008b8b;">false</span>) {
+    <span style="color: #008b8b;">$</span><span style="color: #008b8b;">this</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">denyAccessUnlessGranted</span>(<span style="color: #8b2252;">'ROLE_ADMIN'</span>);
+}
+</pre>
+</div>
+
+<p>
+Essayez de passer par le formulaire d&rsquo;affichage ou le lien
+Delete reste encore quelque soit le contexte, pour déclencher la
+suppression.
+</p>
+
+<p>
+Normalement, une tentative de suppression fonctionne bien cette
+fois, selon les propriétés de la tâche.
+</p></li>
+</ol></li>
+</ol>
+
+<p>
+Vous maîtrisez maintenant la façon dont on peut gérer les permissions
+dans l&rsquo;application, de façon large, en fonction des rôles, ou
+contextuelle, selon les utilisateurs et les données à traîter.
+</p>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org300d90f" class="outline-2">
+<h2 id="org300d90f">Évaluation</h2>
+<div class="outline-text-2" id="text-org300d90f">
+<p>
+Vous comprenez les mécanismes suivants des applications Web :
+</p>
+<ul class="org-ul">
+<li>le stockage d&rsquo;informations dans la session, qui est déterminée grâce
+aux cookies échangées entre le client HTTP et le serveur Web. Ces
+informations sont donc propres à chaque client, chaque utilisateur,
+et non partagées entre tous les utilisateurs comme dans le cas des
+données présentes dans la base de données</li>
+<li>les principes de la gestion des permissions avec le modèle RBAC tel
+qu&rsquo;il est mis en oeuvre dans Symfony. Elle se décompose en deux
+grands axes :
+<ul class="org-ul">
+<li>personnaliser l&rsquo;affichage en fonction du profil de l&rsquo;utilisateur,
+ce qui est fait essentiellement dans les gabarits</li>
+<li>le contrôle effectif des permissions effectué dans le routage ou
+dans le code qu&rsquo;on place dans les contrôleurs, pour une gestion
+plus fine.</li>
+</ul></li>
+</ul>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Auteur: Olivier Berger (TSP)</p>
+<p class="date">Created: 2020-10-21 Wed 14:59</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

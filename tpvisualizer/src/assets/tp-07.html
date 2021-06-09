@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<!-- 2020-10-22 Thu 16:15 -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TP n°7 - Implémentation de formulaires pour entités liées</title>
+<meta name="generator" content="Org mode">
+<meta name="author" content="Olivier Berger (TSP)">
+<meta name="description" content="CSC4101 Telecom SudParis - 2020-2021 - TP n°7"
+>
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+<meta name="copyright" content="&copy; 2017 Telecom SudParis + Olivier Berger" />
+<link rel="stylesheet" type="text/css" href="../media/tsp.css" />
+<style type="text/css">
+.floatrightclass {
+float: right;
+margin: 0 0 10px 10px;
+}
+.floatleftclass {
+float: left;
+margin: 0 0 10px 10px;
+}
+.clearrightclass {
+clear: right;
+}
+.clearleftclass {
+clear: left;
+}
+</style>
+<script type="text/javascript" src='../media/tsp.js'></script>
+<script type="text/javascript" src="../media/org-info-src.js"></script>
+<script type="text/javascript">
+/* <![CDATA[ */
+org_html_manager.set("TOC_DEPTH", "2");
+org_html_manager.set("LINK_HOME", "");
+org_html_manager.set("LINK_UP", "");
+org_html_manager.set("LOCAL_TOC", "0");
+org_html_manager.set("VIEW_BUTTONS", "0");
+org_html_manager.set("MOUSE_HINT", "#cccccc");
+org_html_manager.set("FIXED_TOC", "0");
+org_html_manager.set("TOC", "1");
+org_html_manager.set("VIEW", "showall");
+org_html_manager.set("HELP", "1");
+org_html_manager.setup ();
+/* ]]> */
+</script>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2019 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">TP n°7 - Implémentation de formulaires pour entités liées
+<br>
+<span class="subtitle">Fonctionnalités utiles de Symfony pour accélérer prototypage et développement sur le modèle des données</span>
+</h1>
+<div id="table-of-contents">
+<h2>Table des matières</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org47ea53d">Introduction</a></li>
+<li><a href="#org734cff8">Étape 1 : Gestion d&rsquo;associations 1-N dans Doctrine et Symfony</a>
+<ul>
+<li><a href="#org8b70312">Étape 1-a : Travail dans une copie de l&rsquo;application ToDo</a></li>
+<li><a href="#orgcc3a800">Étape 1-b : Ajout de l&rsquo;entité <code>Project</code></a></li>
+<li><a href="#org3a1b202">Étape 1-c : Gestion du lien entre projet et tâches</a>
+<ul>
+<li><a href="#org85924c2">Ajout du lien vers le projet dans le formulaire de modification des tâches</a></li>
+<li><a href="#org68427b4">Ajout de la liste des tâches dans la consultation des projets</a></li>
+<li><a href="#org5a76ac3">Ajout des éléments de navigation entre pages</a></li>
+</ul>
+</li>
+<li><a href="#org77360cd">Étape 1-d : Formulaire d&rsquo;ajout d&rsquo;une tâche dans un projet</a>
+<ul>
+<li><a href="#orgb696c6d">Ajout du formulaire de création d&rsquo;une tâche dans le contexte d&rsquo;un projet</a></li>
+<li><a href="#org6a63f30">Ajout du lien d&rsquo;appel de ce formulaire</a></li>
+<li><a href="#org7706d58">Amélioration du formulaire d&rsquo;ajout d&rsquo;une nouvelle tâche à un projet (optionnelle)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#org1303c68">Étape 2 : Ajout d&rsquo;une fonction de mise en ligne d&rsquo;images</a></li>
+<li><a href="#org3a15bb6">Évaluation</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org47ea53d" class="outline-2">
+<h2 id="org47ea53d">Introduction</h2>
+<div class="outline-text-2" id="text-org47ea53d">
+<div class="objectif">
+<p>
+Vous allez approfondir votre connaissance du
+cadriciel Symfony, en vous concentrant sur la mise en œuvre du Modèle de
+l&rsquo;application.<br>
+<br>
+Grâce au composant d&rsquo;ORM <i>Doctrine</i>, Symfony peut gérer
+la persistance des données dans un paradigme objet.<br>
+<br>
+On a vu que des outils de
+génération de code additionnels permettent de faciliter le prototypage
+et le développement des applications.<br>
+<br>
+Cette fonctionnalité permettra de mettre en œuvre des données liées
+par une association 1-N.
+</p>
+
+</div>
+
+<p>
+L&rsquo;ajout de nouvelles fonctionnalités à une application nécessite
+l&rsquo;extension du <span class="underline">Modèle</span> des données de l&rsquo;application, et l&rsquo;ajout du
+code de gestion des pages correspondantes. On va examiner en
+particulier le cas des associations 1-N, qui sont très fréquentes en
+pratique.
+</p>
+
+<p>
+Plutôt que d&rsquo;écrire du code &laquo;&nbsp;à la main&nbsp;&raquo; pour ajouter ce type de
+fonctions à l&rsquo;application, on peut utiliser des outils fournis par
+Symfony pour générer du code. Ceci diminue le risque d&rsquo;erreurs et
+d&rsquo;oublis, et accélère le développement, au <b>moins pour un prototype</b> de
+la fonction voulue côté <i>back-office</i>. La finalisation ultérieure est ensuite réalisée
+par les développeurs, qui effectuent les ajustement nécessaires. Le
+code généré est du code PHP pour Symfony complètement &laquo;&nbsp;normal&nbsp;&raquo; qui peut être
+retouché ensuite à loisir.
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-org734cff8" class="outline-2">
+<h2 id="org734cff8">Étape 1 : Gestion d&rsquo;associations 1-N dans Doctrine et Symfony</h2>
+<div class="outline-text-2" id="text-org734cff8">
+<div class="objectif">
+<p>
+L&rsquo;objectif de cette étape est de comprendre précisément le
+mécanisme de gestion d&rsquo;une association 1-N dans le modèle des données
+</p>
+
+</div>
+
+<p>
+Dans cette nouvelle mouture de l&rsquo;application fil-rouge ToDo on ajoute une gestion de &laquo;&nbsp;projets&nbsp;&raquo; dans
+lesquels on peut ranger des tâches.
+</p>
+
+<p>
+Il s&rsquo;agit d&rsquo;une simple association, transitoire, et non d&rsquo;une
+composition. Un projet peut contenir de 0 à N tâches et une tâche peut
+être associée ou non à 1 projet.
+</p>
+</div>
+
+<div id="outline-container-org8b70312" class="outline-3">
+<h3 id="org8b70312">Étape 1-a : Travail dans une copie de l&rsquo;application ToDo</h3>
+<div class="outline-text-3" id="text-org8b70312">
+<p>
+Vous allez modifier la version de ToDo déjà utilisée à la séance
+précédente.
+</p>
+
+<p>
+Nous vous recommendons de travailler dans une copie du répertoire :
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #483d8b;">cd</span> $<span style="color: #a0522d;">HOME</span>/CSC4101/
+mkdir tp-07
+cp -r tp-06/todo-app tp-07/
+<span style="color: #483d8b;">cd</span> tp-07/todo-app/
+bin/console cache:clear
+</pre>
+</div>
+
+<p>
+Pensez aussi à supprimer les répertoires des vieilles séances
+(tp-N-2) pour libérer un peu d&rsquo;espace disque.
+</p>
+
+<p>
+Recréez un nouveau projet dans Eclipse pour la nouvelle version de ToDo de
+la présente séance.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgcc3a800" class="outline-3">
+<h3 id="orgcc3a800">Étape 1-b : Ajout de l&rsquo;entité <code>Project</code></h3>
+<div class="outline-text-3" id="text-orgcc3a800">
+<div class="objectif">
+<p>
+L&rsquo;objectif de cette étape est d&rsquo;ajouter l&rsquo;entité au modèle des données
+de l&rsquo;application.
+</p>
+
+</div>
+
+<p>
+Procédez aux modifications suivantes :
+</p>
+
+<ol class="org-ol">
+<li><p>
+Ajoutez l&rsquo;entité <code>Project</code> qui sera liée aux entités des tâches <code>Todo</code> via
+une association 1-N, en utilisant le générateur Symfony pour Doctrine.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">bin/console make:entity
+</pre>
+</div>
+
+<pre class="example">
+ Class name of the entity to create or update (e.g. TinyChef):
+ &gt; Project
+
+ created: src/Entity/Project.php
+ created: src/Repository/ProjectRepository.php
+
+ Entity generated! Now let's add some fields!
+ You can always add more fields later manually or by re-running this command.
+
+ New property name (press &lt;return&gt; to stop adding fields):
+ &gt; title
+
+ Field type (enter ? to see all types) [string]:
+ &gt; 
+
+ Field length [255]:
+ &gt; 
+
+ Can this field be null in the database (nullable) (yes/no) [no]:
+ &gt; 
+
+ updated: src/Entity/Project.php
+
+ Add another property? Enter the property name (or press &lt;return&gt; to stop adding fields):
+ &gt; description
+
+ Field type (enter ? to see all types) [string]:
+ &gt; text
+
+ Can this field be null in the database (nullable) (yes/no) [no]:
+ &gt; yes
+
+ updated: src/Entity/Project.php
+
+ Add another property? Enter the property name (or press &lt;return&gt; to stop adding fields):
+ &gt; todos
+
+ Field type (enter ? to see all types) [string]:
+ &gt; ?
+
+Main types
+  * string
+  * text
+  * boolean
+  * integer (or smallint, bigint)
+  * float
+
+Relationships / Associations
+  * relation (a wizard will help you build the relation)
+  * ManyToOne
+  * OneToMany
+  * ManyToMany
+  * OneToOne
+
+Array/Object Types
+  * array (or simple_array)
+  * json
+  * object
+  * binary
+  * blob
+
+Date/Time Types
+  * datetime (or datetime_immutable)
+  * datetimetz (or datetimetz_immutable)
+  * date (or date_immutable)
+  * time (or time_immutable)
+  * dateinterval
+
+Other Types
+  * json_array
+  * decimal
+  * guid
+
+
+ Field type (enter ? to see all types) [string]:
+ &gt; OneToMany
+
+ What class should this entity be related to?:
+ &gt; Todo
+
+ A new property will also be added to the Todo class so that you can access and set the related Project object from it.
+
+ New field name inside Todo [project]:
+ &gt; 
+
+ Is the Todo.project property allowed to be null (nullable)? (yes/no) [yes]:
+ &gt; yes
+
+ updated: src/Entity/Project.php
+ updated: src/Entity/Todo.php
+
+ Add another property? Enter the property name (or press &lt;return&gt; to stop adding fields):
+ &gt; 
+
+
+
+  Success! 
+
+
+ Next: When you're ready, create a migration with php bin/console make:migration
+</pre>
+
+<div class="remarque">
+<p>
+Notez que le champ <code>project</code> ajouté à <code>Todo</code> ci-dessus, peut être mis à
+<code>null</code>, ce qui signifie qu&rsquo;une tâche peut n&rsquo;avoir aucun projet :
+association simple, et non composition.
+</p>
+
+</div></li>
+
+<li>Ensuite, mettez à jour la base de données :
+<ul class="org-ul">
+<li><code>php bin/console doctrine:database:create</code></li>
+<li><code>php bin/console doctrine:schema:update --force</code></li>
+<li><code>php bin/console doctrine:fixtures:load</code></li>
+</ul></li>
+
+<li><p>
+Puis générez les classes gérant un contrôleur CRUD pour <code>Project</code>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">php bin/console make:crud
+</pre>
+</div>
+
+<pre class="example">
+The class name of the entity to create CRUD (e.g. GrumpyPizza):
+&gt; Project
+
+created: src/Controller/ProjectController.php
+created: src/Form/ProjectType.php
+created: templates/project/_delete_form.html.twig
+created: templates/project/_form.html.twig
+created: templates/project/edit.html.twig
+created: templates/project/index.html.twig
+created: templates/project/new.html.twig
+created: templates/project/show.html.twig
+
+
+ Success! 
+
+
+Next: Check your new CRUD by going to /project/
+
+</pre></li>
+
+<li><p>
+Vérifiez la présence des routes correspondantes dans l&rsquo;application :
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">php bin/console debug:router
+</pre>
+</div>
+
+<pre class="example">
+
+-&gt;project_index                  GET        ANY      ANY    /project/       
+
+</pre></li>
+
+<li><p>
+Ajoutez enfin une entrée du menu Bootstrap, dans <code>config/packages/bootstrap_menu.yaml</code> :
+</p>
+<div class="org-src-container">
+<pre class="src src-yaml">bootstrap_menu:
+  menus:
+    main:
+      items:
+	projects:
+	  label: 'Projects'
+	  items:
+	    all:
+	      label: 'Projects list'
+	      route: 'project_index'
+# ...
+</pre>
+</div></li>
+
+<li><p>
+Nettoyez le cache (Symfony se comporte souvent bizarement après
+l&rsquo;exécution du <i>maker</i> de CRUD&#x2026;) :
+</p>
+
+<pre class="example">
+php bin/console cache:clear
+</pre></li>
+
+<li>Testez que l&rsquo;application fonctionne bien, et que le CRUD des
+projets fonctionne.</li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-org3a1b202" class="outline-3">
+<h3 id="org3a1b202">Étape 1-c : Gestion du lien entre projet et tâches</h3>
+<div class="outline-text-3" id="text-org3a1b202">
+<div class="objectif">
+<p>
+L&rsquo;objectif de cette étape est de modifier le reste de l&rsquo;application
+pour permettre la navigation entre projets et tâches
+</p>
+
+</div>
+</div>
+
+<div id="outline-container-org85924c2" class="outline-4">
+<h4 id="org85924c2">Ajout du lien vers le projet dans le formulaire de modification des tâches</h4>
+<div class="outline-text-4" id="text-org85924c2">
+<p>
+On souhaite tout d&rsquo;abord pouvoir sauvegarder dans la base de données
+le fait qu&rsquo;une tâche peut faire partie d&rsquo;un projet.
+</p>
+
+<p>
+Il faut donc permettre de modifier les tâches pour renseigner la
+valeur de l&rsquo;attribut <code>Todo::project</code>.
+</p>
+
+<ol class="org-ol">
+<li>Modifiez en conséquence la classe de gestion du formulaire de modification des
+tâches (<code>TodoType</code>), pour ajouer un champ <code>project</code> dans le <i>formbuilder</i>.</li>
+
+<li>Testez dans l&rsquo;application si le formulaire de modification de tâches fonctionne</li>
+
+<li><p>
+Normalement, vous constatez une erreur : la construction du
+formulaire, très basique, doit afficher la liste des projets dans
+une liste, et pour celà, elle doit les afficher sous forme de
+chaîne de caractères. 
+</p>
+
+<p>
+Modifiez en conséquence la classe <code>Project</code> pour ajouter une
+méthode <code>__toString()</code>. Vous pouvez vous inspirer d&rsquo;une autre
+méthode <code>__toString()</code> déjà présente dans une autre classe du
+modèle des données.
+</p></li>
+
+<li>Vérifiez que la modification des tâches fonctionne pour y définir
+le projet d&rsquo;une tâche.</li>
+
+<li><p>
+Vérifiez avec <code>dump()</code> que les liens vers les projets des tâches
+sont bien définis, même si on ne les affiche pas encore.
+</p>
+
+<p>
+Remarquez que tant qu&rsquo;on n&rsquo;a pas accédé aux attributs d&rsquo;un projet,
+le lien <code>todo:project</code> pointe vers une entité &laquo;&nbsp;proxy&nbsp;&raquo;, qui n&rsquo;est
+pas initialisée, mais porte bien l&rsquo;identifiant du projet
+concerné. C&rsquo;est le mécanisme d&rsquo;évaluation tardive dont nous avons
+parlé dans le cours.
+</p></li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-org68427b4" class="outline-4">
+<h4 id="org68427b4">Ajout de la liste des tâches dans la consultation des projets</h4>
+<div class="outline-text-4" id="text-org68427b4">
+<p>
+Maintenant que vous pouvez renseigner en base de données des liens
+entre tâches et projets, vous pouvez ensuite ajouter l&rsquo;affichage de la liste des tâches d&rsquo;un projet, dans
+le gabarit de la fiche de consultation d&rsquo;un projet
+(<code>templates/project/show.html.twig</code>) :
+</p>
+
+<div class="org-src-container">
+<pre class="src src-html">{% dump(project) %}
+
+{# FIXME: display the project todos
+{% for todo in ... %}
+...
+   &lt;<span style="color: #0000ff;">a</span> <span style="color: #a0522d;">href</span>=<span style="color: #8b2252;">"{{ path('todo_show', {'id' : todo.id}) }}"</span>&gt;{{ todo.title }}&lt;/<span style="color: #0000ff;">a</span>&gt;
+...
+{% endfor %}
+#}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org5a76ac3" class="outline-4">
+<h4 id="org5a76ac3">Ajout des éléments de navigation entre pages</h4>
+<div class="outline-text-4" id="text-org5a76ac3">
+<p>
+Vous pouvez maintenant compléter les pages existantes pour permettre
+de passer de la consultation d&rsquo;une tâche à son projet (s&rsquo;il existe),
+et naviguer ainsi dans le modèle de données :
+</p>
+
+<ul class="org-ul">
+<li>dans affichage de Todo, navigation vers son projet (s&rsquo;il existe)</li>
+
+<li>dans les listes des Todos, <i>idem</i></li>
+</ul>
+
+<p>
+Attention : l&rsquo;application doit continuer de fonctionner aussi bien pour des tâches ayant un
+projet, que pour des tâches sans projet.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org77360cd" class="outline-3">
+<h3 id="org77360cd">Étape 1-d : Formulaire d&rsquo;ajout d&rsquo;une tâche dans un projet</h3>
+<div class="outline-text-3" id="text-org77360cd">
+<p>
+<a id="org1ac0f99"></a>
+</p>
+
+<div class="objectif">
+<p>
+On souhaite maintenant améliorer les pages de notre application pour
+gérer un formulaire moins basique que ceux générés par les assistants
+de génération de CRUD.
+</p>
+
+</div>
+
+<p>
+Vous allez ajouter un nouveau formulaire qui permet d&rsquo;ajouter une tâche dans le
+contexte d&rsquo;un projet, directement, une fois connu un projet.
+</p>
+
+<p>
+On souhaite que l&rsquo;utilisateur qui consulte la fiche d&rsquo;un projet puisse
+ajouter une tâche depuis cette page de l&rsquo;application, plutôt que de
+devoir revenir à la liste des tâches, et en créer une, qui serait
+ensuite rattachée au projet.
+</p>
+</div>
+
+<div id="outline-container-orgb696c6d" class="outline-4">
+<h4 id="orgb696c6d">Ajout du formulaire de création d&rsquo;une tâche dans le contexte d&rsquo;un projet</h4>
+<div class="outline-text-4" id="text-orgb696c6d">
+<p>
+Comme on connaît le projet en cours de consultation, on va directement invoquer l&rsquo;ajout d&rsquo;une tâche à ce projet.
+</p>
+
+<p>
+Ajoutez différents éléments au code de l&rsquo;application :
+</p>
+
+<ol class="org-ol">
+<li>créez un nouveau gabarit sur le modèle de <code>todo/new.html.twig</code>, nommé <code>todo/add.html.twig</code>;</li>
+
+<li><p>
+ajoutez une méthode <code>TodoController::addToproject()</code> reprenant certains éléments de
+<code>TodoController::new()</code>, mais ajoutant une <i>todo</i> à un projet existant
+</p>
+
+<p>
+Son code correspond à ce qui suit :
+</p>
+
+<div class="org-src-container">
+<pre class="src src-php"><span style="color: #8b2252;">/**</span>
+<span style="color: #8b2252;"> * </span><span style="color: #008b8b;">@Route</span><span style="color: #8b2252;">("/addtoproject/{id}", name="todo_addtoproject", methods="GET|POST")</span>
+<span style="color: #8b2252;"> */</span>
+<span style="color: #a020f0;">public</span> <span style="color: #a020f0;">function</span> <span style="color: #0000ff;">addToproject</span>(<span style="color: #228b22;">Request</span> <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">request</span>, <span style="color: #228b22;">Project</span> <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">project</span>): <span style="color: #228b22;">Response</span>
+{
+    <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">todo</span> = <span style="color: #a020f0;">new</span> <span style="color: #228b22;">Todo</span>();
+    <span style="color: #b22222;">// </span><span style="color: #b22222;">already set a project, so as to not need add that field in the form (in TodoType)</span>
+    <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">todo</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">setProject</span>(<span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">project</span>);
+
+    <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">form</span> = <span style="color: #008b8b;">$</span><span style="color: #008b8b;">this</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">createForm</span>(<span style="color: #008b8b;">TodoType</span><span style="color: #000000; background-color: #ffffff;">::</span><span style="color: #483d8b;">class</span>, <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">todo</span>);
+    <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">form</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">handleRequest</span>(<span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">request</span>);
+    <span style="color: #a020f0;">if</span> (<span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">form</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">isSubmitted</span>() &amp;&amp; <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">form</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">isValid</span>()) {
+    <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">todo</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">setCreated</span>(<span style="color: #a020f0;">new</span> <span style="color: #228b22;">\DateTime</span>());
+    <span style="color: #b22222;">//</span><span style="color: #b22222;">$project-&gt;addTodo($todo);</span>
+    <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">em</span> = <span style="color: #008b8b;">$</span><span style="color: #008b8b;">this</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">getDoctrine</span>()<span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">getManager</span>();
+    <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">em</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">persist</span>(<span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">todo</span>);
+    <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">em</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">flush</span>();
+
+    <span style="color: #008b8b;">$</span><span style="color: #008b8b;">this</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">get</span>(<span style="color: #8b2252;">'session'</span>)<span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">getFlashBag</span>()<span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">add</span>(<span style="color: #8b2252;">'message'</span>, <span style="color: #8b2252;">'t&#226;che bien ajout&#233;e au projet'</span>);
+
+    <span style="color: #a020f0;">return</span> <span style="color: #008b8b;">$</span><span style="color: #008b8b;">this</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">redirectToRoute</span>(<span style="color: #8b2252;">'project_show'</span>, <span style="color: #a020f0;">array</span>(<span style="color: #8b2252;">'id'</span> =&gt; <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">project</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">getId</span>() ));
+    }
+
+    <span style="color: #a020f0;">return</span> <span style="color: #008b8b;">$</span><span style="color: #008b8b;">this</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">render</span>(<span style="color: #8b2252;">'todo/add.html.twig'</span>, [
+    <span style="color: #8b2252;">'project'</span> =&gt; <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">project</span>,
+    <span style="color: #8b2252;">'todo'</span> =&gt; <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">todo</span>,
+    <span style="color: #8b2252;">'form'</span> =&gt; <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">form</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">createView</span>(),
+    ]);
+}
+</pre>
+</div>
+
+<p>
+Remarquons quelques faits marquants sur ce code :
+</p>
+
+<ul class="org-ul">
+<li>le chemin de cette nouvelle route, <code>/todo/addtoproject/{id}</code>, est
+dérivé de <code>/todo</code>, le préfixe de la classe <code>TodoController</code> qui
+gère les tâches</li>
+
+<li><p>
+on effectue un passage d&rsquo;argument de l&rsquo;instance du projet (s&rsquo;il
+existe) dans le modèle de données (un objet $project de type
+<code>Project</code>), qui est généré &laquo;&nbsp;automagiquement&nbsp;&raquo; en chargeant un
+projet ayant pour identifiant le numéro <code>id</code> extrait du chemin
+de la route (<code>/todo/addtoproject/{id}</code>) via le composant
+<i>ParamConverter</i> de Symfony.
+</p>
+
+<p>
+Ce mécanisme est essentiel pour écrire du code très compact. C&rsquo;est le même qui est utilisé pour <code>project_show</code> :
+</p>
+
+<div class="org-src-container">
+<pre class="src src-php"><span style="color: #8b2252;">/**</span>
+<span style="color: #8b2252;"> * </span><span style="color: #008b8b;">@Route</span><span style="color: #8b2252;">("/{id}", name="project_show", methods="GET")</span>
+<span style="color: #8b2252;"> */</span>
+<span style="color: #a020f0;">public</span> <span style="color: #a020f0;">function</span> <span style="color: #0000ff;">show</span>(<span style="color: #228b22;">Project</span> <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">project</span>): <span style="color: #228b22;">Response</span>
+{
+  <span style="color: #a020f0;">return</span> <span style="color: #008b8b;">$</span><span style="color: #008b8b;">this</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">render</span>(<span style="color: #8b2252;">'project/show.html.twig'</span>, [<span style="color: #8b2252;">'project'</span> =&gt; <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">project</span>]);
+}
+</pre>
+</div>
+
+<p>
+<i>ParamConverter</i> effectue le chargement des données depuis la base via Doctrine automatiquement, sans avoir besoin de faire un <code>-&gt;find($id)</code>.
+</p></li>
+
+<li>ajout de la <code>Todo</code> à son <code>Project</code> si les données soumises sont
+correctes :</li>
+</ul></li>
+</ol>
+
+<div class="org-src-container">
+<pre class="src src-php"><span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">todo</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">setProject</span>(<span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">project</span>);
+</pre>
+</div>
+
+<p>
+On utilise ici la méthode du modèle doctrine générée par <code>make:entity</code> en cas d&rsquo;association OneToMany.
+</p>
+
+<ul class="org-ul">
+<li>on effectue un appel à <code>persist()</code> (qui sert à &laquo;&nbsp;taguer&nbsp;&raquo; une entité du modèle comme devant être sauvée en base) uniquement sur la nouvelle <code>Todo</code> : elle contient le pointeur vers
+son projet, mais l&rsquo;inverse n&rsquo;est pas vrai : l&rsquo;entité projet n&rsquo;est pas modifiée.</li>
+
+<li>une fois ajoutée, on redirige vers le point de départ (en principe) de l&rsquo;accès à ce nouveau dialogue :
+la consultation du projet (dont on doit appeler <code>getId()</code> pour construire la route correcte);</li>
+
+<li>le sous-formulaire de <code>todo/_form.html.twig</code> n&rsquo;a pas eu besoin d&rsquo;être modifié : on peut toujours
+créer des todos sans projets (autorisé dans le modèle de
+données) si on passe par todo/new</li>
+</ul>
+
+<p>
+Vous avez vu ci-dessus un élément clé pour la gestion des entités liées par une association 1-N (<code>OneToMany</code>).
+</p>
+</div>
+</div>
+
+<div id="outline-container-org6a63f30" class="outline-4">
+<h4 id="org6a63f30">Ajout du lien d&rsquo;appel de ce formulaire</h4>
+<div class="outline-text-4" id="text-org6a63f30">
+<p>
+Modifiez enfin le gabarit d&rsquo;affichage d&rsquo;un projet, pour ajouter, en dessous
+de la liste des tâches du projet, un lien vers le formulaire que vous
+venez d&rsquo;ajouter.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org7706d58" class="outline-4">
+<h4 id="org7706d58">Amélioration du formulaire d&rsquo;ajout d&rsquo;une nouvelle tâche à un projet (optionnelle)</h4>
+<div class="outline-text-4" id="text-org7706d58">
+<p>
+Vous pouvez raffiner un peu la gestion de ce formulaire d&rsquo;ajout d&rsquo;une
+nouvelle tâche à un projet, afin de ne pas afficher le champ de
+modification du projet dans le formulaire HTML, puisque, dans ce cas,
+le projet est fixé.
+</p>
+
+<p>
+Cette amélioration n&rsquo;est pas cruciale, donc vous pouvez passer à la
+suite, si vous êtes pressés par le temps restant dans la séance de TP.
+</p>
+
+<p>
+Actuellement l&rsquo;ajout du champ est réalisé dans <code>TodoType::buildForm()</code> :
+</p>
+<div class="org-src-container">
+<pre class="src src-php"><span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">builder</span>
+ <span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">add</span>(<span style="color: #8b2252;">'title'</span>)
+ <span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">add</span>(<span style="color: #8b2252;">'project'</span>);
+ ...
+</pre>
+</div>
+
+<p>
+On peut modificer ce comportement, mais attention, car la génération
+du formulaire s&rsquo;applique aussi bien à la création (via <code>new()</code> ou <code>addToproject()</code>)
+qu&rsquo;à la modification&#x2026;
+</p>
+
+<p>
+Une solution consiste à dupliquer la classe <code>TodoType</code> pour réaliser
+une classe <code>TodoAddType</code> ayant un comportement différent, spécifique à
+cette méthode <code>add()</code>.
+</p>
+
+<p>
+Une autre solution consiste à garder une seule classe <code>TodoType</code>, et à
+utiliser le mécanisme des options, qu&rsquo;on a déjà utilisé pour
+l&rsquo;affichage optionnel du statut terminé de la tâche, mais en l&rsquo;adaptant à
+ce nouveau contexte.
+</p>
+
+<ol class="org-ol">
+<li>Modifiez le code de la méthode <code>TodoController::addToproject()</code> pour
+gérer le passage de l&rsquo;option <code>task_is_new</code> dans ce cas aussi.</li>
+<li>Modifiez le code de <code>TodoType::buildForm()</code> pour n&rsquo;afficher le
+champ de formulaire que pour les tâches modifiables</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org1303c68" class="outline-2">
+<h2 id="org1303c68">Étape 2 : Ajout d&rsquo;une fonction de mise en ligne d&rsquo;images</h2>
+<div class="outline-text-2" id="text-org1303c68">
+<div class="objectif">
+<p>
+Ajouter une fonctionnalité permettant le télé-versement (<i>upload</i>)
+d&rsquo;images vers le site, pour associer des images aux entités <code>Pastes</code> de
+l&rsquo;application fil-rouge.
+</p>
+
+</div>
+
+<p>
+On va utiliser le module <code>VichUploader</code> pour Symfony
+(cf. <a href="https://github.com/dustin10/VichUploaderBundle">https://github.com/dustin10/VichUploaderBundle</a>).
+</p>
+
+<p>
+Procédez aux étapes suivantes :
+</p>
+
+<ol class="org-ol">
+<li><p>
+Installation du bundle :
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">php -d <span style="color: #a0522d;">memory_limit</span>=-1 /usr/bin/composer require vich/uploader-bundle
+</pre>
+</div>
+
+<p>
+Confirmer l&rsquo;exécution de la recette &laquo;&nbsp;<i>Do you want to execute this
+recipe?</i>&nbsp;&raquo;
+</p></li>
+
+<li><p>
+Configurer un <i>mapping</i> de téléversement dans le fichier
+<code>config/packages/vich_uploader.yaml</code> qui a été installé par
+composer/flex (rafraîchir le contenu du projet dans Eclipse) :
+</p>
+
+<div class="org-src-container">
+<pre class="src src-yaml">vich_uploader:
+    db_driver: orm
+
+    mappings:
+	pastes:
+	    uri_prefix: /images/pastes
+	    upload_destination: '%kernel.project_dir%/public/images/pastes'
+</pre>
+</div></li>
+
+<li><p>
+Lier l&rsquo;entité <code>Paste</code> avec le module de téléversement. Annoter la
+classe <code>Paste</code> (dans <code>src/Entity/Paste.php</code>) comme étant gérée par le
+module (annotation <code>@Vich\Uploadable</code>) :
+</p>
+<div class="org-src-container">
+<pre class="src src-php"><span style="color: #b22222;">//</span><span style="color: #b22222;">...</span>
+<span style="color: #a020f0;">use</span> <span style="color: #228b22;">Vich\UploaderBundle\Mapping\Annotation</span> <span style="color: #a020f0;">as</span> <span style="color: #228b22;">Vich</span>;
+
+<span style="color: #8b2252;">/**</span>
+<span style="color: #8b2252;"> * </span><span style="color: #008b8b;">@ORM\Entity</span><span style="color: #8b2252;">(repositoryClass=PasteRepository::class)</span>
+<span style="color: #8b2252;"> * </span><span style="color: #008b8b;">@Vich\Uploadable</span>
+<span style="color: #8b2252;">...</span>
+<span style="color: #8b2252;">class Paste</span>
+</pre>
+</div></li>
+
+<li><p>
+Ajouter les attributs permettant le stockage et la gestion des
+fichiers d&rsquo;images téléversés :
+</p>
+<ul class="org-ul">
+<li>l&rsquo;attribut <code>imageName</code> sera persisté dans la base de données via Doctrine</li>
+<li>l&rsquo;attribut <code>imageFile</code> sera utilisé par le module de
+télé-versement, et sera associé au <i>mapping</i> défini précédamment
+dans <code>config/packages/vich_uploader.yaml</code> (appelé <code>pastes</code>, ici)</li>
+<li>l&rsquo;attribut <code>imageUpdatedAt</code> qui sera utilisé en interne pour
+le bon fonctionnement du module</li>
+</ul>
+
+<p>
+Ajouter aussi les <i>getters</i> et <i>setters</i> correspondants en suivant les
+instructions de la documentation du module :
+</p>
+
+<div class="org-src-container">
+<pre class="src src-php"><span style="color: #a020f0;">use</span> <span style="color: #228b22;">Symfony\Component\HttpFoundation\File\File</span>;
+
+<span style="color: #b22222;">//</span><span style="color: #b22222;">...</span>
+
+<span style="color: #8b2252;">/**</span>
+<span style="color: #8b2252;"> * </span><span style="color: #008b8b;">@ORM\Column</span><span style="color: #8b2252;">(type="string", length=255, nullable=true)</span>
+<span style="color: #8b2252;"> * </span><span style="color: #008b8b;">@var</span><span style="color: #8b2252;"> </span><span style="color: #228b22;">string</span>
+<span style="color: #8b2252;"> */</span>
+<span style="color: #a020f0;">private</span> <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">imageName</span>;
+
+<span style="color: #8b2252;">/**</span>
+<span style="color: #8b2252;"> * </span><span style="color: #008b8b;">@Vich\UploadableField</span><span style="color: #8b2252;">(mapping="pastes", fileNameProperty="imageName")</span>
+<span style="color: #8b2252;"> * </span><span style="color: #008b8b;">@var</span><span style="color: #8b2252;"> </span><span style="color: #8b2252;">File</span>
+<span style="color: #8b2252;"> */</span>
+<span style="color: #a020f0;">private</span> <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">imageFile</span>;
+
+<span style="color: #8b2252;">/**</span>
+<span style="color: #8b2252;"> * </span><span style="color: #008b8b;">@ORM\Column</span><span style="color: #8b2252;">(type="datetime", nullable=true)</span>
+<span style="color: #8b2252;"> *</span>
+<span style="color: #8b2252;"> * </span><span style="color: #008b8b;">@var</span><span style="color: #8b2252;"> </span><span style="color: #8b2252;">\DateTime</span>
+<span style="color: #8b2252;"> */</span>
+<span style="color: #a020f0;">private</span> <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">imageUpdatedAt</span>;
+
+<span style="color: #b22222;">//</span><span style="color: #b22222;">...</span>
+<span style="color: #8b2252;">/**</span>
+<span style="color: #8b2252;"> * If manually uploading a file (i.e. not using Symfony Form) ensure an instance</span>
+<span style="color: #8b2252;"> * of 'UploadedFile' is injected into this setter to trigger the update. If this</span>
+<span style="color: #8b2252;"> * bundle's configuration parameter 'inject_on_load' is set to 'true' this setter</span>
+<span style="color: #8b2252;"> * must be able to accept an instance of 'File' as the bundle will inject one here</span>
+<span style="color: #8b2252;"> * during Doctrine hydration.</span>
+<span style="color: #8b2252;"> *</span>
+<span style="color: #8b2252;"> * </span><span style="color: #008b8b;">@param</span><span style="color: #8b2252;"> </span><span style="color: #8b2252;">File|\Symfony\Component\HttpFoundation\File\UploadedFile</span><span style="color: #8b2252;"> </span><span style="color: #a0522d;">$</span><span style="color: #a0522d;">imageFile</span>
+<span style="color: #8b2252;"> */</span>
+<span style="color: #a020f0;">public</span> <span style="color: #a020f0;">function</span> <span style="color: #0000ff;">setImageFile</span>(<span style="color: #228b22;">?File</span> <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">imageFile</span> = <span style="color: #008b8b;">null</span>): <span style="color: #228b22;">void</span>
+{
+    <span style="color: #008b8b;">$</span><span style="color: #008b8b;">this</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #a0522d;">imageFile</span> = <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">imageFile</span>;
+
+    <span style="color: #a020f0;">if</span> (<span style="color: #008b8b;">null</span> !== <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">imageFile</span>) {
+    <span style="color: #b22222;">// </span><span style="color: #b22222;">It is required that at least one field changes if you are using doctrine</span>
+    <span style="color: #b22222;">// </span><span style="color: #b22222;">otherwise the event listeners won't be called and the file is lost</span>
+    <span style="color: #008b8b;">$</span><span style="color: #008b8b;">this</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #a0522d;">imageUpdatedAt</span> = <span style="color: #a020f0;">new</span> <span style="color: #228b22;">\DateTimeImmutable</span>();
+    }
+}
+
+<span style="color: #a020f0;">public</span> <span style="color: #a020f0;">function</span> <span style="color: #0000ff;">getImageFile</span>(): <span style="color: #228b22;">?File</span>
+{
+    <span style="color: #a020f0;">return</span> <span style="color: #008b8b;">$</span><span style="color: #008b8b;">this</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #a0522d;">imageFile</span>;
+}
+
+<span style="color: #a020f0;">public</span> <span style="color: #a020f0;">function</span> <span style="color: #0000ff;">setImageName</span>(<span style="color: #228b22;">?string</span> <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">imageName</span>): <span style="color: #228b22;">void</span>
+{
+    <span style="color: #008b8b;">$</span><span style="color: #008b8b;">this</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #a0522d;">imageName</span> = <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">imageName</span>;
+}
+
+<span style="color: #a020f0;">public</span> <span style="color: #a020f0;">function</span> <span style="color: #0000ff;">getImageName</span>(): <span style="color: #228b22;">?string</span>
+{
+    <span style="color: #a020f0;">return</span> <span style="color: #008b8b;">$</span><span style="color: #008b8b;">this</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #a0522d;">imageName</span>;
+}
+</pre>
+</div></li>
+
+<li><p>
+Modifier le formulaire d&rsquo;ajout / édition de Pastes
+<code>src/Form/PasteType.php</code> :
+</p>
+
+<div class="org-src-container">
+<pre class="src src-php"><span style="color: #b22222;">//</span><span style="color: #b22222;">...</span>
+<span style="color: #a020f0;">use</span> <span style="color: #228b22;">Symfony\Component\Form\Extension\Core\Type\TextType</span>;
+<span style="color: #a020f0;">use</span> <span style="color: #228b22;">Vich\UploaderBundle\Form\Type\VichImageType</span>;
+
+<span style="color: #b22222;">//</span><span style="color: #b22222;">...</span>
+
+ <span style="color: #a020f0;">class</span> <span style="color: #228b22;">PasteType</span> <span style="color: #a020f0;">extends</span> <span style="color: #228b22;">AbstractType</span>
+ {
+
+     <span style="color: #b22222;">//</span><span style="color: #b22222;">...</span>
+     <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">builder</span>
+     <span style="color: #b22222;">//</span><span style="color: #b22222;">...</span>
+
+        <span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">add</span>(<span style="color: #8b2252;">'imageName'</span>, <span style="color: #008b8b;">TextType</span><span style="color: #000000; background-color: #ffffff;">::</span><span style="color: #483d8b;">class</span>,  [<span style="color: #8b2252;">'disabled'</span> =&gt; <span style="color: #008b8b;">true</span>])
+        <span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">add</span>(<span style="color: #8b2252;">'imageFile'</span>, <span style="color: #008b8b;">VichImageType</span><span style="color: #000000; background-color: #ffffff;">::</span><span style="color: #483d8b;">class</span>, [<span style="color: #8b2252;">'required'</span> =&gt; <span style="color: #008b8b;">false</span>])
+     ;
+</pre>
+</div></li>
+
+<li><p>
+Modifier le gabarit d&rsquo;affichage des pastes
+<code>templates/paste/show.html.twig</code> :
+</p>
+
+<div class="org-src-container">
+<pre class="src src-html">&lt;<span style="color: #0000ff;">tr</span>&gt;
+    &lt;<span style="color: #0000ff;">th</span>&gt;Image&lt;/<span style="color: #0000ff;">th</span>&gt;
+    &lt;<span style="color: #0000ff;">td</span>&gt;&lt;<span style="color: #0000ff;">img</span> <span style="color: #a0522d;">src</span>=<span style="color: #8b2252;">"{{ vich_uploader_asset(paste, 'imageFile') }}"</span>/&gt;&lt;/<span style="color: #0000ff;">td</span>&gt;
+&lt;/<span style="color: #0000ff;">tr</span>&gt;
+</pre>
+</div></li>
+
+<li><p>
+Modifier le content-type en fonction du type d&rsquo;image, si une image
+est présente, dans <code>src/Controller/PasteController.php</code> :
+</p>
+
+<div class="org-src-container">
+<pre class="src src-php"><span style="color: #a020f0;">public</span> <span style="color: #a020f0;">function</span> <span style="color: #0000ff;">new</span>(<span style="color: #228b22;">Request</span> <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">request</span>): <span style="color: #228b22;">Response</span>
+{
+    <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">paste</span> = <span style="color: #a020f0;">new</span> <span style="color: #228b22;">Paste</span>();
+    <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">form</span> = <span style="color: #008b8b;">$</span><span style="color: #008b8b;">this</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">createForm</span>(<span style="color: #008b8b;">PasteType</span><span style="color: #000000; background-color: #ffffff;">::</span><span style="color: #483d8b;">class</span>, <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">paste</span>);
+    <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">form</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">handleRequest</span>(<span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">request</span>);
+
+    <span style="color: #a020f0;">if</span> (<span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">form</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">isSubmitted</span>() &amp;&amp; <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">form</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">isValid</span>()) {
+
+    <span style="color: #b22222;">// </span><span style="color: #b22222;">Change conte-type according to image's</span>
+    <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">imagefile</span> = <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">paste</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">getImageFile</span>();
+    <span style="color: #a020f0;">if</span>(<span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">imagefile</span>) {
+        <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">mimetype</span> = <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">imagefile</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">getMimeType</span>();
+        <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">paste</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">setContentType</span>(<span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">mimetype</span>);
+    }
+
+    <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">entityManager</span> = <span style="color: #008b8b;">$</span><span style="color: #008b8b;">this</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">getDoctrine</span>()<span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">getManager</span>();
+    <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">entityManager</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">persist</span>(<span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">paste</span>);
+    <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">entityManager</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">flush</span>();
+</pre>
+</div></li>
+
+<li><p>
+Mettez à jour le schéma de la base de données :
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">php bin/console doctrine:schema:update --force
+
+</pre>
+</div></li>
+</ol>
+
+<p>
+Vous pouvez tester le fonctionnement de la mise en ligne d&rsquo;images dans
+les <i>Pastes</i>.
+</p>
+</div>
+</div>
+
+
+
+<div id="outline-container-org3a15bb6" class="outline-2">
+<h2 id="org3a15bb6">Évaluation</h2>
+<div class="outline-text-2" id="text-org3a15bb6">
+<p>
+À l&rsquo;issue de cette séance, les éléments ci-dessous doivent vous
+paraître clairs :
+</p>
+<ul class="org-ul">
+<li>Le rôle de la validation des données sur le typage des attributs dans les formulaires</li>
+<li>Comment Les Contrôleurs et gestionnaires de formulaires Symfony
+s&rsquo;intègrent avec Doctrine pour mettre en œuvre automatiquement des
+mécanismes de validation des données conformément au Modèle de donnéees.</li>
+<li>Les outils disponibles dans Doctrine pour gérer la base de données relationnelle</li>
+<li>Les outils de prototypage pour créer de nouvelles entités ou des
+Contrôleurs CRUD pour ces entités, qui génèrent du code PHP pour nous.</li>
+<li>L&rsquo;utilisation du <i>ParamConverter</i> pour un chargement automatique des données, permettant de rendre le code très compact.</li>
+<li>La gestion de fichiers dans les formulaires, en tant que données
+&laquo;&nbsp;comme les autres&nbsp;&raquo;.</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Auteur: Olivier Berger (TSP)</p>
+<p class="date">Created: 2020-10-22 Thu 16:15</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

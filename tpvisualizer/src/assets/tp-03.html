@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<!-- 2020-10-02 Fri 12:07 -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TP n°3 - Gabarits (<i>templates</i>) Twig</title>
+<meta name="generator" content="Org mode">
+<meta name="author" content="Olivier Berger (TSP)">
+<meta name="description" content="CSC4101 Telecom SudParis - 2020-2021 - TP n°3"
+>
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+<meta name="copyright" content="&copy; 2017 Telecom SudParis + Olivier Berger" />
+<link rel="stylesheet" type="text/css" href="../media/tsp.css" />
+<style type="text/css">
+.floatrightclass {
+float: right;
+margin: 0 0 10px 10px;
+}
+.floatleftclass {
+float: left;
+margin: 0 0 10px 10px;
+}
+.clearrightclass {
+clear: right;
+}
+.clearleftclass {
+clear: left;
+}
+</style>
+<script type="text/javascript" src='../media/tsp.js'></script>
+<script type="text/javascript" src="../media/org-info-src.js"></script>
+<script type="text/javascript">
+/* <![CDATA[ */
+org_html_manager.set("TOC_DEPTH", "2");
+org_html_manager.set("LINK_HOME", "");
+org_html_manager.set("LINK_UP", "");
+org_html_manager.set("LOCAL_TOC", "0");
+org_html_manager.set("VIEW_BUTTONS", "0");
+org_html_manager.set("MOUSE_HINT", "#cccccc");
+org_html_manager.set("FIXED_TOC", "0");
+org_html_manager.set("TOC", "1");
+org_html_manager.set("VIEW", "showall");
+org_html_manager.set("HELP", "1");
+org_html_manager.setup ();
+/* ]]> */
+</script>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2019 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">TP n°3 - Gabarits (<i>templates</i>) Twig
+<br>
+<span class="subtitle">Ajout de gabarits Twig dans l&rsquo;application ToDo</span>
+</h1>
+<div id="table-of-contents">
+<h2>Table des matières</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgfe821fa">Introduction</a></li>
+<li><a href="#org5d7d583">Étape 1 : Principe d&rsquo;organisation des gabarits Twig</a>
+<ul>
+<li><a href="#orga6e59d0">Génération du HTML grâce au moteur de rendu des gabarits</a></li>
+<li><a href="#orgdd500ce">Standardisation de la structure des pages.</a></li>
+</ul>
+</li>
+<li><a href="#orgafb003a">Étape 2 : Utilisation de la barre d&rsquo;outils Symfony pour la mise au point</a></li>
+<li><a href="#org8ac7a42">Étape 3 : Remplacement du code HTML par des gabarits</a>
+<ul>
+<li><a href="#org4546e65">Étape 3-a : Consultation d&rsquo;une collection de tâches</a></li>
+<li><a href="#org9d0584b">Étape 3-b : Amélioration du rendu de la liste de tâche, sous forme de tableau</a></li>
+<li><a href="#org8d70860">Étape 3-c : Affichage d&rsquo;une tâche</a></li>
+<li><a href="#orgaa9de52">Étape 3-d : Ajout d&rsquo;un lien de navigation entre liste des tâches et affichage d&rsquo;une tâche</a></li>
+</ul>
+</li>
+<li><a href="#orgb841fb1">Étape 4 : Utilisation de <code>dump()</code> pour faciliter la mise au point</a></li>
+<li><a href="#org5b65eb2">Étape 5 : Affichage des tâches terminées</a></li>
+<li><a href="#orga4a68ca">Étape 6 : Lecture de la documentation Symfony &laquo;&nbsp;<i>quick tour</i>&nbsp;&raquo;</a></li>
+<li><a href="#org51ad973">Fin du TP</a></li>
+<li><a href="#org4e69859">Évaluation</a></li>
+<li><a href="#orga72c0d8">Pour aller plus loin</a>
+<ul>
+<li><a href="#org0a33841"><code>ParamConverter</code></a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgfe821fa" class="outline-2">
+<h2 id="orgfe821fa">Introduction</h2>
+<div class="outline-text-2" id="text-orgfe821fa">
+<div class="objectif">
+<p>
+Cette séance va permettre d&rsquo;expérimenter l&rsquo;application des
+concepts présentés dans le cours qui précède, à travers
+la mise en œuvre d&rsquo;<b>interfaces HTML</b> pour une
+application Symfony avec <b>Twig</b>, sur la base de
+l&rsquo;application fil-rouge <code>ToDo</code>.<br>
+</p>
+
+</div>
+
+<div class="remarque">
+<p>
+Dans cette séance, nous faisons référence à des rudiments d&rsquo;HTML, en
+nous appuyant sur le travail effectué en autonomie dans la séquence de travail
+précédente.
+</p>
+
+</div>
+
+<div class="objectif">
+<p>
+L&rsquo;objectif de cette étape est d&rsquo;étudier comment fonctionne la mise en place d&rsquo;un
+gabarit standard pour différentes pages d&rsquo;une même application, et
+de pratiquer la syntaxe du langage Twig.
+</p>
+
+</div>
+
+<p>
+Nous allons maintenant travailler sur code de l&rsquo;application de
+gestion de tâches (<code>ToDo</code>) qui nous sert de fil-rouge, en réalisant la
+mise en œuvre de la génération de pages avec des gabarits.
+</p>
+
+<p>
+Nous nous concentrons sur le moteur de gabarits (<i>templates</i>)
+<a href="https://twig.sensiolabs.org/">Twig</a>, le composant de Symfony permettant la génération des pages Web
+de l&rsquo;application. En utilisant Twig, on peut notamment standardiser la structure des
+pages du site avec un <b>jeu de gabarits</b> permettant d&rsquo;unifier le contenu
+de toutes les pages.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org5d7d583" class="outline-2">
+<h2 id="org5d7d583">Étape 1 : Principe d&rsquo;organisation des gabarits Twig</h2>
+<div class="outline-text-2" id="text-org5d7d583">
+<p>
+Examinons la façon dont on va s&rsquo;y prendre pour mettre en place les
+gabarits.
+</p>
+</div>
+
+<div id="outline-container-orga6e59d0" class="outline-3">
+<h3 id="orga6e59d0">Génération du HTML grâce au moteur de rendu des gabarits</h3>
+<div class="outline-text-3" id="text-orga6e59d0">
+<p>
+Le code du contrôleur ne manipule plus de chaînes de caractères à
+concaténer pour produire du HTML. Il se contente de
+construire une représentation minimaliste des ressources à afficher
+dans les pages, puis de demander au moteur de rendu Twig d&rsquo;en faire un
+rendu HTML. Twig va injecter cette représentation dans des gabarits
+qui contiennent du HTML et dans lequel sont prévus des emplacements
+pour insérer les différents champs de cette représentation minimaliste.
+</p>
+
+<p>
+Vous allez donc faire en sorte qu&rsquo;il n&rsquo;y ait plus de 
+traces de HTML dans le code PHP de la classe contrôleur. À la place nous
+trouvons l&rsquo;appel à une méthode <code>render()</code> qui utilise un fichier <code>Twig</code> et un
+tableau associatif avec des variables.
+</p>
+
+<p>
+Vous pouvez par exemple ajouter un nouveau fichier <code>index.html.twig</code>
+dans le répertoire <code>templates/</code>, qui contient les fichiers gabarit de
+Twig utilisés par la méthode <code>render()</code> :
+</p>
+
+<pre class="example">
+{% extends 'base.html.twig' %}
+
+{% block title %}Welcome!{% endblock %}
+
+{% block body %}
+&lt;h1&gt;Welcome&lt;/h1&gt;
+
+    &lt;p&gt;{{ welcome }}&lt;/p&gt;
+
+{% endblock %} {# body #}
+</pre>
+
+<p>
+Ensuite, vous pouvez modifier la méthode d&rsquo;affichage de la page
+d&rsquo;accueil de l&rsquo;application pour qu&rsquo;elle utilise ce gabarit :
+</p>
+
+<div class="org-src-container">
+<pre class="src src-php"><span style="color: #8b2252;">/**</span>
+<span style="color: #8b2252;"> * </span><span style="color: #008b8b;">@Route</span><span style="color: #8b2252;">("/", name = "home", methods="GET")</span>
+<span style="color: #8b2252;"> */</span>
+<span style="color: #a020f0;">public</span> <span style="color: #a020f0;">function</span> <span style="color: #0000ff;">indexAction</span>()
+{
+    <span style="color: #a020f0;">return</span> <span style="color: #008b8b;">$</span><span style="color: #008b8b;">this</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">render</span>(<span style="color: #8b2252;">'index.html.twig'</span>,
+        [ <span style="color: #8b2252;">'welcome'</span> =&gt; <span style="color: #8b2252;">"Bonne utilisation de la todo list"</span> ]
+    );
+}
+</pre>
+</div>
+
+<p>
+Examinez la façon avec laquelle les données sont insérées
+pour construire la page affichable (HTML), au travers de l&rsquo;inclusion
+de variables comme <code>welcome</code>, qui va être insérée dans la cible <code>{{ welcome }}</code>. 
+Modifiez ce message et rechargez la page pour voir l&rsquo;affichage changer.
+</p>
+
+<p>
+On va voir plus loin que Twig ne permet pas seulement d&rsquo;injecter des valeurs dans des champs à
+l&rsquo;intérieur d&rsquo;un fichier HTML. Il permet aussi d&rsquo;effectuer des
+traitements pour factoriser des motifs, ou gérer des conditionnelles,
+par exemple.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgdd500ce" class="outline-3">
+<h3 id="orgdd500ce">Standardisation de la structure des pages.</h3>
+<div class="outline-text-3" id="text-orgdd500ce">
+<p>
+Observez le code source de la page HTML générée par Twig, dans le navigateur Web (Ctrl-U, ou menu bouton droit, puis &laquo;&nbsp;Code source de la page&nbsp;&raquo;).
+</p>
+
+<p>
+Vous y trouvez du code HTML ressemblant à :
+</p>
+
+<div class="org-src-container">
+<pre class="src src-html"><span style="color: #8b2252;">&lt;!DOCTYPE html&gt;</span>
+&lt;<span style="color: #0000ff;">html</span>&gt;
+    &lt;<span style="color: #0000ff;">head</span>&gt;
+        &lt;<span style="color: #0000ff;">meta</span> <span style="color: #a0522d;">charset</span>=<span style="color: #8b2252;">"UTF-8"</span>&gt;
+        &lt;<span style="color: #0000ff;">title</span>&gt;<span style="font-weight: bold; text-decoration: underline;">Welcome!</span>&lt;/<span style="color: #0000ff;">title</span>&gt;
+            &lt;/<span style="color: #0000ff;">head</span>&gt;
+    &lt;<span style="color: #0000ff;">body</span>&gt;
+        &lt;<span style="color: #0000ff;">h1</span>&gt;<span style="font-weight: bold; text-decoration: underline;">Welcome</span>&lt;/<span style="color: #0000ff;">h1</span>&gt;
+
+    &lt;<span style="color: #0000ff;">p</span>&gt;Bonne utilisation de la todo list&lt;/<span style="color: #0000ff;">p</span>&gt;
+
+
+&lt;<span style="color: #0000ff;">div</span> <span style="color: #a0522d;">id</span>=<span style="color: #8b2252;">"sfwdtbdd3ea"</span> <span style="color: #a0522d;">class</span>=<span style="color: #8b2252;">"sf-toolbar sf-display-none"</span> <span style="color: #a0522d;">role</span>=<span style="color: #8b2252;">"region"</span> <span style="color: #a0522d;">aria-label</span>=<span style="color: #8b2252;">"Symfony Web Debug Toolbar"</span>&gt;&lt;/<span style="color: #0000ff;">div</span>&gt;&lt;<span style="color: #0000ff;">script</span> <span style="color: #a0522d;">nonce</span>=<span style="color: #8b2252;">"385d6c2fcbeca40f9e98545f02b77976"</span>&gt;/*<span style="color: #8b2252;">&lt;![CDATA[*/        Sfjs = (function() {        "use strict";        if ('classList' in </span>
+</pre>
+</div>
+
+<div class="remarque">
+<p>
+Ignorez la partie du <code>&lt;div&gt;</code> en fin de page, qui correspond à l&rsquo;affichage de la barre d&rsquo;outis Symfony.
+</p>
+
+</div>
+
+<p>
+Comparez avec le code du gabarit <code>templates/index.html.twig</code>.
+</p>
+
+<p>
+Comprenez-vous le principe de surcharge du contenu du fichier
+<code>base.html.twig</code>, mis en oeuvre grâce à l&rsquo;instruction <code>{% extends
+'base.html.twig' %}</code> en en-tête de <code>index.html.twig</code> ?
+</p>
+
+<p>
+Ces différents fichiers définissent des blocs, avec les balises Twig <code>{% block ... %}</code> et <code>{% endblock %}</code>, et comme ils font référence à
+d&rsquo;autres gabarits, cela permet de mettre en place un système de surcharge de ces blocs, comme autant de
+motifs permettant de construire une factorisation et une réutilisation
+pour la structure des pages HTML.
+</p>
+
+<p>
+De la même façon, comprenez-vous le rôle des blocs &laquo;&nbsp;<code>title</code>&nbsp;&raquo; et &laquo;&nbsp;<code>body</code>&nbsp;&raquo;, dans <code>templates/base.html.twig</code>, ?
+</p>
+
+<p>
+Avec ce mécanisme de surcharge de blocs, on peut définir une structure
+générale, puis la personnaliser, faire des cas
+particuliers.
+</p>
+
+<p>
+On peut ainsi décliner un gabarit général en spécificités
+relatives à chacune des sections ou des pages particulières de
+l&rsquo;application.
+</p>
+
+<p>
+La conception des gabarits consiste donc à chercher des motifs
+factorisables, spécialisables, et s&rsquo;apparente à la conception orientée
+objet qu&rsquo;on applique pour la programmation.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgafb003a" class="outline-2">
+<h2 id="orgafb003a">Étape 2 : Utilisation de la barre d&rsquo;outils Symfony pour la mise au point</h2>
+<div class="outline-text-2" id="text-orgafb003a">
+<div class="objectif">
+<p>
+L&rsquo;objectif de cette étape est de découvrir les fonctionnalités de
+la barre d&rsquo;outils de Symfony.
+</p>
+
+</div>
+
+<p>
+Pendant le développement de l&rsquo;application, l&rsquo;environnement Symfony est
+réglé en mode <code>dev</code>. En conséquence, en bas de chaque page Web générée
+par Symfony se trouve une <b>barre d&rsquo;outils</b> permettant d&rsquo;accéder à de
+nombreux outils facilitant la mise au point.
+</p>
+
+<p>
+Pour explorer ces outils commencez par cliquer sur le logo Symfony qui ouvre la
+page du <b>Symfony Profiler</b>.
+</p>
+
+<ol class="org-ol">
+<li>Consultez les routes de l&rsquo;application</li>
+<li><p>
+Testez le lancement de l&rsquo;application :
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">bin/console server:run
+</pre>
+</div></li>
+<li>Testez l&rsquo;affichage des pages de l&rsquo;application selon les différentes
+routes disponibles, et consultez les informations affichées dans la
+barre d&rsquo;outils Symfony en bas de pages :
+
+<ol class="org-ol">
+<li>Examinez les modules suivants :
+<ul class="org-ul">
+<li>&laquo;&nbsp;Request/Response&nbsp;&raquo;</li>
+<li>Twig</li>
+</ul></li>
+<li><p>
+Examinez l&rsquo;historique des requêtes, pour remonter dans
+l&rsquo;historique.
+</p>
+
+<p>
+Cette opération est très utile lorsque on teste des soumissions 
+de formulaire et en cas de redirection.
+</p>
+
+<p>
+On peut remonter dans
+l&rsquo;historique des &laquo;&nbsp;Requêtes / Réponses&nbsp;&raquo; (via &laquo;&nbsp;<i>Last 10</i>&nbsp;&raquo;). On peut
+ainsi par exemple cliquer sur le lien du &laquo;&nbsp;<i>token</i>&nbsp;&raquo; (à droite) de la
+requête ayant entraîné la redirection, et explorer alors, par
+exemple, les données de <i>dump</i>, les requêtes Doctrine intervenues,
+etc..
+</p></li>
+</ol></li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-org8ac7a42" class="outline-2">
+<h2 id="org8ac7a42">Étape 3 : Remplacement du code HTML par des gabarits</h2>
+<div class="outline-text-2" id="text-org8ac7a42">
+<p>
+À l&rsquo;image de ce qui a été montré ci-desssus pour la page d&rsquo;accueil,
+modifiez les différentes méthodes des contrôleurs, pour utiliser les
+gabarits, au lieu d&rsquo;une génération de chaînes de caractère HTML dans
+le code PHP.
+</p>
+</div>
+
+<div id="outline-container-org4546e65" class="outline-3">
+<h3 id="org4546e65">Étape 3-a : Consultation d&rsquo;une collection de tâches</h3>
+<div class="outline-text-3" id="text-org4546e65">
+<p>
+Créez un sous-répertoire <code>templates/todo/</code> et à l&rsquo;intérieur, un nouveau gabarit <code>index.html.twig</code>, contenant :
+</p>
+
+<div class="org-src-container">
+<pre class="src src-html">{% extends 'base.html.twig' %}
+
+{% block title %}Welcome!{% endblock %}
+
+{% block body %}
+&lt;<span style="color: #0000ff;">h1</span>&gt;<span style="font-weight: bold; text-decoration: underline;">Todo index</span>&lt;/<span style="color: #0000ff;">h1</span>&gt;
+
+&lt;<span style="color: #0000ff;">ul</span>&gt;
+  {% for todo in todos %}
+  &lt;<span style="color: #0000ff;">li</span>&gt;{{ todo.title }}&lt;/<span style="color: #0000ff;">li</span>&gt;
+  {% endfor %} {# todos #}
+&lt;/<span style="color: #0000ff;">ul</span>&gt;
+
+{% endblock %} {# body #}
+</pre>
+</div>
+
+<p>
+Modifiez le code de la méthode du contrôleur pour utiliser ce gabarit :
+</p>
+
+<div class="org-src-container">
+<pre class="src src-php"><span style="color: #8b2252;">/**</span>
+<span style="color: #8b2252;"> * Lists all todo entities.</span>
+<span style="color: #8b2252;"> *</span>
+<span style="color: #8b2252;"> * </span><span style="color: #008b8b;">@Route</span><span style="color: #8b2252;">("/list", name = "todo_list", methods="GET")</span>
+<span style="color: #8b2252;"> */</span>
+<span style="color: #a020f0;">public</span> <span style="color: #a020f0;">function</span> <span style="color: #0000ff;">listAction</span>()
+{
+    <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">em</span> = <span style="color: #008b8b;">$</span><span style="color: #008b8b;">this</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">getDoctrine</span>()<span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">getManager</span>();
+    <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">todos</span> = <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">em</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">getRepository</span>(<span style="color: #008b8b;">Todo</span><span style="color: #000000; background-color: #ffffff;">::</span><span style="color: #483d8b;">class</span>)<span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">findAll</span>();
+
+    dump(<span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">todos</span>);
+
+    <span style="color: #a020f0;">return</span> <span style="color: #008b8b;">$</span><span style="color: #008b8b;">this</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">render</span>(<span style="color: #8b2252;">'todo/index.html.twig'</span>,
+    [ <span style="color: #8b2252;">'todos'</span> =&gt; <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">todos</span> ]
+    );
+}
+</pre>
+</div>
+
+<p>
+Notez que par rapport à la version précédente, cette fois, c&rsquo;est dans
+le gabarit Twig que se produit l&rsquo;algorithme d&rsquo;itération sur
+l&rsquo;affichage de chaque élément d&rsquo;une collection, avec l&rsquo;instruction 
+<code>{%for ITEM in COLLECTION %}</code>.
+</p>
+
+<p>
+Le contrôleur passe directement en argument la variable <code>todos</code> à Twig, qui contient une collection d&rsquo;entités Doctrine.
+</p>
+
+<p>
+Twig accède alors aux attributs des classes PHP : <code>{{ todo.title }}</code> résulte donc en un appel à <code>Todo:getTitle()</code>. 
+</p>
+
+<p>
+Essayez de modifier le code de <code>getTitle()</code> pour ajouter, par exemple un caractère &laquo;&nbsp;!&nbsp;&raquo; au début du titre de chaque tâche :
+</p>
+
+<div class="org-src-container">
+<pre class="src src-php"><span style="color: #a020f0;">public</span> <span style="color: #a020f0;">function</span> <span style="color: #0000ff;">getTitle</span>(): <span style="color: #228b22;">?string</span>
+{
+    <span style="color: #a020f0;">return</span> <span style="color: #8b2252;">'!'</span> . <span style="color: #008b8b;">$</span><span style="color: #008b8b;">this</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #a0522d;">title</span>;
+}
+</pre>
+</div>
+
+<p>
+On voit bien sur cet exemple que les gabarits Twig qui construisent
+les vues de notre application, sont bien câblés par Symfony avec les
+données du modèle objet de l&rsquo;application réalisé avec Doctrine.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org9d0584b" class="outline-3">
+<h3 id="org9d0584b">Étape 3-b : Amélioration du rendu de la liste de tâche, sous forme de tableau</h3>
+<div class="outline-text-3" id="text-org9d0584b">
+<p>
+Vous pouvez modifier encore le gabarit <code>templates/todo/index.html.twig</code> pour afficher tous les attributs des tâches dans un tableau.
+</p>
+
+<p>
+Au lieu d&rsquo;une liste à puces simple, vous obtiendrez un tableau du type :
+</p>
+
+<div class="org-src-container">
+<pre class="src src-html">&lt;<span style="color: #0000ff;">table</span> <span style="color: #a0522d;">class</span>=<span style="color: #8b2252;">"table"</span>&gt;
+    &lt;<span style="color: #0000ff;">thead</span>&gt;
+        &lt;<span style="color: #0000ff;">tr</span>&gt;
+            &lt;<span style="color: #0000ff;">th</span>&gt;Id&lt;/<span style="color: #0000ff;">th</span>&gt;
+            &lt;<span style="color: #0000ff;">th</span>&gt;Todo&lt;/<span style="color: #0000ff;">th</span>&gt;
+            &lt;<span style="color: #0000ff;">th</span>&gt;Completed&lt;/<span style="color: #0000ff;">th</span>&gt;
+            &lt;<span style="color: #0000ff;">th</span>&gt;Created&lt;/<span style="color: #0000ff;">th</span>&gt;
+            &lt;<span style="color: #0000ff;">th</span>&gt;Updated&lt;/<span style="color: #0000ff;">th</span>&gt;
+        &lt;/<span style="color: #0000ff;">tr</span>&gt;
+    &lt;/<span style="color: #0000ff;">thead</span>&gt;
+    &lt;<span style="color: #0000ff;">tbody</span>&gt;
+
+        &lt;<span style="color: #0000ff;">tr</span>&gt;
+            &lt;<span style="color: #0000ff;">td</span>&gt;1&lt;/<span style="color: #0000ff;">td</span>&gt;
+            &lt;<span style="color: #0000ff;">td</span>&gt;apprendre les bases de PHP&lt;/<span style="color: #0000ff;">td</span>&gt;
+            &lt;<span style="color: #0000ff;">td</span>&gt;1&lt;/<span style="color: #0000ff;">td</span>&gt;
+            &lt;<span style="color: #0000ff;">td</span>&gt;2018-08-06 14:03:57&lt;/<span style="color: #0000ff;">td</span>&gt;
+            &lt;<span style="color: #0000ff;">td</span>&gt;2018-08-06 14:03:57&lt;/<span style="color: #0000ff;">td</span>&gt;
+        &lt;/<span style="color: #0000ff;">tr</span>&gt;
+
+        ...
+
+    &lt;/<span style="color: #0000ff;">tbody</span>&gt;
+&lt;/<span style="color: #0000ff;">table</span>&gt;
+</pre>
+</div>
+
+<p>
+Modifiez le code du gabarit pour afficher ainsi les différents attributs de chaque tâche.
+</p>
+
+<p>
+Notez que les dates peuvent être affichées avec une instruction Twig du type : <code>{{ todo.created ? todo.created|date('Y-m-d H:i:s') : '' }}</code>, qui signifie : 
+</p>
+<ul class="org-ul">
+<li>si l&rsquo;attribut <code>created</code> est défini, alors afficher sa valeur sous forme de date avec un certain format d&rsquo;affichage</li>
+<li>sinon, afficher une chaîne vide</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org8d70860" class="outline-3">
+<h3 id="org8d70860">Étape 3-c : Affichage d&rsquo;une tâche</h3>
+<div class="outline-text-3" id="text-org8d70860">
+<p>
+Modifiez maintenant l&rsquo;affichage d&rsquo;une seule tâche, en vous inspirant
+des extraits suivants.
+</p>
+
+<ol class="org-ol">
+<li><p>
+ajoutez la méthode du contrôleur qui va gérer les requêtes
+entrantes 
+</p>
+
+<div class="org-src-container">
+<pre class="src src-php"><span style="color: #8b2252;">/**</span>
+<span style="color: #8b2252;"> * Finds and displays a todo entity.</span>
+<span style="color: #8b2252;"> *</span>
+<span style="color: #8b2252;"> * </span><span style="color: #008b8b;">@Route</span><span style="color: #8b2252;">("/{id}", name="todo_show", requirements={ "id": "\d+"}, methods="GET")</span>
+<span style="color: #8b2252;"> */</span>
+ <span style="color: #a020f0;">public</span> <span style="color: #a020f0;">function</span> <span style="color: #0000ff;">showAction</span>(<span style="color: #228b22;">Todo</span> <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">todo</span>): <span style="color: #228b22;">Response</span>
+ {
+     <span style="color: #a020f0;">return</span> <span style="color: #008b8b;">$</span><span style="color: #008b8b;">this</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">render</span>(<span style="color: #8b2252;">'todo/show.html.twig'</span>,
+     [ <span style="color: #8b2252;">'todo'</span> =&gt; <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">todo</span> ]
+     );
+ }
+
+</pre>
+</div>
+
+<p>
+vérifiez que la nouvelle route ajoutée est bien présente dans la
+sortie de <code>bin/console debug:router</code>.
+</p></li>
+
+<li><p>
+ajoutez un nouveau gabarit <code>todo/show.html.twig</code>, contenant par
+exemple la génération d&rsquo;un tableau HTML du type :
+</p>
+
+<div class="org-src-container">
+<pre class="src src-html">{% block main %}
+    &lt;<span style="color: #0000ff;">h1</span>&gt;<span style="font-weight: bold; text-decoration: underline;">Todo</span>&lt;/<span style="color: #0000ff;">h1</span>&gt;
+
+       {% dump(todo) %}
+
+    &lt;<span style="color: #0000ff;">table</span> <span style="color: #a0522d;">class</span>=<span style="color: #8b2252;">"table"</span>&gt;
+        &lt;<span style="color: #0000ff;">tbody</span>&gt;
+            &lt;<span style="color: #0000ff;">tr</span>&gt;
+                &lt;<span style="color: #0000ff;">th</span>&gt;Id&lt;/<span style="color: #0000ff;">th</span>&gt;
+                &lt;<span style="color: #0000ff;">td</span>&gt;{{ todo.id }}&lt;/<span style="color: #0000ff;">td</span>&gt;
+            &lt;/<span style="color: #0000ff;">tr</span>&gt;
+            &lt;<span style="color: #0000ff;">tr</span>&gt;
+                &lt;<span style="color: #0000ff;">th</span>&gt;Todo&lt;/<span style="color: #0000ff;">th</span>&gt;
+                &lt;<span style="color: #0000ff;">td</span>&gt;{{ todo.title }}&lt;/<span style="color: #0000ff;">td</span>&gt;
+            &lt;/<span style="color: #0000ff;">tr</span>&gt;
+            ...
+        &lt;/<span style="color: #0000ff;">tbody</span>&gt;
+    &lt;/<span style="color: #0000ff;">table</span>&gt;
+
+    &lt;<span style="color: #0000ff;">a</span> <span style="color: #a0522d;">href</span>=<span style="color: #8b2252;">"{{ path('todo_index') }}"</span>&gt;back to list&lt;/<span style="color: #0000ff;">a</span>&gt;
+
+{% endblock %}
+</pre>
+</div>
+
+<p>
+Le lien &laquo;&nbsp;<i>back to list</i>&nbsp;&raquo; en bas de page contient une balise <code>&lt;a
+   href=""&gt;...&lt;/a&gt;</code> tout à fait classique, mais dont la valeur de
+l&rsquo;attribut <code>href</code> (l&rsquo;URL cible), est calculé avec une fonction Twig :
+<code>path( )</code>.
+</p>
+
+<p>
+La fonction <code>path( )</code> prend en premier argument le <b>nom</b> d&rsquo;une route,
+qui sera la cible du lien, pour accéder à une autre page de l&rsquo;application.
+</p>
+
+<p>
+Vérifiez que l&rsquo;affichage fonctionne bien, en corrigeant le nom de
+la route si nécessaire.
+</p></li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-orgaa9de52" class="outline-3">
+<h3 id="orgaa9de52">Étape 3-d : Ajout d&rsquo;un lien de navigation entre liste des tâches et affichage d&rsquo;une tâche</h3>
+<div class="outline-text-3" id="text-orgaa9de52">
+<p>
+Vous pouvez maintenant ajouter dans la consultation de la collection
+des tâches, un lien pointant vers la page de consultation de chacune
+de ses tâches.
+</p>
+
+<p>
+Ajoutez dans le tableau des tâches, une dernière colonne pour contenir des liens navigables :
+</p>
+<div class="org-src-container">
+<pre class="src src-html">&lt;<span style="color: #0000ff;">thead</span>&gt;
+  &lt;<span style="color: #0000ff;">tr</span>&gt;
+    ...
+    &lt;<span style="color: #0000ff;">td</span>&gt; <span style="color: #a0522d;">&amp;nbsp;</span>&lt;/<span style="color: #0000ff;">td</span>&gt;
+  &lt;/<span style="color: #0000ff;">tr</span>&gt;
+&lt;/<span style="color: #0000ff;">thead</span>&gt;
+&lt;<span style="color: #0000ff;">tbody</span>&gt;
+  ...
+  &lt;<span style="color: #0000ff;">tr</span>&gt;
+    ...
+    &lt;<span style="color: #0000ff;">td</span>&gt;&lt;<span style="color: #0000ff;">a</span> <span style="color: #a0522d;">href</span>=<span style="color: #8b2252;">"{{ path('todo_show', {'id': todo.id}) }}"</span>&gt;show&lt;/<span style="color: #0000ff;">a</span>&gt;&lt;/<span style="color: #0000ff;">td</span>&gt;
+  &lt;/<span style="color: #0000ff;">tr</span>&gt;
+&lt;/<span style="color: #0000ff;">tbody</span>&gt;
+
+</pre>
+</div>
+
+<p>
+Ces liens ont l&rsquo;attribut <code>href</code>, qui doit pointer vers l&rsquo;URL d&rsquo;affichage
+correspondant à la tâche courante. Cette URL varie, pour chaque tâche
+à afficher, puisqu&rsquo;elle contient l&rsquo;identifiant de la tâche.
+</p>
+
+<p>
+La fonction <code>path( )</code> doit donc cette fois encore prendre en premier
+argument le nom de la route, mais aussi la valeur des arguments de
+cette route, qui rendent l&rsquo;URL dynamique. Ici, la route <code>todo_show</code>
+attend un argument &rsquo;<code>id</code>&rsquo;, comme cela est défini dans l&rsquo;annotation
+<code>@Route("/{id}"</code> de <code>TodoController::showAction</code>.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgb841fb1" class="outline-2">
+<h2 id="orgb841fb1">Étape 4 : Utilisation de <code>dump()</code> pour faciliter la mise au point</h2>
+<div class="outline-text-2" id="text-orgb841fb1">
+<p>
+En cours de développement, pour faciliter le débogage (<i>debug</i>), vous pourrez introduire l&rsquo;affichage d&rsquo;un objet pour le debug
+en utilisant la fonction <code>dump()</code> dans le code PHP, par exemple à l&rsquo;intérieur d&rsquo;une méthode d&rsquo;action contrôleur, avant l&rsquo;appel
+à la méthode <code>render</code> :
+</p>
+
+<div class="org-src-container">
+<pre class="src src-php"><span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">todos</span> = <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">em</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">getRepository</span>(<span style="color: #008b8b;">Todo</span><span style="color: #000000; background-color: #ffffff;">::</span><span style="color: #483d8b;">class</span>)<span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">findAll</span>();
+dump(<span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">todos</span>);
+</pre>
+</div>
+
+<p>
+Mais vous pouvez aussi utiliser la fonction <code>dump()</code> à l&rsquo;intérieur d&rsquo;un gabarit Twig, dans une code du type :
+</p>
+
+<div class="org-src-container">
+<pre class="src src-html">{% dump(todo) %}
+</pre>
+</div>
+
+<p>
+Essayez de modifier votre code si jamais vous n&rsquo;y avez pas recopié les dump tels que fournis dans les exemples ci-avant.
+</p>
+
+<p>
+Dans les deux cas, la présence des informations de debug
+correspondantes aux appels à <code>dump()</code> se retrouve dans la console
+Symfony, derrière l&rsquo;icône en forme de &laquo;&nbsp;cible&nbsp;&raquo; qui apparaît alors dans la barre d&rsquo;outils du développeur Symfony.
+</p>
+
+<p>
+Attention : <code>{% dump(todo) %}</code> est différent de <code>{{ dump(todo) }}</code> : la
+première est une instruction Twig, comme un <code>for</code>, alors que la seconde
+substitue la valeur des informations de debug au milieu du rendu de la
+page.
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-org5b65eb2" class="outline-2">
+<h2 id="org5b65eb2">Étape 5 : Affichage des tâches terminées</h2>
+<div class="outline-text-2" id="text-org5b65eb2">
+<div class="objectif">
+<p>
+L&rsquo;objectif de cette étape est de mettre en forme les tâches terminées
+de façon différente des tâches à faire, grâce aux instructions Twig
+dans les gabarits.
+</p>
+
+</div>
+
+<p>
+Vous allez par exemple afficher les tâches terminées comme étant
+barrées, dans la liste des tâches. Vous pouvez utiliser la balise HTML
+<code>&lt;del&gt;</code> pour ce faire.
+</p>
+
+<p>
+Vous exploiterez la primitive <code>if</code> du langage de gabarits de Twig, en vous référant à la <a href="https://twig.sensiolabs.org/doc/2.x/">documentation de référence de Twig</a>.
+</p>
+
+<p>
+<b>Modifiez le gabarit d&rsquo;affichage de la liste des tâches (<code>index.html.twig</code>) pour intégrer ce changement</b>
+</p>
+
+<div class="remarque">
+<p>
+Dans les données d&rsquo;exemple de l&rsquo;application fournies, seule la tâche
+<del>&laquo;&nbsp;terminer le hp 2-3&nbsp;&raquo;</del> &laquo;&nbsp;apprendre les bases de PHP&nbsp;&raquo; 
+a le statut terminé ;-).
+</p>
+
+</div>
+
+<p>
+Comme vous l&rsquo;aurez maintenant compris, dans une application Symfony,
+une partie des algorithmes peuvent être programmés dans le code PHP,
+comme par exemple le filtrage des données mis en œuvre avec
+<code>findByCompleted()</code>.
+</p>
+
+<p>
+Mais on peut aussi faire varier seulement la présentation des données
+qui est effectuée dans les gabarits, en programmant certains
+comportements dans les gabarits Twig.
+</p>
+
+<p>
+Il faudra faire un choix : appliquer des traitements dans la couche
+traitements, ou dans la couche présentation&#x2026; tout dépend des
+compétences des différents développeurs (PHP <i>vs</i> Twig ?), mais aussi
+des contraintes : performances, encombrement mémoire, factorisation. À
+vous de décider.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orga4a68ca" class="outline-2">
+<h2 id="orga4a68ca">Étape 6 : Lecture de la documentation Symfony &laquo;&nbsp;<i>quick tour</i>&nbsp;&raquo;</h2>
+<div class="outline-text-2" id="text-orga4a68ca">
+<p>
+Maintenant que vous maîtrisez de plus en plus les technologies
+principales de Symfony, il est temps d&rsquo;aller lire la documentation,
+par exemple le début du &laquo;&nbsp;<i>quick tour</i>&nbsp;&raquo;, qui revisite une partie de ce
+qu&rsquo;on a déjà vu dans le cours :
+<a href="https://symfony.com/doc/4.4/quick_tour/index.html">en ligne</a>
+</p>
+
+<p>
+La documentation va plus loin que ce que nous avons vu en cours, en présentant des détails de l&rsquo;architecture de
+Symfony que nous n&rsquo;abordons pas dans le cours&#x2026; mais qui pourraient
+vous intéresser si vous souhaitez aller vraiment plus loin, pour
+d&rsquo;autres projets de développement d&rsquo;applications Web avec Symfony.
+</p>
+
+<p>
+Dans tous les cas, il est bon de pouvoir vous référer à la
+documentation officielle du projet : quand certains points ne sont pas
+clairs dans nos supports, il y a des chances que ça soit plus clair
+dans la documentation de Symfony (espérons-le).
+</p>
+
+<p>
+Ne passez pas des heures à essayer de creuser tous les détails&#x2026; nous
+reviendrons au fil de l&rsquo;eau sur une partie d&rsquo;entre-eux.
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-org51ad973" class="outline-2">
+<h2 id="org51ad973">Fin du TP</h2>
+<div class="outline-text-2" id="text-org51ad973">
+<p>
+Sauvegardez votre travail. Vous y reviendrez ultérieurement, et serez
+notés sur votre code. Autant ne rien perdre et faire des sauvegardes intermédiaires.
+</p>
+
+<div class="attention">
+<p>
+Veillez à ne pas partager votre code &laquo;&nbsp;verbatim&nbsp;&raquo; avec vos
+collègues. La notation sera propre à chacun : attention au plagiat. Coopérez avec vos
+collègues, mais sans tomber dans la &laquo;&nbsp;facilité&nbsp;&raquo; d&rsquo;une sous-traitance !
+</p>
+
+</div>
+
+<div class="remarque">
+<p>
+Si vous maîtrisez déjà l&rsquo;utilisation des outils comme
+Git, vous pouvez bien-entendu vous en servir pour réaliser cet
+archivage au fil de l&rsquo;eau. Prenez garde à utiliser un référentiel Git privé pour
+éviter le plagiat à ce niveau également.
+</p>
+
+</div>
+</div>
+</div>
+
+<div id="outline-container-org4e69859" class="outline-2">
+<h2 id="org4e69859">Évaluation</h2>
+<div class="outline-text-2" id="text-org4e69859">
+<p>
+À l&rsquo;issue de cette séance, vous savez :
+</p>
+<ul class="org-ul">
+<li>construire des pages d&rsquo;une application à partir de gabarits (<i>templates</i>) Twig</li>
+<li>vous comprenez le principe de surcharge de gabarits pour rendre la
+structure des pages uniforme</li>
+<li>vous savez utiliser des primitives du langage Twig telles que <code>if</code> ou <code>for</code></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orga72c0d8" class="outline-2">
+<h2 id="orga72c0d8">Pour aller plus loin</h2>
+<div class="outline-text-2" id="text-orga72c0d8">
+</div>
+<div id="outline-container-org0a33841" class="outline-3">
+<h3 id="org0a33841"><code>ParamConverter</code></h3>
+<div class="outline-text-3" id="text-org0a33841">
+<p>
+Observez le code de <code>TodoController::showAction</code>.
+</p>
+
+<p>
+Comprenez-vous comment est obtenue l&rsquo;instance de <code>Todo</code>, <code>$todo</code> qui
+est récupérée en paramètre par cette méthode ?
+</p>
+
+<p>
+Vous avez bien vu que l&rsquo;identifiant <code>id</code> est spécifié dans
+l&rsquo;annotation définissant la route (on précise même que c&rsquo;est un
+entier), qui correspond à l&rsquo;attribut <code>todo.id</code> dans la génération des
+liens avec <code>path()</code> dans le gabarit de liste des tâches.
+</p>
+
+<p>
+Peut-on instancier en mémoire un objet <code>$todo</code> chargé depuis la base
+de donnée, une fois qu&rsquo;on connaît son identifiant ?
+</p>
+
+<p>
+On peut utiliser le code suivant, qui utilise explicitement Doctrine,
+comme dans le TP précédent :
+</p>
+
+<div class="org-src-container">
+<pre class="src src-php"><span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">todo</span> = <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">em</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">getRepository</span>(<span style="color: #008b8b;">Todo</span><span style="color: #000000; background-color: #ffffff;">::</span><span style="color: #483d8b;">class</span>)<span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">find</span>(<span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">id</span>);
+</pre>
+</div>
+
+<p>
+Mais comme une application Symfony finit typiquement par contenir ce genre de code presque
+systématiquement, les développeurs du <i>framework</i> ont intégré ce
+mécanisme dans la classe Contrôleur, de façon a rendre cela
+&laquo;&nbsp;<i>automagique</i>&nbsp;&raquo;. C&rsquo;est le rôle du <code>ParamConverter</code> sur lequel on
+reviendra plus tard, qui instancie automatiquement une classe à partir
+d&rsquo;un identifiant, lorsqu&rsquo;il n&rsquo;y a pas dambiguïté.
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Auteur: Olivier Berger (TSP)</p>
+<p class="date">Created: 2020-10-02 Fri 12:07</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

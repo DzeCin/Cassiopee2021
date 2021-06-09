@@ -1,0 +1,1520 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<!-- 2020-08-26 Wed 13:08 -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TP n°9 - Formulaires dynamiques complexes</title>
+<meta name="generator" content="Org mode">
+<meta name="author" content="Olivier Berger (TSP)">
+<meta name="description" content="CSC4101 Telecom SudParis - 2019-2020 - TP n°9"
+>
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+<meta name="copyright" content="&copy; 2017 Telecom SudParis + Olivier Berger" />
+<link rel="stylesheet" type="text/css" href="../media/tsp.css" />
+<style type="text/css">
+.floatrightclass {
+float: right;
+margin: 0 0 10px 10px;
+}
+.floatleftclass {
+float: left;
+margin: 0 0 10px 10px;
+}
+.clearrightclass {
+clear: right;
+}
+.clearleftclass {
+clear: left;
+}
+</style>
+<script type="text/javascript" src='../media/tsp.js'></script>
+<script type="text/javascript" src="../media/org-info-src.js"></script>
+<script type="text/javascript">
+/* <![CDATA[ */
+org_html_manager.set("TOC_DEPTH", "2");
+org_html_manager.set("LINK_HOME", "");
+org_html_manager.set("LINK_UP", "");
+org_html_manager.set("LOCAL_TOC", "0");
+org_html_manager.set("VIEW_BUTTONS", "0");
+org_html_manager.set("MOUSE_HINT", "#cccccc");
+org_html_manager.set("FIXED_TOC", "0");
+org_html_manager.set("TOC", "1");
+org_html_manager.set("VIEW", "showall");
+org_html_manager.set("HELP", "1");
+org_html_manager.setup ();
+/* ]]> */
+</script>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2019 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">TP n°9 - Formulaires dynamiques complexes
+<br>
+<span class="subtitle">Formulaires Symfony dynamiques - Doctrine et JQuery en détails</span>
+</h1>
+<div id="table-of-contents">
+<h2>Table des matières</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org0417ffb">Introduction</a></li>
+<li><a href="#org654a7c2">Étape 1 : Premières modifications de l&rsquo;application &laquo;&nbsp;Todo&nbsp;&raquo;</a>
+<ul>
+<li><a href="#org6062e98">Étape 1-a : Ajout de la création de tâches de test dans le Contrôleur du formulaire de nouveau projet</a></li>
+<li><a href="#org5cd53e2">Étape 1-b : Modification du formulaire de nouveau projet</a></li>
+</ul>
+</li>
+<li><a href="#orgb898ded">Étape 2 : Modification du gabarit de création d&rsquo;un nouveau projet</a></li>
+<li><a href="#orgf33425d">Étape 3 : Mise en place d&rsquo;un prototype de formulaire de nouvelle tâche</a></li>
+<li><a href="#orge8b2bae">Étape 4 : Ajout du code Javascript pour rendre le formulaire dynamique</a>
+<ul>
+<li><a href="#orgc1588df">Étape 4-a : Permettre l&rsquo;ajout de nouveaux champs de saisie pour ajouter une tâche</a></li>
+<li><a href="#org7f28668">Étape 4-b : Gestion de la suppression des sous-formulaires des tâches</a></li>
+</ul>
+</li>
+<li><a href="#org0d05cd5">Étape 5 : Finalisation du fonctionnement du formulaire</a>
+<ul>
+<li><a href="#org038f05d">Étape 5-a : Utilisation des outils de mise au point pour vérifier le fonctionnement des formulaires</a></li>
+<li><a href="#org6a3f38b">Étape 5-b : Correction de l&rsquo;absence de sauvegarde des sous-tâches ajoutées</a></li>
+<li><a href="#orgfddd337">Étape 5-c : Correction de la suppression des tâches d&rsquo;un projet</a>
+<ul>
+<li><a href="#orgba7a685">Mise en évidence du dysfonctionnement</a></li>
+<li><a href="#org5bf7a10">Compréhension du problème</a></li>
+<li><a href="#org1d340dd">Correction : ajout explicite de la suppression</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#orga11656f">Évaluation</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org0417ffb" class="outline-2">
+<h2 id="org0417ffb">Introduction</h2>
+<div class="outline-text-2" id="text-org0417ffb">
+<div class="objectif">
+<p>
+Cette séance vise à mettre en œuvre, dans l&rsquo;application fil-rouge &laquo;&nbsp;ToDo&nbsp;&raquo;,
+la gestion de <b>formulaires dynamiques Symfony</b>, en intégrant les
+mécanismes codés en PHP et JQuery, et à ajouter une <b>gestion des
+erreurs</b>.
+</p>
+
+</div>
+
+<p>
+On cherche à ce que les formulaires de l&rsquo;application soient plus
+riches.
+</p>
+
+<p>
+Auparavant, on avait :
+</p>
+<ol class="org-ol">
+<li>un formulaire &laquo;&nbsp;statique&nbsp;&raquo; de création d&rsquo;un nouveau projet</li>
+<li>un formulaire d&rsquo;ajout d&rsquo;une nouvelle tâche à un projet déjà créé
+(vous avez travaillé dessus dans la séance précédente)</li>
+</ol>
+
+<p>
+À la place, ou souhaiterait désormais disposer d&rsquo;<b>un seul formulaire</b>,
+dynamique, qui intègre l&rsquo;ajout d&rsquo;un
+nouveau Projet et d&rsquo;un nombre <b>variable</b> de tâches qui le constituent
+(Collection de Todos, dans le cadre d&rsquo;une relation de type
+<i>association</i> 1-N).
+</p>
+
+<p>
+Cela nécessite que le formulaire puisse contenir un nombre variable de
+champs de saisie, pour les tâches du projet, dont on ne connaît pas le nombre a
+priori. On utilisera Javascript pour modifier dynamiquement les champs
+de saisie présents dans le formulaire HTML, pour chaque nouvelle tâche
+du projet à créer, au fur-et-à-mesure des
+besoins, sans que l&rsquo;ensemble du formulaire soit rechargé.
+</p>
+
+<p>
+Ce type de fonctionnalité sera très classique dans les applications, dès lors qu&rsquo;on
+souhaitera ajouter une nouvelle entité dans un CRUD, et que cette
+entité est composée d&rsquo;autres sous-entités liées par une relation &laquo;&nbsp;OneToMany&nbsp;&raquo;.
+</p>
+
+
+<p>
+On va suivre les indications de la documentation Symfony <a href="https://symfony.com/doc/current/form/form_collections.html">How to Embed a Collection of Forms</a> 
+pour intégrer l&rsquo;ajout ou la suppression des tâches du projet,
+directement dans le formulaire de création d&rsquo;un nouveau projet.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org654a7c2" class="outline-2">
+<h2 id="org654a7c2">Étape 1 : Premières modifications de l&rsquo;application &laquo;&nbsp;Todo&nbsp;&raquo;</h2>
+<div class="outline-text-2" id="text-org654a7c2">
+<div class="objectif">
+<p>
+L&rsquo;objectif de cette étape est de mettre en place le moyen de tester
+les modifications sur l&rsquo;application ToDo.
+</p>
+
+</div>
+</div>
+
+<div id="outline-container-org6062e98" class="outline-3">
+<h3 id="org6062e98">Étape 1-a : Ajout de la création de tâches de test dans le Contrôleur du formulaire de nouveau projet</h3>
+<div class="outline-text-3" id="text-org6062e98">
+<p>
+Vous allez modifier la version de ToDo, supposée être dans l&rsquo;état
+final obtenu à la fin de la séance 8.
+</p>
+
+<ul class="org-ul">
+<li><p>
+Si vous aviez terminé la séance précédente, nous vous recommendons de travailler dans une copie du répertoire :
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #483d8b;">cd</span> $<span style="color: #a0522d;">HOME</span>/CSC4101/
+mkdir tp-09
+cp -r tp-08/todo-app tp-09/
+<span style="color: #483d8b;">cd</span> tp-09/todo-app/
+rm -fr .project
+bin/console cache:clear
+</pre>
+</div>
+
+<p>
+Pensez aussi à supprimer les répertoires des vieilles séances
+(tp-N-2) pour libérer un peu d&rsquo;espace disque.
+</p>
+
+<p>
+Recréez un nouveau projet dans Eclipse pour la nouvelle version de ToDo de
+la présente séance.
+</p></li>
+
+<li><p>
+En cas de besoin, si vous n&rsquo;aviez pas pu effectuer les modifications
+complètement dans la séance précédente, et aviez un état instable
+dans le répertoire de travail de la séance 8, vous pouvez récupérer
+le code correspondant au travail terminé de la séance 8 :
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">mkdir -p $<span style="color: #a0522d;">HOME</span>/CSC4101/tp-09
+<span style="color: #483d8b;">cd</span> $<span style="color: #a0522d;">HOME</span>/CSC4101/tp-09/
+<span style="color: #483d8b;">export</span> <span style="color: #a0522d;">COMPOSER_MEMORY_LIMIT</span>=-1
+composer create-project oberger/tspcsc4101-todo-skeleton todo-app <span style="color: #8b2252;">"v8.*"</span>
+</pre>
+</div>
+<p>
+Confirmez l&rsquo;application de la recette <i>Flex</i> pour <code>vich/uploader-bundle</code>
+en répondant &rsquo;y&rsquo; (<i>yes</i>) au prompt de composer. 
+</p>
+
+<p>
+Puis importez le projet dans Eclipse.
+</p>
+
+<p>
+Profitez-en pour faire éventuellement du ménage dans les anciennes
+versions (TP n-2 et antérieures)
+</p></li>
+</ul>
+</div>
+</div>
+
+
+<div id="outline-container-org5cd53e2" class="outline-3">
+<h3 id="org5cd53e2">Étape 1-b : Modification du formulaire de nouveau projet</h3>
+<div class="outline-text-3" id="text-org5cd53e2">
+<div class="objectif">
+<p>
+Vous allez mettre en place, dans le modèle des données, une gestion de
+l&rsquo;ajout de tâches dès la création d&rsquo;un nouveau projet, pour pouvoir
+effectuer des tests dans la suite des étapes.
+</p>
+
+</div>
+
+<p>
+Procédez aux étapes suivantes :
+</p>
+
+<ol class="org-ol">
+<li><p>
+dans <code>src/Controller/ProjectController.php</code>, modifiez la méthode
+<code>new()</code> existante, pour ajouter le code <i>bidon</i> suivant.
+</p>
+
+<p>
+<b>Attention à bien placer les différents blocs dans le bon ordre, comme ci-dessous</b>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-php"><span style="color: #a020f0;">use</span> <span style="color: #228b22;">App\Entity\Todo</span>;
+
+<span style="color: #b22222;">//</span><span style="color: #b22222;">...</span>
+
+ <span style="color: #8b2252;">/**</span>
+<span style="color: #8b2252;">  * </span><span style="color: #008b8b;">@Route</span><span style="color: #8b2252;">("/new", name="project_new", methods="GET|POST")</span>
+<span style="color: #8b2252;">  */</span>
+ <span style="color: #a020f0;">public</span> <span style="color: #a020f0;">function</span> <span style="color: #0000ff;">new</span>(<span style="color: #228b22;">Request</span> <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">request</span>): <span style="color: #228b22;">Response</span>
+ {
+     <span style="color: #b22222;">// </span><span style="color: #b22222;">1) cr&#233;ation d'un projet en m&#233;moire</span>
+     <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">project</span> = <span style="color: #a020f0;">new</span> <span style="color: #228b22;">Project</span>();
+
+     <span style="color: #b22222;">// </span><span style="color: #b22222;">2) ajout de sous-entit&#233;s</span>
+     <span style="color: #b22222;">// </span><span style="color: #b22222;">code bidon - c'est juste fait pour qu'un Project ait des todos</span>
+     <span style="color: #b22222;">// </span><span style="color: #b22222;">sinon, &#231;a ne sert pas &#224; grand chose</span>
+     <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">todo1</span> = <span style="color: #a020f0;">new</span> <span style="color: #228b22;">Todo</span>();
+     <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">todo1</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">setTitle</span>(<span style="color: #8b2252;">'todo1'</span>);
+     <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">project</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">getTodos</span>()<span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">add</span>(<span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">todo1</span>);
+     <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">todo2</span> = <span style="color: #a020f0;">new</span> <span style="color: #228b22;">Todo</span>();
+     <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">todo2</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">setTitle</span>(<span style="color: #8b2252;">'todo2'</span>);
+     <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">project</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">getTodos</span>()<span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">add</span>(<span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">todo2</span>);
+     <span style="color: #b22222;">// </span><span style="color: #b22222;">fin du code bidon</span>
+
+     <span style="color: #b22222;">// </span><span style="color: #b22222;">3) cr&#233;ation d'un formulaire d'affichage du projet</span>
+     <span style="color: #b22222;">//    </span><span style="color: #b22222;">et de ses sous-t&#226;ches</span>
+     <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">form</span> = <span style="color: #008b8b;">$</span><span style="color: #008b8b;">this</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">createForm</span>(<span style="color: #008b8b;">ProjectType</span><span style="color: #000000; background-color: #ffffff;">::</span><span style="color: #483d8b;">class</span>, <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">project</span>);
+
+     ...
+ }
+</pre>
+</div>
+
+<p>
+Dès qu&rsquo;un projet est créé, en support de l&rsquo;affichage du formulaire de
+création, il comportera deux sous-tâches de test.
+</p></li>
+
+<li><p>
+modifiez la méthode <code>ProjectType::buildForm</code> (dans
+<code>src/Form/ProjectType.php</code>) pour gérer l&rsquo;intégration dans le
+formulaire de modification d&rsquo;un projet, de sous-formulaires pour
+ses sous-tâches :
+</p>
+<div class="org-src-container">
+<pre class="src src-php"><span style="color: #a020f0;">use</span> <span style="color: #228b22;">Symfony\Component\Form\Extension\Core\Type\CollectionType</span>;
+<span style="color: #b22222;">//</span><span style="color: #b22222;">...</span>
+    <span style="color: #a020f0;">public</span> <span style="color: #a020f0;">function</span> <span style="color: #0000ff;">buildForm</span>(<span style="color: #228b22;">FormBuilderInterface</span> <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">builder</span>, <span style="color: #228b22;">array</span> <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">options</span>)
+    {
+    <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">builder</span>
+        <span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">add</span>(<span style="color: #8b2252;">'title'</span>)
+        <span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">add</span>(<span style="color: #8b2252;">'description'</span>)
+        <span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">add</span>(<span style="color: #8b2252;">'todos'</span>, <span style="color: #008b8b;">CollectionType</span><span style="color: #000000; background-color: #ffffff;">::</span><span style="color: #483d8b;">class</span>, <span style="color: #a020f0;">array</span>(
+        <span style="color: #8b2252;">'entry_type'</span> =&gt; <span style="color: #008b8b;">TodoType</span><span style="color: #000000; background-color: #ffffff;">::</span><span style="color: #483d8b;">class</span>,
+        <span style="color: #8b2252;">'entry_options'</span> =&gt; <span style="color: #a020f0;">array</span>(<span style="color: #8b2252;">'label'</span> =&gt; <span style="color: #008b8b;">false</span>),
+        ));
+    ;
+    }
+</pre>
+</div>
+
+<p>
+Vous voyez ici comment on intègre un nouvel élément au formulaire,
+pour gérer la collection des sous-tâches de l&rsquo;attribut
+<code>todos</code> des <code>Project</code>.
+</p>
+
+<p>
+Au lieu d&rsquo;une gestion d&rsquo;un champ de saisie
+mono-valuée, comme pour le titre du projet (<code>title</code>), il s&rsquo;agit ici
+d&rsquo;un objet Symfony gérant une
+collection (<code>CollectionType</code>). Chaque élément de la
+collection sera géré par un sous-formulaire de type <code>TodoType</code>
+(il existe déjà, et est utilisé pour la création des
+tâches). Ignorez le rôle d&rsquo;<code>entry_options</code> qui est un détail d&rsquo;implémentation.
+</p></li>
+
+<li>Vérifiez que le formulaire de création de nouveau projet s&rsquo;affiche, et permet d&rsquo;y
+voir les deux sous-tâches &laquo;&nbsp;bidon&nbsp;&raquo;.</li>
+</ol>
+
+<p>
+Il faut maintenant adapter le code du gabarit associé, pour intégrer
+la dimension dynamique du formulaire HTML.
+</p>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-orgb898ded" class="outline-2">
+<h2 id="orgb898ded">Étape 2 : Modification du gabarit de création d&rsquo;un nouveau projet</h2>
+<div class="outline-text-2" id="text-orgb898ded">
+<div class="objectif">
+<p>
+L&rsquo;objectif de cette étape est de modifier le gabarit qui génère le
+formulaire HTML afin qu&rsquo;il intègre la capacité à être modifié
+dynamiquement en Javascript, côté client (dans le navigateur).
+</p>
+
+</div>
+
+<p>
+Dans le gabarit <code>templates/project/_form.html.twig</code> existant, on va modifier le
+formulaire de création de nouveau projet pour embarquer des
+<b>sous-formulaire</b> pour chacune des tâches.
+</p>
+
+<p>
+Procédez aux étapes suivantes :
+</p>
+<ol class="org-ol">
+<li><p>
+Modifiez <code>templates/project/new.html.twig</code> pour ajouter un gabarit de
+base intermédiaire, qui sera spécifique aux formulaires de création ou de
+modification des projets, qui pourra intégrer le code Javascript :
+</p>
+
+<div class="org-src-container">
+<pre class="src src-html">{% extends 'project/project_form_base.html.twig' %}
+
+{% block title %}New Project{% endblock %}
+...
+</pre>
+</div></li>
+
+<li>Modifiez de même <code>templates/project/edit.html.twig</code></li>
+
+<li><p>
+Ajoutez le nouveau gabarit
+<code>templates/project/project_form_base.html.twig</code> :
+</p>
+
+<div class="org-src-container">
+<pre class="src src-html">{% extends <span style="color: #8b2252;">"baselayout.html.twig"</span> %}
+
+{% block custompage_script %}
+&lt;<span style="color: #0000ff;">script</span>&gt;
+
+  /* Ici se trouvera le code JQuery n&#233;cessaire aux formulaires dynamiques */
+
+&lt;/<span style="color: #0000ff;">script</span>&gt;
+{% endblock %} {# custompage_script #}
+
+</pre>
+</div>
+
+<p>
+Le bloc <code>custompage_script</code> existait dans le gabarit de base
+<code>baselayout.html.twig</code>, prêt à être surchargé pour l&rsquo;ajout de code
+javascript dans les pages de l&rsquo;application. C&rsquo;est ce qu&rsquo;on va faire ici.
+</p></li>
+
+<li><p>
+Modifiez le gabarit de formulaire <code>project/_form.html.twig</code> qui est inclus
+dans les deux gabarits <code>new</code> et <code>edit</code>, afin d&rsquo;y lister
+explicitement tous les attributs, du projet, et de ses sous-tâches.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-html">{{ form_start(form) }}
+
+    {{ form_row(form.title) }}
+    {{ form_row(form.description) }}
+
+    &lt;<span style="color: #0000ff;">h3</span>&gt;<span style="text-decoration: underline;">Tasks</span>&lt;/<span style="color: #0000ff;">h3</span>&gt;
+    &lt;<span style="color: #0000ff;">ul</span> <span style="color: #a0522d;">class</span>=<span style="color: #8b2252;">"todos"</span>&gt;
+
+        {# passer en revue chaque todo existante pour afficher ses champs #}
+        {% for todo in form.todos %}
+            &lt;<span style="color: #0000ff;">li</span>&gt;{{ form_row(todo.title) }}&lt;<span style="color: #0000ff;">br</span>/&gt;{{ form_row(todo.completed) }}&lt;/<span style="color: #0000ff;">li</span>&gt;
+        {% endfor %}
+    &lt;/<span style="color: #0000ff;">ul</span>&gt;
+
+    &lt;<span style="color: #0000ff;">button</span> <span style="color: #a0522d;">class</span>=<span style="color: #8b2252;">"btn"</span>&gt;{{ button_label|default('Save') }}&lt;/<span style="color: #0000ff;">button</span>&gt;
+{{ form_end(form) }}
+
+</pre>
+</div>
+
+<p>
+Cela suppose que le formulaire qui sera transmis à ce gabarit ne
+contiendra pas uniquement des données du modèle pour le projet,
+mais aussi pour ses sous-tâches. Cela devrait fonctionner puisqu&rsquo;on
+a ajouté des données &laquo;&nbsp;bidon&nbsp;&raquo; ci-dessus, quand on a modifié <code>ProjectController::new</code>.
+</p></li>
+
+<li>Testez que l&rsquo;affichage du formulaire fonctionne bien quand on
+invoque la page de création d&rsquo;un nouveau projet. Le formulaire doit afficher les données &laquo;&nbsp;bidon&nbsp;&raquo; qu&rsquo;on a
+ajouté dans la création du formulaire, pour des tâches &laquo;&nbsp;todo1&nbsp;&raquo; et
+&laquo;&nbsp;todo2&nbsp;&raquo;, via deux jeux de champs de saisie pour ces tâches.</li>
+
+<li>Observez dans la barre d&rsquo;outils Symfony la structure des
+formulaires transmis, le format des objets Collection gérant les
+sous-tâches instances de
+<code>Todo</code>.</li>
+
+<li>Observez, avec l&rsquo;inspecteur des outils de développement du navigateur, la structure des sous-formulaires dans l&rsquo;arbre DOM.</li>
+</ol>
+
+<p>
+Il reste maintenant à mettre en place le fonctionnement dynamique du
+formulaire pour supporter la saisie d&rsquo;un nombre quelconque de tâches,
+et non deux sous-tâches &laquo;&nbsp;bidons&nbsp;&raquo;.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgf33425d" class="outline-2">
+<h2 id="orgf33425d">Étape 3 : Mise en place d&rsquo;un prototype de formulaire de nouvelle tâche</h2>
+<div class="outline-text-2" id="text-orgf33425d">
+<div class="objectif">
+<p>
+L&rsquo;objectif de cette étape est de préparer le formulaire de nouveau
+projet, pour qu&rsquo;on puisse le rendre dynamique via un code Javascript.
+</p>
+
+</div>
+
+<p>
+Lisez la section <a href="https://symfony.com/doc/current/form/form_collections.html#allowing-new-tags-with-the-prototype">Allowing &laquo;&nbsp;new&nbsp;&raquo; Tags with the &laquo;&nbsp;Prototype&nbsp;&raquo;</a> de la
+documentation Symfony, qui explique le principe de fonctionnement du formulaire
+dynamique qu&rsquo;on va mettre en œuvre. 
+</p>
+
+<p>
+Procédez aux étapes suivantes, en parallèle de votre lecture :
+</p>
+
+<ol class="org-ol">
+<li><p>
+Modifiez la méthode <code>ProjectType::buildForm</code> (dans
+<code>src/Form/ProjectType.php</code>) pour autoriser l&rsquo;ajout de
+nouveaux sous-formulaires pour la Collection <code>todos</code> si
+elle doit s&rsquo;agrandir dynamiquement. Ajoutez l&rsquo; option <code>allow_add</code>, pour obtenir
+ce qui suit :
+</p>
+<div class="org-src-container">
+<pre class="src src-php"><span style="color: #a020f0;">public</span> <span style="color: #a020f0;">function</span> <span style="color: #0000ff;">buildForm</span>(<span style="color: #228b22;">FormBuilderInterface</span> <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">builder</span>, <span style="color: #228b22;">array</span> <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">options</span>)
+    {
+    <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">builder</span>
+        <span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">add</span>(<span style="color: #8b2252;">'title'</span>)
+        <span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">add</span>(<span style="color: #8b2252;">'description'</span>)
+        <span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">add</span>(<span style="color: #8b2252;">'todos'</span>, <span style="color: #008b8b;">CollectionType</span><span style="color: #000000; background-color: #ffffff;">::</span><span style="color: #483d8b;">class</span>, <span style="color: #a020f0;">array</span>(
+        <span style="color: #8b2252;">'entry_type'</span> =&gt; <span style="color: #008b8b;">TodoType</span><span style="color: #000000; background-color: #ffffff;">::</span><span style="color: #483d8b;">class</span>,
+        <span style="color: #8b2252;">'entry_options'</span> =&gt; <span style="color: #a020f0;">array</span>(<span style="color: #8b2252;">'label'</span> =&gt; <span style="color: #008b8b;">false</span>),
+        <span style="color: #8b2252;">'allow_add'</span> =&gt; <span style="color: #008b8b;">true</span>,
+        <span style="color: #b22222;">// </span><span style="color: #b22222;">'by_reference' =&gt; false,</span>
+        <span style="color: #b22222;">// </span><span style="color: #b22222;">'allow_delete' =&gt; true,</span>
+        ))
+    ;
+    }
+</pre>
+</div></li>
+
+<li><p>
+Modifiez en parallèle le gabarit  <code>project/_form.html.twig</code> pour y
+ajouter un &laquo;&nbsp;prototype&nbsp;&raquo; de nouveau formulaire, dont l&rsquo;ojectif sera
+d&rsquo;être prêt à être utilisé par du code Javascript.
+</p>
+
+<p>
+Modifiez la balise <code>&lt;ul&gt;</code> de la liste des sous-formulaires. 
+</p>
+
+<p>
+Le code Twig doit passer de :
+</p>
+<div class="org-src-container">
+<pre class="src src-html">&lt;<span style="color: #0000ff;">h3</span>&gt;<span style="text-decoration: underline;">Tasks</span>&lt;/<span style="color: #0000ff;">h3</span>&gt;
+&lt;<span style="color: #0000ff;">ul</span> <span style="color: #a0522d;">class</span>=<span style="color: #8b2252;">"todos"</span>&gt;
+
+    {# passer en revue chaque todo existante pour afficher ses champs #}
+    {% for todo in form.todos %}
+</pre>
+</div>
+
+<p>
+à :
+</p>
+<div class="org-src-container">
+<pre class="src src-html">&lt;<span style="color: #0000ff;">h3</span>&gt;<span style="text-decoration: underline;">Tasks</span>&lt;/<span style="color: #0000ff;">h3</span>&gt;
+&lt;<span style="color: #0000ff;">ul</span> <span style="color: #a0522d;">class</span>=<span style="color: #8b2252;">"todos"</span> <span style="color: #a0522d;">data-prototype</span>=<span style="color: #8b2252;">"{{ form_widget(form.todos.vars.prototype)|e('html_attr') }}"</span>&gt;
+
+    {# passer en revue chaque todo existante pour afficher ses champs #}
+    {% for todo in form.todos %}
+</pre>
+</div>
+
+<p>
+On insère ainsi, dans un attribut <code>data-prototype</code>, qu&rsquo;on place ainsi
+dans l&rsquo;en-tête de la liste dans le <code>&lt;ul&gt;</code>, un prototype de formulaire
+généré par Symfony (<code>form.todos.vars.prototype</code>) du fait de l&rsquo;option
+<code>allow_add</code>. On l&rsquo;encode sous forme d&rsquo;attribut d&rsquo;une balise HTML,
+pour ne pas casser le HTML, avec le filtre Twig <code>e('html_attr')</code>.
+</p></li>
+
+<li><p>
+Testez le fonctionnement du formulaire de création de nouveau
+projet, et vérifiez que le le <code>&lt;ul&gt;</code> contenant les
+tâches contient bien une valeur (assez longue) générée pour l&rsquo;attribut
+<code>data-prototype</code>, quand on examine le code HTML dans l&rsquo;inspecteur des
+outils du développeur Web.
+</p>
+
+<p>
+Cette valeur est un peu absconse à première vue.
+</p>
+
+<p>
+En fait, elle correspond à une version &laquo;&nbsp;prête à l&rsquo;emploi&nbsp;&raquo; d&rsquo;un code
+HTML de sous-formulaire, qui contient deux couples champs de saisie
+et labels, pour les attributs <code>title</code> et <code>completed</code> des
+sous-tâches. En voici une version indentée, donc plus lisible :
+</p>
+
+<div class="org-src-container">
+<pre class="src src-html">&lt;<span style="color: #0000ff;">div</span> <span style="color: #a0522d;">id</span>=<span style="color: #8b2252;">"project_todos___name__"</span>&gt;
+  &lt;<span style="color: #0000ff;">div</span> <span style="color: #a0522d;">class</span>=<span style="color: #8b2252;">"form-group"</span>&gt;
+    &lt;<span style="color: #0000ff;">label</span> <span style="color: #a0522d;">for</span>=<span style="color: #8b2252;">"project_todos___name___title"</span>&gt;Title&lt;/<span style="color: #0000ff;">label</span>&gt;
+    &lt;<span style="color: #0000ff;">textarea</span> <span style="color: #a0522d;">id</span>=<span style="color: #8b2252;">"project_todos___name___title"</span>
+              <span style="color: #a0522d;">name</span>=<span style="color: #8b2252;">"project[todos][__name__][title]"</span>
+              <span style="color: #a0522d;">class</span>=<span style="color: #8b2252;">"form-control"</span>&gt;&lt;/<span style="color: #0000ff;">textarea</span>&gt;
+  &lt;/<span style="color: #0000ff;">div</span>&gt;
+  &lt;<span style="color: #0000ff;">div</span> <span style="color: #a0522d;">class</span>=<span style="color: #8b2252;">"form-group"</span>&gt;
+    &lt;<span style="color: #0000ff;">div</span> <span style="color: #a0522d;">class</span>=<span style="color: #8b2252;">"form-check"</span>&gt;
+      &lt;<span style="color: #0000ff;">input</span> <span style="color: #a0522d;">type</span>=<span style="color: #8b2252;">"checkbox"</span>
+             <span style="color: #a0522d;">id</span>=<span style="color: #8b2252;">"project_todos___name___completed"</span>
+             <span style="color: #a0522d;">name</span>=<span style="color: #8b2252;">"project[todos][__name__][completed]"</span>
+             <span style="color: #a0522d;">class</span>=<span style="color: #8b2252;">"form-check-input"</span>
+             <span style="color: #a0522d;">value</span>=<span style="color: #8b2252;">"1"</span> /&gt;
+        &lt;<span style="color: #0000ff;">label</span> <span style="color: #a0522d;">class</span>=<span style="color: #8b2252;">"form-check-label"</span>
+               <span style="color: #a0522d;">for</span>=<span style="color: #8b2252;">"project_todos___name___completed"</span>&gt;Completed&lt;/<span style="color: #0000ff;">label</span>&gt;
+    &lt;/<span style="color: #0000ff;">div</span>&gt;
+  &lt;/<span style="color: #0000ff;">div</span>&gt;
+&lt;/<span style="color: #0000ff;">div</span>&gt;
+</pre>
+</div>
+
+<p>
+Inutile d&rsquo;en comprendre tous les détails. Le code Javascript fourni ci-dessous saura quoi en faire.
+</p></li>
+</ol>
+
+<p>
+Maintenant, il ne reste plus qu&rsquo;à coder le Javascript correspondant.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orge8b2bae" class="outline-2">
+<h2 id="orge8b2bae">Étape 4 : Ajout du code Javascript pour rendre le formulaire dynamique</h2>
+<div class="outline-text-2" id="text-orge8b2bae">
+<div class="objectif">
+<p>
+L&rsquo;objectif de cette étape est de rendre le formulaire réellement dynamique, en programmant en JQuery.
+</p>
+
+</div>
+
+<p>
+On va ajouter dans le formulaire des liens qui déclencheront
+l&rsquo;exécution de code JQuery qui ajoutera ou supprimera des
+sous-formulaires permettant d&rsquo;ajouter ou supprimer des tâches.
+</p>
+
+<p>
+Ce code n&rsquo;aura pas d&rsquo;incidence sur l&rsquo;exécution côté serveur : l&rsquo;ajout
+des champs de saisie se fera côté client dans le navigateur via
+l&rsquo;exécution Javascript. On se contente de modifier le DOM de la page
+HTML contenant le formulaire de création de projets, sans interaction
+HTTP avec le serveur PHP. Une fois que le formulaire sera validé, le
+gestionnaire de formulaires Symfony recevra les donnés du formulaire, et découvrira les données
+correspondantes aux sous-entités ajoutées dynamiquement par ce biais.
+</p>
+</div>
+
+<div id="outline-container-orgc1588df" class="outline-3">
+<h3 id="orgc1588df">Étape 4-a : Permettre l&rsquo;ajout de nouveaux champs de saisie pour ajouter une tâche</h3>
+<div class="outline-text-3" id="text-orgc1588df">
+<div class="objectif">
+<p>
+L&rsquo;objectif de cette sous-étape est de coder ce qui permet l&rsquo;ajout de liens
+pour l&rsquo;ajout d&rsquo;un sous-formulaire de création de tâche, dans le
+formulaire maître de création d&rsquo;un nouveau projet.
+</p>
+
+</div>
+
+<p>
+Procédez aux étapes suivantes :
+</p>
+
+<ol class="org-ol">
+<li><p>
+On va modifier le gabarit de base
+<code>project/project_form_base.html.twig</code>. Dans le bloc <code>custompage_script</code> Twig, dans les balises <code>&lt;script&gt;</code>, on ajoute le code JQuery suivant :
+</p>
+<div class="org-src-container">
+<pre class="src src-js"><span style="color: #a020f0;">var</span> <span style="color: #a0522d;">$collectionHolder</span>;
+
+<span style="color: #b22222;">//</span><span style="color: #b22222;">setup an "add a todo" link</span>
+<span style="color: #a020f0;">var</span> <span style="color: #a0522d;">$addTodoButton</span> = $(<span style="color: #8b2252;">'&lt;button type="button" class="add_todo_link"&gt;Add a task&lt;/button&gt;'</span>);
+<span style="color: #a020f0;">var</span> <span style="color: #a0522d;">$newLinkLi</span> = $(<span style="color: #8b2252;">'&lt;li&gt;&lt;/li&gt;'</span>).append($addTodoButton);
+
+jQuery(document).ready(<span style="color: #a020f0;">function</span>() {
+ <span style="color: #b22222;">// </span><span style="color: #b22222;">Get the ul that holds the collection of todos</span>
+ $collectionHolder = $(<span style="color: #8b2252;">'ul.todos'</span>);
+
+ <span style="color: #b22222;">// </span><span style="color: #b22222;">add the "add a todo" anchor and li to the todos ul</span>
+ $collectionHolder.append($newLinkLi);
+
+ <span style="color: #b22222;">// </span><span style="color: #b22222;">count the current form inputs we have (e.g. 2), use that as the new</span>
+ <span style="color: #b22222;">// </span><span style="color: #b22222;">index when inserting a new item (e.g. 2)</span>
+ $collectionHolder.data(<span style="color: #8b2252;">'index'</span>, $collectionHolder.find(<span style="color: #8b2252;">':input'</span>).length);
+
+ $addTodoButton.on(<span style="color: #8b2252;">'click'</span>, <span style="color: #a020f0;">function</span>(<span style="color: #a0522d;">e</span>) {
+     <span style="color: #b22222;">// </span><span style="color: #b22222;">add a new todo form (see next code block)</span>
+     addTodoForm($collectionHolder, $newLinkLi);
+ });
+});
+
+<span style="color: #a020f0;">function</span> <span style="color: #0000ff;">addTodoForm</span>(<span style="color: #a0522d;">$collectionHolder</span>, <span style="color: #a0522d;">$newLinkLi</span>) {
+    <span style="color: #b22222;">// </span><span style="color: #b22222;">Get the data-prototype explained earlier</span>
+    <span style="color: #a020f0;">var</span> <span style="color: #a0522d;">prototype</span> = $collectionHolder.data(<span style="color: #8b2252;">'prototype'</span>);
+
+    <span style="color: #b22222;">// </span><span style="color: #b22222;">get the new index</span>
+    <span style="color: #a020f0;">var</span> <span style="color: #a0522d;">index</span> = $collectionHolder.data(<span style="color: #8b2252;">'index'</span>);
+
+    <span style="color: #a020f0;">var</span> <span style="color: #a0522d;">newForm</span> = prototype;
+    <span style="color: #b22222;">// </span><span style="color: #b22222;">You need this only if you didn't set 'label' =&gt; false in your taskss field in TaskType</span>
+    <span style="color: #b22222;">// </span><span style="color: #b22222;">Replace '__name__label__' in the prototype's HTML to</span>
+    <span style="color: #b22222;">// </span><span style="color: #b22222;">instead be a number based on how many items we have</span>
+    <span style="color: #b22222;">// </span><span style="color: #b22222;">newForm = newForm.replace(/__name__label__/g, index);</span>
+
+    <span style="color: #b22222;">// </span><span style="color: #b22222;">Replace '__name__' in the prototype's HTML to</span>
+    <span style="color: #b22222;">// </span><span style="color: #b22222;">instead be a number based on how many items we have</span>
+    newForm = newForm.replace(<span style="color: #8b2252;">/__name__/</span>g, index);
+
+    <span style="color: #b22222;">// </span><span style="color: #b22222;">increase the index with one for the next item</span>
+    $collectionHolder.data(<span style="color: #8b2252;">'index'</span>, index + 1);
+
+    <span style="color: #b22222;">// </span><span style="color: #b22222;">Display the form in the page in an li, before the "Add a task" link li</span>
+    <span style="color: #a020f0;">var</span> <span style="color: #a0522d;">$newFormLi</span> = $(<span style="color: #8b2252;">'&lt;li&gt;&lt;/li&gt;'</span>).append(newForm);
+    $newLinkLi.before($newFormLi);
+}
+</pre>
+</div>
+
+<p>
+Ce code peut sembler un peu compliqué, mais il est en fait
+relativement simple, pourvu qu&rsquo;on ait compris le principe de la phase
+précédente où on a embarqué dans le formulaire HTML l&rsquo;attribut
+<code>data-prototype</code>, tel que généré par Symfony. 
+</p>
+
+<p>
+<code>addTodoForm()</code> va convertir ce prototype en code HTML, qui sera
+ajouté dans le DOM du formulaire, pour faire apparaître au bon
+endroit les sous-champs d&rsquo;ajout d&rsquo;une tâche, en remplaçant les
+identifiants des différentes balises des formulaires, là où le
+prototype contenait <code>__name__</code>.
+</p>
+
+<p>
+Référez-vous si besoin à la documentation Symfony qui explique bien les détails de ce code.
+</p></li>
+
+<li>Testez le fonctionnement du bouton &laquo;&nbsp;Ajouter une tâche&nbsp;&raquo;, pour
+vérifier que l&rsquo;ajout d&rsquo;un sous-formulaire est
+opérationnel. Vérifiez dans le DOM, via l&rsquo;inspecteur des outils de
+développement du navigateur, que les sous-formulaires sont ajoutés
+dynamiquement comme on le souhaite (de la même façon que lorsqu&rsquo;ils
+sont déjà présents pour les tâches &laquo;&nbsp;bidon&nbsp;&raquo;).</li>
+</ol>
+
+<p>
+Vous avez ici un exemple de la façon dont un réflexe Javascript sait
+modifier dynamiquement le contenu d&rsquo;une page, pour changer à la
+demande le contenu d&rsquo;un formulaire. La structure du formulaire,
+préparée à l&rsquo;avance dans le prototype, généré par le serveur, n&rsquo;est
+pas complètement construite par le code Javascript. Le formulaire
+reste sous un contrôle assez important du code Symfony.
+</p>
+
+<div class="attention">
+<p>
+Le formulaire complet ne fonctionne pas encore complètement. On va
+voir un peu plus loin comment faire en sorte que la sauvegarde en base
+de données soit complète.
+</p>
+
+</div>
+</div>
+</div>
+
+<div id="outline-container-org7f28668" class="outline-3">
+<h3 id="org7f28668">Étape 4-b : Gestion de la suppression des sous-formulaires des tâches</h3>
+<div class="outline-text-3" id="text-org7f28668">
+<div class="objectif">
+<p>
+L&rsquo;objectif de cette sous-étape est de coder le pendant du code précédent, pour pouvoir supprimer dynamiquement des formulaires de création de sous-tâches.
+</p>
+
+</div>
+
+<p>
+Procédez aux modifications suivantes :
+</p>
+<ol class="org-ol">
+<li><p>
+Ajoutez dans la classe de formulaire des Projets, une option supplémentaire (<code>allow_delete</code>) permettant d&rsquo;autoriser la suppression des sous-formulaires :
+</p>
+<div class="org-src-container">
+<pre class="src src-php"><span style="color: #a020f0;">public</span> <span style="color: #a020f0;">function</span> <span style="color: #0000ff;">buildForm</span>(<span style="color: #228b22;">FormBuilderInterface</span> <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">builder</span>, <span style="color: #228b22;">array</span> <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">options</span>)
+    {
+    <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">builder</span>
+        <span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">add</span>(<span style="color: #8b2252;">'todos'</span>, <span style="color: #008b8b;">CollectionType</span><span style="color: #000000; background-color: #ffffff;">::</span><span style="color: #483d8b;">class</span>, <span style="color: #a020f0;">array</span>(
+        ...
+        <span style="color: #8b2252;">'allow_delete'</span> =&gt; <span style="color: #008b8b;">true</span>,
+        ));
+    ;
+    }
+</pre>
+</div></li>
+
+<li><p>
+Modifiez le code JQuery correspondant pour ajouter des liens de
+suppression de sous-formulaires de saisie de tâches. Insérez le code
+correspondant qui modifiee tous les <code>&lt;li&gt;</code> des tâches, puis le code
+de <code>addTodoForm()</code> pour invoquer une nouvelle fonction
+<code>addTodoFormDeleteLink( )</code>, pour obtenir du code similaire à ce qui
+suit :
+</p>
+
+<div class="org-src-container">
+<pre class="src src-js"><span style="color: #a020f0;">var</span> <span style="color: #a0522d;">$collectionHolder</span>;
+
+<span style="color: #b22222;">//</span><span style="color: #b22222;">setup an "add a task" link</span>
+<span style="color: #a020f0;">var</span> <span style="color: #a0522d;">$addTodoButton</span> = $(<span style="color: #8b2252;">'&lt;button type="button" class="add_todo_link"&gt;Add a task&lt;/button&gt;'</span>);
+<span style="color: #a020f0;">var</span> <span style="color: #a0522d;">$newLinkLi</span> = $(<span style="color: #8b2252;">'&lt;li&gt;&lt;/li&gt;'</span>).append($addTodoButton);
+
+jQuery(document).ready(<span style="color: #a020f0;">function</span>() {
+ <span style="color: #b22222;">// </span><span style="color: #b22222;">Get the ul that holds the collection of tasks</span>
+ $collectionHolder = $(<span style="color: #8b2252;">'ul.todos'</span>);
+
+<span style="color: #b22222;">//</span><span style="color: #b22222;">add a delete link to all of the existing task form li elements</span>
+ $collectionHolder.find(<span style="color: #8b2252;">'li'</span>).each(<span style="color: #a020f0;">function</span>() {
+     addTodoFormDeleteLink($(<span style="color: #008b8b;">this</span>));
+ });
+
+ <span style="color: #b22222;">// </span><span style="color: #b22222;">add the "add a task" anchor and li to the tasks ul</span>
+ $collectionHolder.append($newLinkLi);
+
+    ...
+});
+
+<span style="color: #a020f0;">function</span> <span style="color: #0000ff;">addTodoForm</span>(<span style="color: #a0522d;">$collectionHolder</span>, <span style="color: #a0522d;">$newLinkLi</span>) {
+    ...
+    <span style="color: #b22222;">// </span><span style="color: #b22222;">Display the form in the page in an li, before the "Add a task" link li</span>
+    <span style="color: #a020f0;">var</span> <span style="color: #a0522d;">$newFormLi</span> = $(<span style="color: #8b2252;">'&lt;li&gt;&lt;/li&gt;'</span>).append(newForm);
+
+    <span style="color: #b22222;">// </span><span style="color: #b22222;">add a delete link to the new form</span>
+    addTodoFormDeleteLink($newFormLi);
+
+    $newLinkLi.before($newFormLi);
+}
+
+<span style="color: #a020f0;">function</span> <span style="color: #0000ff;">addTodoFormDeleteLink</span>(<span style="color: #a0522d;">$todoFormLi</span>) {
+    <span style="color: #a020f0;">var</span> <span style="color: #a0522d;">$removeFormButton</span> = $(<span style="color: #8b2252;">'&lt;button type="button"&gt;Delete this task&lt;/button&gt;'</span>);
+    $todoFormLi.append($removeFormButton);
+
+    $removeFormButton.on(<span style="color: #8b2252;">'click'</span>, <span style="color: #a020f0;">function</span>(<span style="color: #a0522d;">e</span>) {
+        <span style="color: #b22222;">// </span><span style="color: #b22222;">remove the li for the todo form</span>
+        $todoFormLi.remove();
+    });
+}
+
+</pre>
+</div></li>
+
+<li>Testez le fonctionnement des liens de suppression et leur impact sur le DOM de la page.</li>
+</ol>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org0d05cd5" class="outline-2">
+<h2 id="org0d05cd5">Étape 5 : Finalisation du fonctionnement du formulaire</h2>
+<div class="outline-text-2" id="text-org0d05cd5">
+<div class="objectif">
+<p>
+L&rsquo;objectif de cette dernière étape est de finaliser le fonctionnement
+du formulaire et de tester que les créations de projets et de leurs tâches fonctionnent bien.
+</p>
+
+</div>
+
+<p>
+Procédez aux étapes suivantes :
+</p>
+
+<ol class="org-ol">
+<li><p>
+Dans la classe de formulaire des Projets, ajoutez une option
+supplémentaire (<code>by_reference</code> définie à <code>false</code>) pour que la
+soumission des formulaires de création des projets s&rsquo;occupent bien
+de vérifier les tâches soumises via le formulaire, et appelle en
+conséquence les méthodes <code>addTodo()</code> et <code>removeTodo()</code> de l&rsquo;entité <code>Project</code> (cf. <a href="https://symfony.com/doc/current/reference/forms/types/collection.html#by-reference">https://symfony.com/doc/current/reference/forms/types/collection.html#by-reference</a>) :
+</p>
+
+<div class="org-src-container">
+<pre class="src src-php"><span style="color: #a020f0;">public</span> <span style="color: #a020f0;">function</span> <span style="color: #0000ff;">buildForm</span>(<span style="color: #228b22;">FormBuilderInterface</span> <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">builder</span>, <span style="color: #228b22;">array</span> <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">options</span>)
+    {
+    <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">builder</span>
+        <span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">add</span>(<span style="color: #8b2252;">'todos'</span>, <span style="color: #008b8b;">CollectionType</span><span style="color: #000000; background-color: #ffffff;">::</span><span style="color: #483d8b;">class</span>, <span style="color: #a020f0;">array</span>(
+        ...
+        <span style="color: #8b2252;">'by_reference'</span> =&gt; <span style="color: #008b8b;">false</span>,
+        ));
+    ;
+    }
+</pre>
+</div></li>
+
+<li>Modifiez le code de la méthode <code>new()</code> du contrôleur <code>ProjectController</code>
+pour supprimer l&rsquo;ajout des données de tâches &laquo;&nbsp;bidon&nbsp;&raquo; dans
+les projets, qu&rsquo;on avait ajouté en début de séance.</li>
+</ol>
+
+
+<p>
+Les principaux éléments nécessaires au fonctionnement des formulaires
+dynamiques sont désormais présents.
+</p>
+
+<p>
+Il reste à vérifier que les ajouts ou suppressions des tâches depuis
+les formulaires des projets sont
+bien fonctionnels, et ce que les données sont bien modifiées en
+conséquence via Doctrine.
+</p>
+</div>
+
+<div id="outline-container-org038f05d" class="outline-3">
+<h3 id="org038f05d">Étape 5-a : Utilisation des outils de mise au point pour vérifier le fonctionnement des formulaires</h3>
+<div class="outline-text-3" id="text-org038f05d">
+<p>
+Lors des mises à jour des données, à la validation des formulaires de
+modification des projets, on
+s&rsquo;attend à ce que les modifications sur les données des projets soient
+sauvées, mais aussi les ajouts, modifications ou suppressions des
+données de leurs tâches, venant des sous-formulaires Todo embarqués dynamiquement
+dans le formulaire.
+</p>
+
+<p>
+Si les formulaires fonctionnent correctement, les méthodes <code>new</code> et <code>edit</code> du
+contrôleur <code>ProjectController</code> reçoivent les bonnes données.
+</p>
+
+<p>
+Contrôlez que les données transmises dans les formulaires sont
+cohérentes, après des ajouts ou suppressions de sous-formulaires de
+Todos :
+</p>
+
+<ol class="org-ol">
+<li>dans le <i>Profiler</i> de la barre d&rsquo;outils Symfony, vous allez examiner les requêtes
+POST (antérieures à la redirection, en cas de succès) en remontant dans l&rsquo;historique
+des requêtes.</li>
+
+<li>les données soumises dans une requête POST sont visibles dans le menu
+<i>Forms</i> : il doit y avoir le bon nombre de sous formulaires des <code>todos</code>
+dans la hiérarchie :
+<ul class="org-ul">
+<li><code>project</code></li>
+<li><code>title</code></li>
+<li><code>description</code></li>
+<li><code>todos</code>, qui contient bien une collection de tâches :
+<ul class="org-ul">
+<li>1</li>
+<li>2</li>
+<li>&#x2026;</li>
+</ul></li>
+</ul></li>
+<li>si le formulaire a été accepté sans problème, vérifiez les requêtes transmises à la base de données par Doctrine,
+suite aux traitements du formulaire (valide), dans le menu
+&laquo;&nbsp;Doctrine&nbsp;&raquo;.</li>
+</ol>
+
+<p>
+Si le formulaire fonctionnait correctement, des requêtes INSERT, UPDATE ou DELETE devraient être faites dans la
+base de données, dans la table <code>todos</code>, pour gérer l&rsquo;ajout, la modification ou la suppression
+des sous-tâches des projets.
+</p>
+
+<p>
+Or normalement, à ce stade, les données ne sont pas sauvegardées
+correctement. Seule la table des projets est toujours gérée.
+</p>
+
+<p>
+On va corriger le code pour s&rsquo;assurer de la bonne sauvegarde.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org6a3f38b" class="outline-3">
+<h3 id="org6a3f38b">Étape 5-b : Correction de l&rsquo;absence de sauvegarde des sous-tâches ajoutées</h3>
+<div class="outline-text-3" id="text-org6a3f38b">
+<p>
+L&rsquo;ajout d&rsquo;une sous-tâche devrait afficher une erreur 500 du type 
+&laquo;&nbsp;<i>A new entity was found through the relationship &rsquo;App\Entity\Project#todos&rsquo; that was not configured to cascade persist operations for entity</i>&nbsp;&raquo;
+</p>
+
+<p>
+Notez que l&rsquo;erreur de produit dans l&rsquo;appel à <code>$em-&gt;flush();</code>, soit au
+niveau de la tentative de génération des requêtes à envoyer à la base
+de données, dans Doctrine.
+</p>
+
+<ol class="org-ol">
+<li>Procédez à l&rsquo;examen des données des formulaires, comme indiqué
+ci-dessus. Il doit bien y avoir le bon nombre de sous-tâches dans
+les sous-formulaires <code>todos</code>.</li>
+<li>Examinez le message d&rsquo;erreur complet, qui propose une solution pour
+remédier au problème.</li>
+<li>Procédez aux modifications suggérées en ajoutant
+<code>cascade={"persist"}</code> dans l&rsquo;annotation Doctrine <code>@ORM\OneToMany</code> de
+<code>Project:todos</code> dans <code>src/Entity/Project.php</code>.</li>
+
+<li>Vérifiez que cela fonctionne correctement maintenant, en revenant
+dans le Profiler sur la requête POST, et en examinant les
+requêtes.</li>
+</ol>
+
+<p>
+Y a-t-il les <code>INSERT INTO todos</code> attendus ? Cela doit maintenant fonctionner.
+</p>
+
+<p>
+L&rsquo;explication du problème qu&rsquo;on vient de résoudre est donnée dans la
+documentation, dans la &laquo;&nbsp;bloc&nbsp;&raquo;
+&laquo;&nbsp;<i>Doctrine: Cascading Relations and saving the &laquo;&nbsp;Inverse&nbsp;&raquo; side</i>&nbsp;&raquo; de
+<a href="https://symfony.com/doc/current/form/form_collections.html#allowing-new-tags-with-the-prototype">https://symfony.com/doc/current/form/form_collections.html#allowing-new-tags-with-the-prototype</a>.
+</p>
+
+<p>
+Dans la gestion de la soumission du formulaire, le code gérant l&rsquo;ajout
+des données des formulaires dans les entités en mémoire est invoqué
+dans <code>$form-&gt;isValid()</code> : cela invoque <code>Project:addTodo()</code> pour chaque sous-formulaire des <code>todos</code>.
+</p>
+
+<p>
+Examinez <code>Project:addTodo()</code>, et remarquez le code :
+</p>
+<div class="org-src-container">
+<pre class="src src-php"><span style="color: #008b8b;">$</span><span style="color: #008b8b;">this</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #a0522d;">todos</span>[] = <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">todo</span>;
+<span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">todo</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">setProject</span>(<span style="color: #008b8b;">$</span><span style="color: #008b8b;">this</span>);
+</pre>
+</div>
+<ul class="org-ul">
+<li>la première ligne ajoute le nouveau todo dans la collection des <code>todos</code> de ce projet,</li>
+<li>puis elle met à jour le pointeur inverse, du <code>Todo</code> vers son <code>Project</code>.</li>
+</ul>
+
+<p>
+De nouvelles entités sont donc présentes en mémoire dans
+   <code>App\Entity\Project#todos</code>, comme nous l&rsquo;indique Doctrine dans le
+   message d&rsquo;erreur.
+</p>
+
+<p>
+Mais si on examine le code traitant les données du formulaire dans
+le contrôleur (entre <code>$form-&gt;isValid()</code> et l&rsquo;endoit où se produit
+l&rsquo;erreur : <code>$em-&gt;flush();</code>), on peut vérifier quelles sont les données qui doivent être
+sauvegardées, puisqu&rsquo;elles sont &laquo;&nbsp;marquées&nbsp;&raquo; comme telles avec l&rsquo;appel à
+<code>$em-&gt;persist($project);</code>. Seul le projet est marqué.
+</p>
+
+<p>
+Comme indiqué dans la documentation, soit ce <code>persist()</code> doit procéder
+&laquo;&nbsp;en cascade&nbsp;&raquo;, en parcourant l&rsquo;arbre des données liées depuis
+l&rsquo;instance de <code>$project</code>, ce qui sera fait à condition d&rsquo;avoir déclaré l&rsquo;attribut <code>todos</code> de <code>Project</code> avec <code>cascade={"persist"}</code>.
+</p>
+
+<p>
+Ou bien, on devrait écrire une boucle pour appeler <code>persist( )</code>
+explicitement pour chaque élément de
+<code>$project-&gt;getTodos()</code>. L&rsquo;annotation est beaucoup plus pratique, dans
+ce cas. Consultez la
+   <a href="https://www.doctrine-project.org/projects/doctrine-orm/en/2.6/reference/working-with-associations.html#transitive-persistence-cascade-operations">documentation doctrine</a> 
+   pour plus de détails.
+</p>
+
+<p>
+Maintenant que l&rsquo;ajout fonctionne, vérifions la suppression.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgfddd337" class="outline-3">
+<h3 id="orgfddd337">Étape 5-c : Correction de la suppression des tâches d&rsquo;un projet</h3>
+<div class="outline-text-3" id="text-orgfddd337">
+</div>
+
+<div id="outline-container-orgba7a685" class="outline-4">
+<h4 id="orgba7a685">Mise en évidence du dysfonctionnement</h4>
+<div class="outline-text-4" id="text-orgba7a685">
+<ol class="org-ol">
+<li>Modifiez un projet qui a déjà des sous-tâches;</li>
+<li>Dans le formulaire de modification, supprimez certaines de ses sous-tâches en supprimant les sous-formulaires dynamiquement;</li>
+<li>Validez la mise-à-jour du projet : aucune erreur n&rsquo;est signalée. Tout va bien en apparence;</li>
+<li>Examinez à nouveau le projet : il semble ne plus avoir la sous-tâche qu&rsquo;on a supprimée;</li>
+<li>Examinez maintenant la liste de toutes les tâches de l&rsquo;application : la sous-tâche du projet qu&rsquo;on a tenté de supprimer est toujours présente, mais sans qu&rsquo;elle soit rattachée à aucun projet;</li>
+</ol>
+
+<p>
+Ce n&rsquo;est pas le comportement souhaité : les instances de Todo créées
+comme sous-tâches, dans le contexte d&rsquo;un projet, doivent être supprimées
+complètement, si on les supprime depuis la modification de leur
+projet, au lieu d&rsquo;être détachées du projet. On pourrait ajouter à
+l&rsquo;application une fonctionnalité permettant de &laquo;&nbsp;détacher&nbsp;&raquo; une tâche de
+son projet, mais ce n&rsquo;est pas l&rsquo;objectif qu&rsquo;on recherchait pour
+l&rsquo;instant.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org5bf7a10" class="outline-4">
+<h4 id="org5bf7a10">Compréhension du problème</h4>
+<div class="outline-text-4" id="text-org5bf7a10">
+<p>
+La correction de ce problème nécessite d&rsquo;appliquer un algorithme qui
+gère explicitement les données dans le contrôleur. Cette fois,
+Doctrine ne nous offre pas d&rsquo;annotation &laquo;&nbsp;magique&nbsp;&raquo; nous évitant
+d&rsquo;écrire du code.
+</p>
+
+<p>
+Examinons tout d&rsquo;abord la cause du dysfonctionnement.
+</p>
+
+<ol class="org-ol">
+<li>Recommencez la suppression d&rsquo;une sous-tâche d&rsquo;un projet.</li>
+<li>Une fois la validation du formulaire transmise, examinez le contenu de la requête POST dans les outils de la barre Symfony.</li>
+<li>Examinez les requêtes transmises par Doctrine à la base de
+données : des requêtes du type <code>UPDATE todos SET project_id = ?
+   WHERE tid = ?</code> sont transmises avec une mise à <code>NULL</code> de
+<code>project_id</code>.</li>
+</ol>
+
+<p>
+Cela correspond en effet à la suppression de la référence d&rsquo;une <code>Todo</code> à son <code>Project</code>, pas à la suppression de la Todo (on devrait voir une requête <code>DELETE</code>).
+</p>
+
+<p>
+Examinons le code de <code>Project:removeTodo()</code> :
+</p>
+
+<div class="org-src-container">
+<pre class="src src-php"><span style="color: #008b8b;">$</span><span style="color: #008b8b;">this</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #a0522d;">todos</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">removeElement</span>(<span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">todo</span>);
+...
+<span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">todo</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">setProject</span>(<span style="color: #008b8b;">null</span>);
+
+</pre>
+</div>
+
+<p>
+Examinons ces instructions :
+</p>
+<ol class="org-ol">
+<li>on supprime l&rsquo;instance de Todo de la liste des <code>todos</code> du Project
+<b>en mémoire</b>.</li>
+<li>puis on met à nul la référence de la Todo vers son Projet (toujours en mémoire).</li>
+</ol>
+
+<p>
+Examinons la traduction que Doctrine effectue lors du
+<code>$entityManager-&gt;persist($project);</code> dans le contrôleur. Ces
+instructions n&rsquo;ont pas nécessairement d&rsquo;impact sur les données en base de
+données, si l&rsquo;instance de Project est la seule à être marquée comme devant être sauvegardée par le <code>persist()</code>.
+En fait, la liste des <code>todos</code> d&rsquo;un Project, qu&rsquo;on a déclaré comme une association <code>OneToMany</code> dans Doctrine,
+est en fait construite dans la base la clé étrangère
+de la table <code>project</code> migrée dans la table <code>todo</code> (dans <code>project_id</code>).
+</p>
+
+<p>
+Or dans cette configuration du modèle des données via les annotations
+Doctrine, on n&rsquo;a établi qu&rsquo;un lien de type association entre
+Project et Todo, pas une composition (forte). 
+</p>
+
+<p>
+En effet, on n&rsquo;a pas défini l&rsquo;annotation <code>orphanRemoval=true</code> comme
+c&rsquo;est le cas par contre dans l&rsquo;application Agence de Voyages, pour
+Circuit et Etape, par exemple, qui sont fortement liés.
+</p>
+
+<p>
+Une tâche sans projet peut donc exister seule, mais une tâche peut aussi être associée à un projet.
+</p>
+
+<p>
+Doctrine n&rsquo;a donc pas à gérer la suppression sans qu&rsquo;on le lui
+demande, dans ce cas.  Il ne génère donc pas les requêtes DELETE
+automatiquement lorsque le pointeur <code>project</code> vers l&rsquo;entité mère est
+mis à nul <code>$todo-&gt;setProject(null);</code>. Le <code>cascade={"persist"}</code> prend
+juste en compte cette modification de l&rsquo;attribut <code>project</code> et génère donc seulement les requêtes <code>UPDATE</code>.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org1d340dd" class="outline-4">
+<h4 id="org1d340dd">Correction : ajout explicite de la suppression</h4>
+<div class="outline-text-4" id="text-org1d340dd">
+<p>
+On va appliquer la suggestion mentionnée dans la documentation dans le
+bloc &laquo;&nbsp;<i>Doctrine: Ensuring the database persistence</i>&nbsp;&raquo; en fin de page de
+<a href="https://symfony.com/doc/current/form/form_collections.html">https://symfony.com/doc/current/form/form_collections.html</a>.
+</p>
+
+<p>
+On va modifier le code du contrôleur qui traite la soumission d&rsquo;un
+formulaire valide, pour gérer explicitement les opétations de
+suppression des sous-tâches supprimées.
+</p>
+
+<p>
+Le principe est le suivant :
+</p>
+
+<ol class="org-ol">
+<li>on garde la trace de la liste des sous-tâches du projet avant la soumission du formulaire</li>
+<li>on récupère les données valides soumises par le formulaire, et la nouvelle liste de sous-tâches dans laquelle ne sont plus présentes celles qui ont été supprimées</li>
+<li>on compare les deux et on marque explicitement celle qui doivent être supprimées.</li>
+</ol>
+
+<p>
+Voici un exemple code réalisant cette fonctionnalité :
+</p>
+
+<div class="org-src-container">
+<pre class="src src-php"><span style="color: #a020f0;">use</span> <span style="color: #228b22;">Doctrine\ORM\EntityManagerInterface</span>;
+<span style="color: #a020f0;">use</span> <span style="color: #228b22;">Doctrine\Common\Collections\ArrayCollection</span>;
+
+<span style="color: #b22222;">//</span><span style="color: #b22222;">...</span>
+
+<span style="color: #a020f0;">public</span> <span style="color: #a020f0;">function</span> <span style="color: #0000ff;">edit</span>(<span style="color: #228b22;">Request</span> <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">request</span>, <span style="color: #228b22;">Project</span> <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">project</span>, <span style="color: #228b22;">EntityManagerInterface</span> <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">entityManager</span>): <span style="color: #228b22;">Response</span>
+{
+    <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">originalTodos</span> = <span style="color: #a020f0;">new</span> <span style="color: #228b22;">ArrayCollection</span>();
+
+    <span style="color: #b22222;">// </span><span style="color: #b22222;">On cr&#233;e un tableau ArrayCollection m&#233;morisant les objets Todo associ&#233;s avant la soumission</span>
+    <span style="color: #a020f0;">foreach</span> (<span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">project</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">getTodos</span>() <span style="color: #a020f0;">as</span> <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">todo</span>) {
+    <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">originalTodos</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">add</span>(<span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">todo</span>);
+    }
+
+    <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">form</span> = <span style="color: #008b8b;">$</span><span style="color: #008b8b;">this</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">createForm</span>(<span style="color: #008b8b;">ProjectType</span><span style="color: #000000; background-color: #ffffff;">::</span><span style="color: #483d8b;">class</span>, <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">project</span>);
+    <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">form</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">handleRequest</span>(<span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">request</span>);
+
+    <span style="color: #a020f0;">if</span> (<span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">form</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">isSubmitted</span>() &amp;&amp; <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">form</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">isValid</span>()) {
+
+    <span style="color: #b22222;">// </span><span style="color: #b22222;">une fois que le formulaire est valide, les nouvelles donn&#233;es sont celles o&#249; des sous-t&#226;ches ont pu &#234;tre supprim&#233;es</span>
+
+    <span style="color: #b22222;">// </span><span style="color: #b22222;">on parcourt l'ancien tableau et on v&#233;rifie l'impact</span>
+    <span style="color: #a020f0;">foreach</span> (<span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">originalTodos</span> <span style="color: #a020f0;">as</span> <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">todo</span>) {
+
+        <span style="color: #a020f0;">if</span> (! <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">project</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">getTodos</span>()<span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">contains</span>(<span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">todo</span>)) {
+        <span style="color: #b22222;">// </span><span style="color: #b22222;">la Todo n'est plus pr&#233;sente dans le tableau. Il faut donc la supprimer de la base.       </span>
+        <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">entityManager</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">remove</span>(<span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">todo</span>);
+        }
+    }
+
+    <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">entityManager</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">flush</span>();
+
+    <span style="color: #a020f0;">return</span> <span style="color: #008b8b;">$</span><span style="color: #008b8b;">this</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">redirectToRoute</span>(<span style="color: #8b2252;">'project_edit'</span>, [<span style="color: #8b2252;">'id'</span> =&gt; <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">project</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">getId</span>()]);
+    }
+    ...
+</pre>
+</div>
+
+<p>
+Modifiez le code du contrôleur, puis testez que l&rsquo;application fonctionne désormais de la façon souhaitée. Vérifiez que les requêtes <code>DELETE</code> sont bien transmises à la base.
+</p>
+</div>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-orga11656f" class="outline-2">
+<h2 id="orga11656f">Évaluation</h2>
+<div class="outline-text-2" id="text-orga11656f">
+<p>
+À l&rsquo;issue de cette séance, les éléments ci-dessous doivent vous
+paraître clairs :
+</p>
+<ul class="org-ul">
+<li>comment sont gérées les données des relations de type composition OneToMany par Doctrine via une Collection</li>
+<li>comment sont &laquo;&nbsp;câblés&nbsp;&raquo; des réflexes entre les formulaires des Contrôleurs et le Modèle au niveau des ajouts/suppressions &laquo;&nbsp;automatiques&nbsp;&raquo; dans les données soumises aux formulaires</li>
+<li>comment le code Javascript (JQuery) permet relativement simplement de rendre des formulaires dynamiques pour gérer des sous-formulaires en nombre quelconque.</li>
+<li>qu&rsquo;il est important de comprendre la mise en œuvre des associations
+dans le modèle de données, pour s&rsquo;assurer que les requêtes en base
+dont correctes, et à défaut, modifier les annotations nécessaires
+(cascade, etc.)</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Auteur: Olivier Berger (TSP)</p>
+<p class="date">Created: 2020-08-26 Wed 13:08</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

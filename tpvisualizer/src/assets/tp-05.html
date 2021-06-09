@@ -1,0 +1,1500 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<!-- 2020-10-12 Mon 14:56 -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TP n°5 - Implémentation d&rsquo;un CRUD sur ToDo</title>
+<meta name="generator" content="Org mode">
+<meta name="author" content="Olivier Berger (TSP)">
+<meta name="description" content="CSC4101 Telecom SudParis - 2020-2021 - TP n°5"
+>
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+<meta name="copyright" content="&copy; 2017 Telecom SudParis + Olivier Berger" />
+<link rel="stylesheet" type="text/css" href="../media/tsp.css" />
+<style type="text/css">
+.floatrightclass {
+float: right;
+margin: 0 0 10px 10px;
+}
+.floatleftclass {
+float: left;
+margin: 0 0 10px 10px;
+}
+.clearrightclass {
+clear: right;
+}
+.clearleftclass {
+clear: left;
+}
+</style>
+<script type="text/javascript" src='../media/tsp.js'></script>
+<script type="text/javascript" src="../media/org-info-src.js"></script>
+<script type="text/javascript">
+/* <![CDATA[ */
+org_html_manager.set("TOC_DEPTH", "2");
+org_html_manager.set("LINK_HOME", "");
+org_html_manager.set("LINK_UP", "");
+org_html_manager.set("LOCAL_TOC", "0");
+org_html_manager.set("VIEW_BUTTONS", "0");
+org_html_manager.set("MOUSE_HINT", "#cccccc");
+org_html_manager.set("FIXED_TOC", "0");
+org_html_manager.set("TOC", "1");
+org_html_manager.set("VIEW", "showall");
+org_html_manager.set("HELP", "1");
+org_html_manager.setup ();
+/* ]]> */
+</script>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2019 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">TP n°5 - Implémentation d&rsquo;un CRUD sur ToDo
+<br>
+<span class="subtitle">Générateurs de formulaires CRUD et session Symfony</span>
+</h1>
+<div id="table-of-contents">
+<h2>Table des matières</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org3ac0402">Introduction</a></li>
+<li><a href="#orgcad5f6b">Étape 0 : Récupération d&rsquo;une version à jour par rapport à la fin de séance précédente (optionnel)</a>
+<ul>
+<li><a href="#org4d9b458">Récupération du point de départ (optionnel)</a></li>
+</ul>
+</li>
+<li><a href="#org8495d76">Étape 1 : Ajout de fonctions de soumission de données à <code>ToDo</code></a>
+<ul>
+<li><a href="#org202a2e5">Principe des générateurs de code CRUD Symfony</a></li>
+<li><a href="#org24fb937">Étape 1-a : Ajout d&rsquo;une nouvelle entité <code>Paste</code></a>
+<ul>
+<li><a href="#orgf59fec5">i) Mise en place du répertoire de travail</a></li>
+<li><a href="#orgb184777">ii) Ajout d&rsquo;une nouvelle entité <code>Paste</code></a></li>
+</ul>
+</li>
+<li><a href="#orgb491cf3">Étape 1-b : Ajout d&rsquo;un controleur CRUD pour les <i>Pastes</i></a></li>
+<li><a href="#orgd4c92a8">Étape 1-c : Tests de l&rsquo;application modifiée</a></li>
+<li><a href="#org99af407">Étape 1-d : Compréhension des requêtes mises en jeu dans un formulaire de création</a></li>
+<li><a href="#orgec4e4c3">Étape 1-e : Compréhension sommaire de l&rsquo;algorithme de gestion du formulaire</a></li>
+<li><a href="#org9191df1">Étape 1-f : Modification du <i>look</i> dans les formulaires générés</a>
+<ul>
+<li><a href="#org567f35f">Utilisation de Bootstrap</a></li>
+<li><a href="#orgf15320f">Utilisation du style de formulaire Bootstrap</a></li>
+<li><a href="#orgf7cb2e2">Modification du look des boutons</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#org339fb1f">Étape 2 : Ajout d&rsquo;une gestion CRUD pour les tâches</a></li>
+<li><a href="#org2fe67ac">Étape 3 : Ajout de règles de gestion</a>
+<ul>
+<li><a href="#org8a41f50">Règles de gestion de la gestion des tâches</a></li>
+<li><a href="#orgc97b8bc">Mise en œuvre</a></li>
+</ul>
+</li>
+<li><a href="#org4873394">Évaluation</a>
+<ul>
+<li><a href="#orga5755e9">Rendu du travail en fin de séance.</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org3ac0402" class="outline-2">
+<h2 id="org3ac0402">Introduction</h2>
+<div class="outline-text-2" id="text-org3ac0402">
+<div class="objectif">
+<p>
+L&rsquo;objectif de cette séance est de comprendre et mettre en œuvre les
+mécanismes qui permettent à une application Web de gérer la
+<b>soumission de données</b> de la part des utilisateurs, et la <b>persistence
+de ces données</b>, pour que son
+comportement dépende des interactions précédentes avec le même
+utilisateur, ou d&rsquo;autres utilisateurs accédant aux mêmes données.
+</p>
+
+</div>
+
+<p>
+Jusqu&rsquo;ici, nous avons travaillé sur une application dont le
+comportement en mode Web était &laquo;&nbsp;figé&nbsp;&raquo;, basé sur la <b>lecture seule</b> des données, sans
+possibilité de mettre en œuvre une modification de ces données.
+</p>
+
+<p>
+À chaque requête HTTP émise par le client, le serveur Web répondait
+avec un même comportement de l&rsquo;application, qui était indépendant des requêtes et
+réponses précédentes.
+</p>
+
+<p>
+Les seules sources de modification des données étaient, soit une
+utilisation en ligne de commande dans le répertoire dans lequel
+l&rsquo;application est installée, soit une modification du contenu de la
+base de données par une autre application.
+</p>
+
+<p>
+Pour mettre en œuvre la <b>soumission des données</b>, on va notamment
+s&rsquo;appuyer sur les <b>formulaires de saisie HTML</b>, et la soumission des données
+de ces formulaires via les requêtes <code>POST</code> HTTP.
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-orgcad5f6b" class="outline-2">
+<h2 id="orgcad5f6b">Étape 0 : Récupération d&rsquo;une version à jour par rapport à la fin de séance précédente (optionnel)</h2>
+<div class="outline-text-2" id="text-orgcad5f6b">
+<p>
+Ce TP fait l&rsquo;objet d&rsquo;un rendu en fin de séance, qui donnera lieu à une
+évaluation comptant pour la note de contrôle continu.
+</p>
+
+<p>
+Nous souhaitons faciliter le travail durant cette séance, et
+souhaitons que vous ayez toutes et tous un point de départ équivalent.
+</p>
+
+<p>
+Si vous avez eu des difficultés à finaliser la séance
+précédente, nous vous proposons de télécharger, depuis Moodle, une
+version correspondant au résultat attendu à la fin de la séance
+précédente.
+</p>
+
+<p>
+<b>Si vous aviez terminé la séquence de travail de la séance précédente, vous pouvez sauter cette étape optionnelle.</b> Ne perdez pas de temps, et
+passez directement à l&rsquo;étape suivante de ce support de TP.
+</p>
+</div>
+
+<div id="outline-container-org4d9b458" class="outline-3">
+<h3 id="org4d9b458">Récupération du point de départ (optionnel)</h3>
+<div class="outline-text-3" id="text-org4d9b458">
+<p>
+Pour récupérer cette version, effectuez les étapes suivantes :
+</p>
+<ol class="org-ol">
+<li>Téléchargez l&rsquo;archive <code>.zip</code> présente dans Moodle</li>
+<li>Extrayez-la dans votre répertoire de travail (par exemple dans <code>~/CSC4101/tp-05/</code>)</li>
+<li><p>
+Positionnez-vous dans le répertoire du projet Symfony que vous
+venez d&rsquo;extraire (instructions à adapter, sur machines
+personnelles) :
+</p>
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #483d8b;">cd</span> ~/CSC4101/tp-05/todo-tp4-2/
+rm symfony.lock composer.lock
+php -d <span style="color: #a0522d;">memory_limit</span>=-1 /usr/bin/composer install
+</pre>
+</div></li>
+<li>Lancez l&rsquo;application et vérifiez que tout fonctionne</li>
+<li>Importez le code dans Eclipse dans un nouveau projet. Attention à
+ne pas confondre votre ancien projet et ce nouveau projet, si vous
+les importez dans le même <i>workspace</i> Eclipse.</li>
+</ol>
+
+<p>
+Vous travaillerez dans le code de cette nouvelle version, puis
+effectuerez un rendu en fin de séance sur la base de ce code modifié.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org8495d76" class="outline-2">
+<h2 id="org8495d76">Étape 1 : Ajout de fonctions de soumission de données à <code>ToDo</code></h2>
+<div class="outline-text-2" id="text-org8495d76">
+<div class="objectif">
+<p>
+L&rsquo;objectif de cette séquence est d&rsquo;enrichir l&rsquo;application &laquo;&nbsp;fil-rouge&nbsp;&raquo; de gestion
+de tâches <code>ToDo</code> pour que l&rsquo;interface Web de l&rsquo;application permette
+d&rsquo;intéragir avec les fonctions du modèle de données existant, et qui
+n&rsquo;étaient auparavant disponibles qu&rsquo;en local en ligne de commande.<br>
+<br>
+Cela permettra de découvrir des fonctions du <i>framework</i>
+Symfony permettant de &laquo;&nbsp;câbler&nbsp;&raquo; des gestionnaires de requêtes HTTP avec
+le modèle de données Doctrine, pour permettre des <b>interactions en
+lecture/écriture</b> de type CRUD.
+</p>
+
+</div>
+
+<p>
+Nous allons utiliser des
+assistants de génération de code de Symfony qui permettent
+de générer rapidement des contrôleurs complets implémentant des
+fonctionnalités CRUD.
+</p>
+</div>
+
+<div id="outline-container-org202a2e5" class="outline-3">
+<h3 id="org202a2e5">Principe des générateurs de code CRUD Symfony</h3>
+<div class="outline-text-3" id="text-org202a2e5">
+<p>
+Nous avons déjà vu dans une séance précédente les générateurs :
+</p>
+<ul class="org-ul">
+<li>d&rsquo;entité (<code>make:entity</code>)</li>
+<li>de contrôleur &laquo;&nbsp;basique&nbsp;&raquo;, avec son template Twig par défaut (<code>make:controller</code>)</li>
+</ul>
+
+<p>
+Cette fois, nous allons utiliser un assistant (<code>make:crud</code>) qui génère,
+pour une entité du modèle de l&rsquo;application, <b>un contrôleur, un jeu de formulaires, des templates</b> et méthodes
+associées à chacune des opérations CRUD suivantes :
+</p>
+<ul class="org-ul">
+<li>création d&rsquo;une nouvelle entité (<i>Create/new</i>)</li>
+<li>consultation (<i>Read</i>), déclinée en deux sous-ensembles :
+<ul class="org-ul">
+<li>d&rsquo;une collection d&rsquo;entités (<i>index</i>)</li>
+<li>d&rsquo;une entité (<i>show</i>)</li>
+</ul></li>
+<li>modification d&rsquo;une entité (<i>Update/edit</i>)</li>
+<li>suppression d&rsquo;une entité (<i>Delete</i>)</li>
+</ul>
+
+<p>
+Nous allons travailler sur une nouvelle entité du modèle, qu&rsquo;on va
+ajouter à <code>ToDo</code> : <code>Paste</code>, qui va permettre de gérer des notes à
+copier/coller. Nous avons choisi de travailler sur une nouvelle entité
+pour permettre la génération de fichiers source PHP sans risquer
+d&rsquo;entrer en conflit avec le code existant déjà pour la consultation de l&rsquo;entité <code>Todo</code>.
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-org24fb937" class="outline-3">
+<h3 id="org24fb937">Étape 1-a : Ajout d&rsquo;une nouvelle entité <code>Paste</code></h3>
+<div class="outline-text-3" id="text-org24fb937">
+<p>
+Vous allez modifier la version de ToDo déjà utilisée à la séance
+précédente.
+</p>
+</div>
+
+<div id="outline-container-orgf59fec5" class="outline-4">
+<h4 id="orgf59fec5">i) Mise en place du répertoire de travail</h4>
+<div class="outline-text-4" id="text-orgf59fec5">
+<p>
+Nous vous recommendons de travailler dans une copie du répertoire. <b>Si vous avez téléchargé une nouvelle version de l&rsquo;application au début de la sénce, vous pouvez sauter cette étape</b>.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh"><span style="color: #483d8b;">cd</span> $<span style="color: #a0522d;">HOME</span>/CSC4101/
+mkdir tp-05
+cp -r tp-04/todo-app tp-05/
+<span style="color: #483d8b;">cd</span> tp-05/todo-app/
+bin/console cache:clear
+</pre>
+</div>
+
+<p>
+Pensez aussi à supprimer les répertoires des vieilles séances
+(tp-N-2) pour libérer un peu d&rsquo;espace disque.
+</p>
+
+<p>
+Recréez un nouveau projet dans Eclipse pour cette nouvelle version de
+ToDo, et fermez les projets des séances précédentes.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgb184777" class="outline-4">
+<h4 id="orgb184777">ii) Ajout d&rsquo;une nouvelle entité <code>Paste</code></h4>
+<div class="outline-text-4" id="text-orgb184777">
+<div class="objectif">
+<p>
+L&rsquo;objectif de cette étape est de générer le code d&rsquo;une nouvelle entité
+du Modèle des données
+Doctrine, qui gère des sauvegardes de &laquo;&nbsp;bouts de texte&nbsp;&raquo;.
+</p>
+
+</div>
+
+<p>
+Nous appelons cette entité <code>Paste</code> (collage), en référence au fait de
+garder une trace de copiés-collés dans une application Web (mémos,
+astuces, bouts de code, &#x2026;).
+</p>
+
+<p>
+Une <i>paste</i> sera identifiée par :
+</p>
+<ul class="org-ul">
+<li>un contenu textuel (<i>content</i>)</li>
+<li>une date de sauvegarde (<i>created</i>)</li>
+<li>un type de contenu (<i>content_type</i>), optionnel, permettant
+éventuellement d&rsquo;en typer le format avec un type MIME.</li>
+</ul>
+
+<p>
+Attention : on utilise le type <code>text</code> et non <code>string</code> car les bouts de
+texte qu&rsquo;on souhaite sauvegarder sont potentiellement longs.
+</p>
+
+<p>
+Procédez aux étapes suivantes :
+</p>
+
+<ol class="org-ol">
+<li><p>
+Utilisez l&rsquo;assistant générateur de code pour ajouter au modèle de
+données une nouvelle entité Doctrine :
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">bin/console make:entity
+</pre>
+</div>
+
+<pre class="example">
+Class name of the entity to create or update (e.g. FierceElephant):
+&gt; Paste
+
+created: src/Entity/Paste.php
+created: src/Repository/PasteRepository.php
+
+Entity generated! Now let's add some fields!
+You can always add more fields later manually or by re-running this command.
+
+New property name (press &lt;return&gt; to stop adding fields):
+&gt; content
+
+Field type (enter ? to see all types) [string]:
+&gt; text
+
+Can this field be null in the database (nullable) (yes/no) [no]:
+&gt; 
+
+updated: src/Entity/Paste.php
+
+Add another property? Enter the property name (or press &lt;return&gt; to stop adding fields):
+&gt; created
+
+Field type (enter ? to see all types) [string]:
+&gt; datetime
+
+Can this field be null in the database (nullable) (yes/no) [no]:
+&gt; 
+
+updated: src/Entity/Paste.php
+
+Add another property? Enter the property name (or press &lt;return&gt; to stop adding fields):
+&gt; content_type
+
+Field type (enter ? to see all types) [string]:
+&gt; 
+
+Field length [255]:
+&gt; 
+
+Can this field be null in the database (nullable) (yes/no) [no]:
+&gt; yes
+
+updated: src/Entity/Paste.php
+
+Add another property? Enter the property name (or press &lt;return&gt; to stop adding fields):
+&gt; 
+
+
+
+ Success! 
+
+
+Next: When you're ready, create a migration with make:migration
+
+</pre></li>
+
+<li>Rafraîchissez le projet Eclipse, et vérifiez ensuite le code généré dans
+<code>src/Entity/</code>.</li>
+
+<li><p>
+Regénérez enfin le schéma de la base de données, avec la commande suivante :
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">bin/console make:migration
+</pre>
+</div>
+<pre class="example">
+ Success! 
+
+
+Next: Review the new migration "src/Migrations/Version20180808090005.php"
+Then: Run the migration with php bin/console doctrine:migrations:migrate
+See https://symfony.com/doc/current/bundles/DoctrineMigrationsBundle/index.html
+
+</pre>
+
+<p>
+Les migrations sont des scripts qui permettent de gérer les
+changement du modèle de données à appliquer au SGBD. Nous ne les
+avons pas étudiés jusqu&rsquo;ici, et ils concernent principalement la
+gestion des applications en production.
+</p>
+
+<p>
+En pratique, pour nous, il suffit de suivre les indications données
+dans ce message : &laquo;&nbsp;<i>Run the migration with php bin/console doctrine:migrations:migrate</i>&nbsp;&raquo;.
+</p>
+
+<p>
+Donc lancez cette commande, et validez l&rsquo;application de la
+migration :
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">bin/console doctrine:migrations:migrate
+</pre>
+</div>
+<pre class="example">
+ WARNING! You are about to execute a database migration that could result in schema changes and data loss. Are you sure you wish to continue? (yes/no) [yes]:
+ &gt; 
+
+[notice] Migrating up to DoctrineMigrations\Version20201005132537
+[notice] finished in 16.6ms, used 18M memory, 1 migrations executed, 1 sql queries
+
+</pre></li>
+
+<li>Vous pouvez maintenant lancer l&rsquo;application et re-tester. Elle devrait
+toujours fonctionner comme précédemment pour la consultation des
+tâches de la base de données.</li>
+</ol>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-orgb491cf3" class="outline-3">
+<h3 id="orgb491cf3">Étape 1-b : Ajout d&rsquo;un controleur CRUD pour les <i>Pastes</i></h3>
+<div class="outline-text-3" id="text-orgb491cf3">
+<div class="objectif">
+<p>
+L&rsquo;objectif de cette étape est d&rsquo;ajouter un contrôleur
+permettant de disposer de pages Web <i>CRUD</i> dans l&rsquo;application, pour
+ajouter (<i>Create</i>), consulter (<i>Retrieve</i>) modifier (<i>Update</i>), ou supprimer
+(<i>Delete</i>), des instances de notre nouvelle entité
+<code>Paste</code>.
+</p>
+
+</div>
+
+<p>
+Procédez aux étapes suivantes :
+</p>
+
+<ol class="org-ol">
+<li><p>
+Ajoutez un nouveau contrôleur CRUD pour la classe <code>Paste</code> :
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">bin/console make:crud
+</pre>
+</div>
+
+<pre class="example">
+The class name of the entity to create CRUD (e.g. GentleJellybean):
+&gt; Paste
+
+created: src/Controller/PasteController.php
+created: src/Form/PasteType.php
+created: templates/paste/_delete_form.html.twig
+created: templates/paste/_form.html.twig
+created: templates/paste/edit.html.twig
+created: templates/paste/index.html.twig
+created: templates/paste/new.html.twig
+created: templates/paste/show.html.twig
+
+
+ Success! 
+
+
+Next: Check your new CRUD by going to /paste/
+
+</pre></li>
+
+<li><p>
+Rafraîchissez le contenu du projet Eclipse, et consultez les
+fichiers générés. 
+</p>
+
+<p>
+Vous pouvez voir que l&rsquo;assistant a non-seulement généré le code PHP
+de la classe du contrôleur, dans <code>src/Controller</code>, mais aussi tous
+les éléments associés, comme des gabarits Twig nécessaires.
+</p></li>
+</ol>
+</div>
+</div>
+
+
+
+<div id="outline-container-orgd4c92a8" class="outline-3">
+<h3 id="orgd4c92a8">Étape 1-c : Tests de l&rsquo;application modifiée</h3>
+<div class="outline-text-3" id="text-orgd4c92a8">
+<p>
+Testez maintenant
+l&rsquo;application qui permet maintenant une soumission de données :
+</p>
+
+<ol class="org-ol">
+<li>Lancez l&rsquo;application comme d&rsquo;habitude</li>
+
+<li><p>
+Testez l&rsquo;application et vérifiez que vous pouvez maintenant saisir des
+données via les fonctions accessibles par les routes CRUD, derrière
+le préfixe <code>http://localhost:8000/paste/</code>
+</p>
+
+<div class="remarque">
+<p>
+Les boutons &laquo;&nbsp;<i>Save</i>&nbsp;&raquo; de validation des formulaires sont assez peu visibles
+pour l&rsquo;instant, mais bien actifs
+</p>
+
+</div>
+
+<div class="attention">
+<p>
+Il se peut que vous constatiez des problèmes de fonctionnement du contrôleur
+CRUD généré ci-dessus, avec une route inconnue pour le chemin
+<code>/paste/</code>. Il est alors nécessaire de corriger cela :
+</p>
+
+</div>
+
+<p>
+Il faut probablement à ce stade nettoyer le cache de Symfony :
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">bin/console cache:clear
+</pre>
+</div>
+
+<p>
+Si jamais ça ne suffisait pas (un bug Symfony semble empêcher parfois
+de faire fonctionner les nouvelles routes, malheureusement&#x2026;),
+vous pouvez réinitialiser le projet Symfony un peu plus en
+profondeur :
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">rm -fr var composer.lock symfony.lock vendor
+php -d <span style="color: #a0522d;">memory_limit</span>=-1 /usr/bin/composer install
+</pre>
+</div>
+
+<p>
+Adaptez cette commande en fonction de l&rsquo;emplacement de composer
+et selon votre système d&rsquo;exploitation.
+</p></li>
+
+<li>Vérifiez que l&rsquo;ajout de nouvelle <i>paste</i> fonctionne enfin, et
+l&rsquo;impact sur la base de données : les <i>pastes</i> ajoutées sont bien
+retrouvées dans la liste, et ainsi de suite.</li>
+</ol>
+</div>
+</div>
+
+
+<div id="outline-container-org99af407" class="outline-3">
+<h3 id="org99af407">Étape 1-d : Compréhension des requêtes mises en jeu dans un formulaire de création</h3>
+<div class="outline-text-3" id="text-org99af407">
+<ol class="org-ol">
+<li><p>
+Vérifiez la séquence d&rsquo;interactions HTTP, dans le fonctionnement
+des formulaires de création sur <code>/paste/new</code> :
+</p>
+<ol class="org-ol">
+<li>chargement du formulaire de création (1ère requête : <code>GET</code>)</li>
+<li>soumission de données à la validation du formulaire (2ème
+requête : <code>POST</code>)</li>
+<li>une fois la soumission traitée, redirection (automatique opérée
+par le navigateur) vers la liste des <i>pastes</i> (nouvelle requête
+<code>GET</code>)</li>
+</ol>
+
+<p>
+Vous pouvez suivre ces requêtes via l&rsquo;outil réseau du développeur
+Web dans le navigateur.
+</p>
+
+<p>
+Observez les en-têtes transmis dans la réponse à la requête <code>POST</code> :
+en complément du code de réponse 302, le serveur envoie la cible de
+la redirection, dans l&rsquo;en-tête <code>Location</code>.
+</p></li>
+
+<li><p>
+Vérifiez aussi ce qui apparaît dans les logs du serveur, où on
+voit passer ces 3 requêtes et les codes de réponse renvoyés (302
+pour la redirection) :
+</p>
+
+<pre class="example">
+[200]: GET /paste/new
+...
+[302]: POST /paste/new
+...
+[200]: GET /paste/
+</pre></li>
+
+<li><p>
+Observez également les caractéristiques du traitement de la requête POST en
+remontant dans l&rsquo;historique des requêtes, via la barre d&rsquo;outils
+Symfony et le <i>profiler</i> :
+</p>
+
+<p>
+Une fois une nouvelle <i>paste</i> ajoutée, on est redirigé vers la page
+de liste des <i>pastes</i>. Si vous cliquez alors sur le code de réponse
+&laquo;&nbsp;200&nbsp;&raquo; dans la barre d&rsquo;outils Symfony, vous accédez au Profiler qui
+indique : 
+</p>
+
+<pre class="example">
+302 Redirect from POST @paste_new (544890)
+</pre>
+
+<p>
+Cela signifie qu&rsquo;on a affiché cette page de liste des <i>pastes</i>
+(envoyée avec succès : 200), car le navigateur nous y a redirigé,
+car il avait reçu juste avant un code de réponse 302 suite à sa
+requête POST, qui avait été faite sur la route <code>paste_new</code>, et avait
+été traîtée, en interne par le serveur Symfony qui lui a associé le
+jeton de requête (<i>Token</i>) &laquo;&nbsp;544890&nbsp;&raquo; dans cet exemple.
+</p>
+
+<ol class="org-ol">
+<li>Remarquez que ce numéro de jeton de requête &laquo;&nbsp;544890&nbsp;&raquo; est en fait un
+lien qui permet d&rsquo;aller inspecter tout ce qui s&rsquo;est passé lors du
+traîtement de cette requête POST par le serveur Symfony :
+<ul class="org-ul">
+<li>nom de la méthode du contrôleur invoquée : <code>PasteController::new</code></li>
+<li>paramètres du POST :
+<ul class="org-ul">
+<li>content</li>
+<li>create</li>
+<li>&#x2026;</li>
+</ul></li>
+<li>etc.</li>
+</ul></li>
+<li><p>
+Cliquez alors sur l&rsquo;outil &laquo;&nbsp;Doctrine&nbsp;&raquo;
+</p>
+
+<p>
+Vous voyez alors la requête SQL qui a été générée :
+</p>
+<ol class="org-ol">
+<li><code>START TRANSACTION</code></li>
+
+<li><code>INSERT INTO paste (content, created, content_type) VALUES (?, ?, ?) ...</code></li>
+
+<li><code>COMMIT</code></li>
+</ol></li>
+
+<li>Cliquez sur l&rsquo;outil &laquo;&nbsp;Forms&nbsp;&raquo; : vous voyez des détails sur les
+données qui ont été soumises depuis le formulaire HTML via la
+méthode POST, et la façon dont ils sont interfacés avec le
+modèle objet de Symfony pour Doctrine.</li>
+</ol></li>
+</ol>
+
+<p>
+Grâce à cet outil Profiler de Symfony, dans l&rsquo;environnement de
+développement, vous pouvez à tout moment aller consulter énormément de
+détails sur tout l&rsquo;historique des requêtes précédentes de
+l&rsquo;application, pour déboguer, ou mieux comprendre le fonctionnement de l&rsquo;application.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgec4e4c3" class="outline-3">
+<h3 id="orgec4e4c3">Étape 1-e : Compréhension sommaire de l&rsquo;algorithme de gestion du formulaire</h3>
+<div class="outline-text-3" id="text-orgec4e4c3">
+<p>
+Le générateur a créé pour nous des méthodes gérant les requêtes GET et
+POST et la génération des formulaires. 
+</p>
+
+<p>
+Examinez dans Eclipse le code du contrôleur <code>src/Controller/PasteController.php</code> qui
+a été généré par l&rsquo;assistant, qui correspond à ce qui a été
+présenté en cours magistral (une version un peu plus sophistiquée, certes).
+</p>
+
+<ol class="org-ol">
+<li><p>
+Regardez le code des méthodes <code>index()</code> et <code>show()</code>, et en parallèle
+les gabarits Twig <code>templates/paste/index.html.twig</code> et
+<code>templates/paste/show.html.twig</code>.
+</p>
+
+<p>
+Vous ne devriez pas être trop dépaysés, par rapport à ce qu&rsquo;on a
+utilisé jusqu&rsquo;à présent dans <code>TodoController.php</code>.
+</p></li>
+
+<li>Consultez maintenant le code de la méthode <code>PasteController::new()</code>,
+qui gère le formulaire de création de nouvelles <i>Pastes</i>. Il correspond à celui qu&rsquo;on a présenté dans le cours.</li>
+
+<li>Ajoutez des éléments de traces avec la fonction <code>dump()</code> pour tester
+et comprendre les différents éléments de ce code, aux
+différentes étapes de l&rsquo;algorithme de traitement des
+soumissions : les données soumises, les entités du modèle. Vous
+devez retrouver parmi ces éléments ce que vous avez
+vu précédemment dans les outils du
+<i>profiler</i> Symfony</li>
+</ol>
+
+
+<p>
+À ce stade, l&rsquo;application fonctionne de façon interactive, et
+sauvegarde les opérations CRUD sur les Pastes, en base de données.
+</p>
+
+<p>
+Le code généré est modifiable, si besoin, par exemple pour ajouter
+des opérations pour la gestion de règles métier.
+</p>
+
+<div class="remarque">
+<p>
+Il n&rsquo;est pas indispensable de comprendre, à ce stade, l&rsquo;ensemble
+complet des
+opérations effectuées dans ce code, notamment pour la modification et
+la suppression, car les générateurs réalisent une
+version assez optimisée, et qu&rsquo;on pourrait écrire de façon un peu
+différente, et peut-être moins compacte, donc plus facilement
+compréhensible.<br>
+<br>
+Nous détaillerons le fonctionnement des formulaires dans une séance
+ultérieure du cours.
+</p>
+
+</div>
+</div>
+</div>
+
+<div id="outline-container-org9191df1" class="outline-3">
+<h3 id="org9191df1">Étape 1-f : Modification du <i>look</i> dans les formulaires générés</h3>
+<div class="outline-text-3" id="text-org9191df1">
+<p>
+Les assistants générateur de code ne générent pas, par défaut, des
+boutons de validation de formulaires qui
+s&rsquo;affichent de façon optimale, quand on utilise Bootstrap.
+</p>
+</div>
+
+<div id="outline-container-org567f35f" class="outline-4">
+<h4 id="org567f35f">Utilisation de Bootstrap</h4>
+<div class="outline-text-4" id="text-org567f35f">
+<p>
+Si vous examinez attentivement la construction du gabarit
+<code>paste/index.html.twig</code>, vous constatez qu&rsquo;il surcharge en fait le bloc
+Twig <code>body</code>. C&rsquo;est le comportement par défaut du générateur de code
+<code>make:crud</code> de Symfony.
+</p>
+
+<p>
+Or notre structure de gabarits suppose qu&rsquo;on surcharge plutôt le bloc
+interne <code>main</code> (comparez avec <code>todo.html.twig</code>).
+</p>
+
+<p>
+Modifiez en conséquence les gabarits des Pastes générés par le
+<code>make:crud</code>, afin de surcharger le bloc <code>main</code>, et utiliser ainsi la bonne
+mise en forme.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgf15320f" class="outline-4">
+<h4 id="orgf15320f">Utilisation du style de formulaire Bootstrap</h4>
+<div class="outline-text-4" id="text-orgf15320f">
+<ol class="org-ol">
+<li><p>
+Configurez le theme des formulaires Twig comme étant Bootstrap 4 :
+modifiez le fichier <code>config/packages/twig.yaml</code> pour ajouter l&rsquo;entrée
+<code>form_themes</code> :
+</p>
+
+<pre class="example">
+twig:
+    ...
+    form_themes: ['bootstrap_4_layout.html.twig']
+</pre></li>
+
+<li>Rechargez la page de création de nouvelle <i>paste</i>, et vérifiez que
+les champs de formulaire prennent bien maintenant toute la largeur
+utile de la page</li>
+
+<li>Modifiez si besoin le gabarit <code>templates/paste/new.html.twig</code> si ce
+n&rsquo;était pas déjà fait, pour y surcharger le bloc <code>main</code> plutôt que le
+bloc <code>body</code></li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-orgf7cb2e2" class="outline-4">
+<h4 id="orgf7cb2e2">Modification du look des boutons</h4>
+<div class="outline-text-4" id="text-orgf7cb2e2">
+<p>
+Vous pouvez donc modifier le code des gabarits générés pour que les
+boutons ressemblent à ceux qu&rsquo;attend Bootstrap, en vous inspirant des
+exemples fournis dans la <a href="https://getbootstrap.com/docs/4.5/components/buttons/">documentation</a>.
+</p>
+
+<ol class="org-ol">
+<li><p>
+Chargez le code du gabarit <code>new.html.twig</code>. Remarquez qu&rsquo;il inclut un
+autre gabarit, dans lequel est situé le code du formulaire
+proprement dit :
+</p>
+
+<div class="org-src-container">
+<pre class="src src-html">{{ include('paste/_form.html.twig') }}
+</pre>
+</div>
+
+<p>
+Attention : il s&rsquo;agit là d&rsquo;inclure le code d&rsquo;un autre gabarit, et
+non de surcharger les valeurs d&rsquo;un autre gabarit, comme pour <code>{%
+   extends 'base.html.twig' %}</code>
+</p></li>
+
+<li><p>
+Modifiez le code du formulaire <code>_form.html.twig</code> pour changer
+l&rsquo;apparence du bouton de validation du formulaire, par exemple avec :
+</p>
+
+<pre class="example">
+&lt;button class="btn btn-primary"&gt;...&lt;/button&gt;
+</pre></li>
+
+<li>Vérifiez que le formulaire dans la page de création est bien impacté, mais aussi
+celui dans la page de modification, qui inclut elle aussi le même
+sous-formulaire <code>_form.html.twig</code> : créer ou modifier des données
+nécessite à peu près les mêmes champs, dans la plupart des
+applications simples. C&rsquo;est donc le comportement choisi par les
+concepteurs du générateur de CRUD.</li>
+
+<li><p>
+Observez l&rsquo;intitulé du bouton, qui est tantôt &laquo;&nbsp;<i>Save</i>&nbsp;&raquo;, tantôt
+<i>Update</i>.
+</p>
+
+<p>
+Cela correspond en principe à la valeur qui est présente dans la
+balise &lt;button&gt;. Ici, on trouve, dans le gabarit :
+</p>
+
+<pre class="example">
+&lt;button class="btn btn-primary"&gt;{{ button_label|default('Save') }}&lt;/button&gt;
+</pre>
+
+<p>
+Cela signifie que si une variable <code>button_label</code> est fournie au
+gabarit, alors on s&rsquo;en sert, et sinon, on prend comme valeur par
+défaut <code>'Save'</code>.
+</p></li>
+
+<li><p>
+Vérifiez le code dans <code>edit.html.twig</code>. Remarquez la définition de <code>button_label</code>, à la
+volée, lors de l&rsquo;inclusion du sous-formulaire <code>_form.html.twig</code>.
+</p>
+
+<p>
+Vous voyez encore une fois qu&rsquo;à travers Twig on dispose d&rsquo;un mécanisme puissant
+pour factoriser les instructions et éviter de dupliquer le code,
+tout en permettant des particularisations.
+</p></li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org339fb1f" class="outline-2">
+<h2 id="org339fb1f">Étape 2 : Ajout d&rsquo;une gestion CRUD pour les tâches</h2>
+<div class="outline-text-2" id="text-org339fb1f">
+<div class="objectif">
+<p>
+L&rsquo;objectif de cette séquence est de mettre
+en œuvre des fonctions permettant de modifier les
+tâches via l&rsquo;interface Web
+</p>
+
+</div>
+
+<p>
+Vous allez mettre en œuvre le reste
+des fonctions <i>CRUD</i> (<i>Create Retrieve Update Delete</i>) pour l&rsquo;entité Todo
+du modèle applicatif. La consultation (<i>Retrieve</i>) fonctionne déjà, et
+vous vous attaquez maintenant aux opérations en modification.
+</p>
+
+<p>
+Vous vous inspirerez du code de gestion des formulaire obtenu à l&rsquo;aide
+des <i>makers</i> pour les Paste.
+</p>
+
+<p>
+Pour mettre en œuvre la soumissions de données via les formulaires,
+pour la création ou la modification, il y a un certain nombre d&rsquo;éléments à
+ajouter dans le code, à la fois au niveau des gabarits Twig que du
+code PHP. Il faut correctement calibrer les interactions entre les
+différentes couches de l&rsquo;application : requêtes HTTP GET et POST,
+détails de HTML, subtilités du code PHP ou Twig&#x2026;
+</p>
+
+<p>
+Procédez aux étapes suivantes, tout en testant au fur et à mesure vos
+modifications dans l&rsquo;application :
+</p>
+
+<ol class="org-ol">
+<li>Ajout d&rsquo;une classe <code>TodoType</code> définie dans le fichier
+<code>src/Form/TodoType.php</code> :
+<ul class="org-ul">
+<li>recopiez, dans Eclipse, le fichier <code>PasteType.php</code> et collez-le en
+tant que <code>TodoType.php</code></li>
+<li>dans <code>TodoType.php</code>, modifiez le code pour renommer toutes les
+occurrences de la chaîne &laquo;&nbsp;Paste&nbsp;&raquo; en &laquo;&nbsp;Todo&nbsp;&raquo; (resp. &laquo;&nbsp;paste&nbsp;&raquo; en
+&laquo;&nbsp;todo&nbsp;&raquo;) : utilisez pour cela l&rsquo;outil syntaxique &laquo;&nbsp;Edit / Find/replace&nbsp;&raquo;</li>
+<li>modifiez la liste des champs ajoutés dans le constructeur de
+formulaire dans la méthode <code>TodoType::buildForm</code>, pour refléter les attributs de
+<code>Todo</code> :
+<ul class="org-ul">
+<li><code>title</code> ;</li>
+<li>&#x2026;</li>
+</ul></li>
+</ul></li>
+
+<li>Ajout d&rsquo;une méthode <code>new()</code> dans <code>TodoController</code> :
+<ul class="org-ul">
+<li>copiez-collez le code de la méthode <code>Paste::new</code> pour l&rsquo;ajouter
+dans <code>Todo</code></li>
+<li><p>
+modifiez toutes les occurrences de &laquo;&nbsp;Paste&nbsp;&raquo; en &laquo;&nbsp;Todo&nbsp;&raquo; (resp. &laquo;&nbsp;paste&nbsp;&raquo; en
+&laquo;&nbsp;todo&nbsp;&raquo;)
+</p>
+
+<p>
+Notez qu&rsquo;Eclipse possède une fonction utile pour renommer une
+variable dans ses différentes occurrences dans le corps d&rsquo;une
+méthode : positionnez le curseur dans la première chaîne $paste
+et sélectionnez le menu du bouton droit Refactor / Rename. Au fur
+et à mesure de la saisie du nouveau nom, vous voyez les autres
+occurrences de la variable être renommées simultanément. Cet
+outil est capable de reconnaître la sémantique du langage PHP
+pour agir au bons endroits, là où un outil syntaxique risquerait
+de tout casser.
+</p>
+
+<p>
+Pensez à renommer par contre les noms de gabarits ou de routes,
+qui ne sont que des chaînes de caractère, et pas des variables
+concernées par l&rsquo;outil de renommage sémantique.
+</p></li>
+<li>ajoutez les <code>use</code> manquants éventuels pour les classes inconnues jusqu&rsquo;alors
+dans ce fichier (<code>Request</code>, a priori&#x2026;)</li>
+</ul></li>
+
+<li>Ajout des gabarits du formulaire de création de nouvelle tâche :
+<ul class="org-ul">
+<li>recopiez les deux gabarits <code>new.html.twig</code> et <code>_form.html.twig</code>
+depuis <code>templates/paste/</code> vers <code>templates/todo/</code></li>
+<li>renommez, dans <code>templates/todo/new.html.twig</code> toutes les occurrences de &laquo;&nbsp;Paste&nbsp;&raquo; en &laquo;&nbsp;Todo&nbsp;&raquo; (resp. &laquo;&nbsp;paste&nbsp;&raquo; en
+&laquo;&nbsp;todo&nbsp;&raquo;)</li>
+</ul></li>
+
+<li><p>
+Testez que le le formulaire de création de nouvelle tâche
+fonctionne.
+</p>
+
+<p>
+Résolvez les éventuelles erreurs liées aux attributs manquants
+signalées par Doctrine
+</p></li>
+
+<li>Ajoutez du lien de création, dans la page de liste des tâches,
+comme ça a été fait pour les Pastes</li>
+
+<li>Procédez comme précédemment, pour l&rsquo;ajout :
+
+<ul class="org-ul">
+<li>de la méthode de modification d&rsquo;une tâche, de son gabarit et des
+liens d&rsquo;édition des tâches dans la liste des tâches (à côté du
+lien de consultation).</li>
+
+<li>de la méthode de suppression d&rsquo;une tâche ainsi que de son
+gabarit, qui sont nécessaires au fonctionnement de l&rsquo;édition</li>
+</ul></li>
+
+<li>Ajoutez les liens de modification et de suppression dans le
+formulaire de consultation d&rsquo;une tâche</li>
+</ol>
+</div>
+</div>
+
+
+<div id="outline-container-org2fe67ac" class="outline-2">
+<h2 id="org2fe67ac">Étape 3 : Ajout de règles de gestion</h2>
+<div class="outline-text-2" id="text-org2fe67ac">
+<div class="objectif">
+<p>
+L&rsquo;objectif de cette dernière séquence est d&rsquo;ajouter des règles de gestion par
+rapport à la cohérence des données
+</p>
+
+</div>
+
+<p>
+Le fonctionnement des méthodes CRUD, tel qu&rsquo;il est généré par les
+assistants générateurs de code est assez basique. Il permet de faire
+des créations, modifications ou suppressions &laquo;&nbsp;brutes&nbsp;&raquo;, sans gestion
+particulière.
+</p>
+
+<p>
+Jusqu&rsquo;ici, il s&rsquo;agit principalement de fournir une interface Web pour
+interagir avec la base de données sous-jacente.
+</p>
+
+<p>
+Dans les vraies applications, en général, tous les attributs stockés
+dans la base de données ne sont pas modifiables par tous les
+utilisateurs. On doit ainsi respecter des règles de gestion
+applicatives, qui répondent à des besoins &laquo;&nbsp;métiers&nbsp;&raquo;.
+</p>
+
+<p>
+Nous allons voir comment coder ce genre de règles dans le code PHP de
+notre application.
+</p>
+</div>
+
+<div id="outline-container-org8a41f50" class="outline-3">
+<h3 id="org8a41f50">Règles de gestion de la gestion des tâches</h3>
+<div class="outline-text-3" id="text-org8a41f50">
+<p>
+Dans notre application fil-rouge, on souhaite ainsi que la gestion des
+tâches permise par les fonctions de modification des données obéisse à
+certaines règles :
+</p>
+
+<ul class="org-ul">
+<li>les dates de dernière modification des tâches (<code>todo:updated</code>) sont non
+modifiables par l&rsquo;utilisateur dans les formulaires, et mises à jour
+automatiquement lorsqu&rsquo;une modification est effectuée sur la tâche
+(création ou modification)</li>
+
+<li>une tâche nouvellement créée :
+<ul class="org-ul">
+<li>ne peut être créée comme déjà terminée. Il faudra la modifier
+ultérieurement pour changer son statut (<code>todo:completed</code>)</li>
+<li>sa date de création (<code>todo:created</code>) est définie automatiquement
+lors de son ajout dans la base de données, et ne sera plus
+modifiable ultérieurement</li>
+</ul></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgc97b8bc" class="outline-3">
+<h3 id="orgc97b8bc">Mise en œuvre</h3>
+<div class="outline-text-3" id="text-orgc97b8bc">
+<p>
+Modifiez le code pour mettre en œuvre ces règles. Il s&rsquo;agit de
+modifier deux élements :
+</p>
+
+<ol class="org-ol">
+<li><p>
+le gestionnaire de formulaire <code>TodoType</code>.
+</p>
+
+<p>
+Il est utilisé aussi bien pour le formulaire de création d&rsquo;une
+nouvelle tâche que pour une tâche modifiée.
+</p>
+
+<p>
+Vous allez ajouter une option à son comportement de façon à ce
+qu&rsquo;il affiche ou non certains champs selon que la tâche est
+nouvelle, ou modifiée.
+</p>
+
+<ol class="org-ol">
+<li><p>
+Ajoutez-lui une option, via la méthode <code>configureOptions()</code>, nommée
+<code>task_is_new</code> de type booléen, dont la valeur par défaut est fausse :
+</p>
+
+<div class="org-src-container">
+<pre class="src src-php"><span style="color: #a020f0;">public</span> <span style="color: #a020f0;">function</span> <span style="color: #0000ff;">configureOptions</span>(<span style="color: #228b22;">OptionsResolver</span> <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">resolver</span>)
+{
+    <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">resolver</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">setDefaults</span>([
+    <span style="color: #8b2252;">'data_class'</span> =&gt; <span style="color: #008b8b;">Todo</span><span style="color: #000000; background-color: #ffffff;">::</span><span style="color: #483d8b;">class</span>,
+    <span style="color: #8b2252;">'task_is_new'</span> =&gt; <span style="color: #008b8b;">false</span>
+    ]);
+    <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">resolver</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">setAllowedTypes</span>(<span style="color: #8b2252;">'task_is_new'</span>, <span style="color: #8b2252;">'bool'</span>);
+}
+</pre>
+</div></li>
+
+<li><p>
+Modifiez le comportement de la création du formulaire, dans
+<code>buildForm()</code> pour ajouter ou non certains champs, selon qu&rsquo;ils
+doivent être inclus dans le formulaire, en fonction de la valeur
+de <code>task_is_new</code> :
+</p>
+
+<div class="org-src-container">
+<pre class="src src-php"><span style="color: #a020f0;">public</span> <span style="color: #a020f0;">function</span> <span style="color: #0000ff;">buildForm</span>(<span style="color: #228b22;">FormBuilderInterface</span> <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">builder</span>, <span style="color: #228b22;">array</span> <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">options</span>)
+{
+   ...
+   <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">builder</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">add</span>(...);
+
+   <span style="color: #a020f0;">if</span>(! <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">options</span>[<span style="color: #8b2252;">'task_is_new'</span>] ) 
+   {
+       <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">builder</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">add</span>(...);
+   }
+   ...
+</pre>
+</div></li>
+</ol></li>
+
+<li>le contrôleur <code>TodoController</code> :
+<ol class="org-ol">
+<li><p>
+Modifiez le code dans la méthode <code>new()</code>, qui appelle la génération du formulaire, pour
+passer en argument un tableau d&rsquo;options, qui contient la valeur de l&rsquo;option <code>task_is_new</code>, qui
+doit alors être vraie :
+</p>
+<div class="org-src-container">
+<pre class="src src-php"><span style="color: #a020f0;">public</span> <span style="color: #a020f0;">function</span> <span style="color: #0000ff;">new</span>(<span style="color: #228b22;">Request</span> <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">request</span>): <span style="color: #228b22;">Response</span>
+{
+    <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">todo</span> = <span style="color: #a020f0;">new</span> <span style="color: #228b22;">Todo</span>();
+    ...
+
+    <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">form</span> = <span style="color: #008b8b;">$</span><span style="color: #008b8b;">this</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">createForm</span>(<span style="color: #008b8b;">TodoType</span><span style="color: #000000; background-color: #ffffff;">::</span><span style="color: #483d8b;">class</span>, <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">todo</span>,
+    [<span style="color: #8b2252;">'task_is_new'</span> =&gt; <span style="color: #008b8b;">true</span>]
+    );
+</pre>
+</div>
+
+<p>
+Comme le code de <code>edit()</code> n&rsquo;est pas changé, les champs présents dans le
+formulaire de création et de modification sont donc gérés
+différemment, en fonction de la valeur par défaut de l&rsquo;option <code>task_is_new</code>.
+</p></li>
+
+<li><p>
+Modifiez le code de gestion des formulaires soumis, pour gérer
+les attributs dont la valeur doit être calculée. Inspirez-vous
+de cet example :
+</p>
+
+<div class="org-src-container">
+<pre class="src src-php"><span style="color: #a020f0;">public</span> <span style="color: #a020f0;">function</span> <span style="color: #0000ff;">edit</span>(<span style="color: #228b22;">Request</span> <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">request</span>, <span style="color: #228b22;">Todo</span> <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">todo</span>): <span style="color: #228b22;">Response</span>
+{
+    <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">form</span> = <span style="color: #008b8b;">$</span><span style="color: #008b8b;">this</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">createForm</span>(<span style="color: #008b8b;">TodoType</span><span style="color: #000000; background-color: #ffffff;">::</span><span style="color: #483d8b;">class</span>, <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">todo</span>);
+    <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">form</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">handleRequest</span>(<span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">request</span>);
+
+    <span style="color: #a020f0;">if</span> (<span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">form</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">isSubmitted</span>() &amp;&amp; <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">form</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">isValid</span>()) {
+
+    <span style="color: #b22222;">// </span><span style="color: #b22222;">Ici la liste des valeurs calcul&#233;es, juste avant la sauvegarde</span>
+    <span style="color: #b22222;">// </span><span style="color: #b22222;">dans la base de donn&#233;es</span>
+    <span style="color: #000000; background-color: #ffffff;">$</span><span style="color: #a0522d;">todo</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">setUpdated</span>(<span style="color: #a020f0;">new</span> <span style="color: #228b22;">\DateTime</span>());
+
+    <span style="color: #008b8b;">$</span><span style="color: #008b8b;">this</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">getDoctrine</span>()<span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">getManager</span>()<span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">flush</span>();
+
+    <span style="color: #a020f0;">return</span> <span style="color: #008b8b;">$</span><span style="color: #008b8b;">this</span><span style="color: #000000; background-color: #ffffff;">-&gt;</span><span style="color: #000000; background-color: #ffffff;">redirectToRoute</span>(<span style="color: #8b2252;">'todo_index'</span>);
+    }
+    ...
+</pre>
+</div></li>
+</ol></li>
+</ol>
+
+<p>
+Testez l&rsquo;application ainsi modifiée, et vérifiez que les formulaires
+de création d&rsquo;une nouvelle tâche, et de modification d&rsquo;une tâche
+existante contiennent des champs différents, et que les dates sont
+mises à jour correctement dans la base de données.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org4873394" class="outline-2">
+<h2 id="org4873394">Évaluation</h2>
+<div class="outline-text-2" id="text-org4873394">
+<p>
+Vous avez expérimenté avec les éléments suivants :
+</p>
+<ul class="org-ul">
+<li>utiliser les générateurs de CRUD pour mettre en place du code gérant
+les formulaires</li>
+<li>observer le fonctionnement de la gestion des soumissions de données</li>
+<li>adapter le comportement des formulaires pour gérer des règles métier</li>
+</ul>
+</div>
+
+<div id="outline-container-orga5755e9" class="outline-3">
+<h3 id="orga5755e9">Rendu du travail en fin de séance.</h3>
+<div class="outline-text-3" id="text-orga5755e9">
+<p>
+Merci de vous référer aux instructions présentes dans Moodle pour
+effectuer votre rendu.
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Auteur: Olivier Berger (TSP)</p>
+<p class="date">Created: 2020-10-12 Mon 14:56</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>
