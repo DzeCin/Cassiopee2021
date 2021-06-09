@@ -5,7 +5,6 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="./bootstrap.min.css" type="text/css" />
   <title>Visualiseur de TP PHP</title>
   <style>
     .subtitle {
@@ -48,11 +47,11 @@
     var isTpLoaded = false;
 
     function canGoBackwards() {
-      return currentStepIndex > 0 || currentSubstepIndex > 0;
+      return isTpLoaded && (currentStepIndex > 0 || currentSubstepIndex > 0);
     }
 
     function canGoForwards() {
-      return currentStepIndex < tp.steps.length - 1 || currentSubstepIndex < tp.steps[currentStepIndex].length - 1;
+      return isTpLoaded && (currentStepIndex < tp.steps.length - 1 || currentSubstepIndex < tp.steps[currentStepIndex].length - 1);
     }
 
     function updateContent() {
@@ -105,7 +104,6 @@
           case "tp":
             tp = message.data;
             document.getElementById("title").innerHTML = tp.title;
-            // document.getElementById("subtitle").innerHTML = tp.subtitle;
             updateContent();
             document.getElementById("container").style.visibility = "visible";
             document.getElementById("navbar").style.visibility = "visible";

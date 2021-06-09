@@ -7,6 +7,11 @@ import { HTMLElement, parse } from "node-html-parser";
 import { Step, TP } from "./types";
 import { getTpList, getTpNumber } from "./tpList";
 
+/**
+ * Updates the webview panel with the app's HTML.
+ * @param context The extension's context.
+ * @returns the updated webview panel.
+ */
 function initializeWebviewPanel(context: vscode.ExtensionContext) {
   // Create the webview panel within which the visualizer will be shown
   const panel = vscode.window.createWebviewPanel(
@@ -34,14 +39,22 @@ function initializeWebviewPanel(context: vscode.ExtensionContext) {
   return panel;
 }
 
+/**
+ * Gets a TP subject as a single HTML element, parses it then passes
+ * the resulting TP to the webview.
+ * @param webview The extension's webview.
+ * @param tp The loaded TP HTML, unparsed.
+ */
 function passTpToWebview(webview: vscode.Webview, tp: HTMLElement) {
+  // Initialized the parsed TP using the main title, which includes the subtitle
   var parsedTp: TP = {
     title: tp.querySelector(".title").innerHTML,
-    subtitle: tp.querySelector(".subtitle")?.innerHTML ?? "",
     steps: [],
   };
 
+  // Each TP step is contained in a div with the outline-2 class
   const tpSteps = tp.querySelectorAll(".outline-2");
+  // Iterate through each step to create a parsed version and append its substeps
   tpSteps.forEach((element) => {
     var step: Step = {
       title: element.querySelector("h2").textContent,
@@ -52,15 +65,21 @@ function passTpToWebview(webview: vscode.Webview, tp: HTMLElement) {
     substeps.forEach((substep) => {
       step.substeps.push(substep.toString());
     });
+    // Add the parsed step to the parsed TP
     parsedTp.steps.push(step);
   });
 
+  // Pass the parsed TP to the webview using a message
   webview.postMessage({
     command: "tp",
     data: parsedTp,
   });
 }
 
+/**
+ * This function is called everytime the extension is launched.
+ * @param context The extension's context, passed by VS Code.
+ */
 export function activate(context: vscode.ExtensionContext) {
   let disposable = vscode.commands.registerCommand(
     "tpvisualizer.tpVisualizer",

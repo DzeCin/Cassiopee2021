@@ -1,3 +1,6 @@
+/**
+ * An array containing each TP's title.
+ */
 const tpTitles: string[] = [
   "Prise en main de PHP et de la boîte à outils Symfony",
   "Programmation contrôleur Web Symfony",
@@ -10,6 +13,10 @@ const tpTitles: string[] = [
   "Formulaires dynamiques complexes",
 ];
 
+/**
+ * Creates and returns a list of all TPs, including their numbers. Used by the Quick Pick selector.
+ * @returns an array containing formatted TP titles.
+ */
 export function getTpList(): string[] {
   var tpList: string[] = [];
   tpTitles.forEach((title, index) => {
@@ -18,6 +25,14 @@ export function getTpList(): string[] {
   return tpList;
 }
 
+/**
+ * Given a formatted TP title, returns its number.
+ *
+ * Ex: `getTPNumber("TP n°3 - Gabarits (templates) Twig")` returns 3.
+ *
+ * @param tpListElement
+ * @returns
+ */
 export function getTpNumber(tpListElement: string): number {
   return getTpList().indexOf(tpListElement) + 1;
 }

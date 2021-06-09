@@ -1,6 +1,6 @@
 # TPVisualizer
 
-Cette extension Visual Studio Code permet de consulter les TP de CSC4101 à l'intérieur de son IDE, avec une navigation étape par étape.
+Cette extension Visual Studio Code/Theia permet de consulter les TP de CSC4101 à l'intérieur de son IDE, avec une navigation étape par étape.
 
 ## Fonctionnalités
 
@@ -30,6 +30,7 @@ Cette extension n'a pas de paramètres.
 
 - Problèmes de couleur lors de l'utilisation d'un thème sombre
 - Pas de notes de bas de page
+- Design améliorable
 
 ## Changelog
 

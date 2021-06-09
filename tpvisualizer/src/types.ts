@@ -6,6 +6,5 @@ export type Step = {
 
 export type TP = {
   title: string; // .title
-  subtitle: string; // .subtitle
   steps: Step[]; // .outline-2
 };
