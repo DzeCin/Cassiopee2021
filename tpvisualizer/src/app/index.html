@@ -104,10 +104,10 @@
           case "tp":
             tp = message.data;
             document.getElementById("title").innerHTML = tp.title;
-            updateContent();
             document.getElementById("container").style.visibility = "visible";
             document.getElementById("navbar").style.visibility = "visible";
             isTpLoaded = true;
+            updateContent();
             break;
 
           case "css":
